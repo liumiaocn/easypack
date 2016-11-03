@@ -30,12 +30,13 @@ systemctl stop firewalld    >> $INSTALL_LOG 2>&1
 iptables -F
 echo |tee -a $INSTALL_LOG
 
+#baseurl=http://yum.kubernetes.io/repos/kubernetes-el7-x86_64
 date |tee -a $INSTALL_LOG
 echo "##Step 2: set repository and install kubeadm etc..." |tee -a $INSTALL_LOG
 cat <<EOF > /etc/yum.repos.d/kubernetes.repo
 [kubernetes]
 name=Kubernetes
-baseurl=http://yum.kubernetes.io/repos/kubernetes-el7-x86_64
+baseurl=http://files.rm-rf.ca/rpms/kubelet/
 enabled=1
 gpgcheck=0
 EOF
