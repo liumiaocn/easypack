@@ -15,7 +15,7 @@ sh easypack_kubernetes.sh MASTER
 ---
 #使用方法
 #Step 1: 取得easypack_kubernetes.sh
->使用git clone或者直接下载或者拷贝粘贴生成本地的easypack_kubernetes.sh文件 \
+>使用git clone或者直接下载或者拷贝粘贴生成本地的easypack_kubernetes.sh文件    
 git clone https://github.com/liumiaocn/easypack
 
 #Step 2: 
