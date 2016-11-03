@@ -19,14 +19,14 @@ sh easypack_kubernetes.sh MASTER
 git clone https://github.com/liumiaocn/easypack
 
 #Step 2: 
->需要记住Master创建时候所生成的Token，后面Node在Join的时候需要用到 \ 
->cd easypack/k8s \
+>需要记住Master创建时候所生成的Token，后面Node在Join的时候需要用到    
+>cd easypack/k8s   
 sh easypack_kubernetes.sh MASTER
 
 #Step 3: Join Node
->在node所在节点执行，需要知道Master创建时候所生成的Token和Master的IP地址 \ 
->git clone https://github.com/liumiaocn/easypack \ 
->cd easypack/k8s \ 
+>在node所在节点执行，需要知道Master创建时候所生成的Token和Master的IP地址   
+>git clone https://github.com/liumiaocn/easypack   
+>cd easypack/k8s   
 >sh easypack_kubernetes.sh NODE token MASTERIP
 
 
