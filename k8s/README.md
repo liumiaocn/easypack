@@ -1,15 +1,15 @@
 #Usage
 #Step 1: Get easypack_kubernetes.sh
->git clone or download or copy-paste to create local easypack_kubernetes.sh
+>git clone or download or copy-paste to create local easypack_kubernetes.sh   
 git clone https://github.com/liumiaocn/easypack
 
 #Step 2: Create Master
->cd easypack/k8s
+>cd easypack/k8s   
 sh easypack_kubernetes.sh MASTER
 
 #Step 3: Join Node
->git clone https://github.com/liumiaocn/easypack
->cd easypack/k8s
+>git clone https://github.com/liumiaocn/easypack   
+>cd easypack/k8s   
 >sh easypack_kubernetes.sh NODE token MASTERIP
 
 ---
