@@ -54,16 +54,77 @@ systemctl restart docker >> $INSTALL_LOG 2>&1
 systemctl enable kubelet & systemctl restart kubelet >> $INSTALL_LOG 2>&1
 
 echo
+#!/bin/sh
+
+INSTALL_LOG=/tmp/k8s_install.$$.log
+
+usage(){
+  echo "Usage: $0 MASTER|NODE [token] [MASTERIP]"
+  echo "          token and IP are used with token created by kubeadm init in MASTER"
+}
+
+if [ $# -ne 1 -a $# -ne 3 ]; then
+  usage
+  exit 1
+fi
+
+TYPE=$1
+TOKEN=$2
+MASTERIP=$3
+
+if [ _"$TYPE" = _"NODE" -a _"$TOKEN" = _"" ]; then
+  usge
+  exit
+fi
+
+
+echo `date` |tee -a $INSTALL_LOG
+echo "##INSTALL LOG : $INSTALL_LOG " |tee -a $INSTALL_LOG
+echo "##Step 1: Stop firewall ..." |tee -a $INSTALL_LOG
+systemctl disable firewalld >>$INSTALL_LOG 2>&1
+systemctl stop firewalld    >> $INSTALL_LOG 2>&1
+iptables -F
+echo |tee -a $INSTALL_LOG
+
+#baseurl=http://yum.kubernetes.io/repos/kubernetes-el7-x86_64
+date |tee -a $INSTALL_LOG
+echo "##Step 2: set repository and install kubeadm etc..." |tee -a $INSTALL_LOG
+cat <<EOF > /etc/yum.repos.d/kubernetes.repo
+[kubernetes]
+name=Kubernetes
+baseurl=http://files.rm-rf.ca/rpms/kubelet/
+enabled=1
+gpgcheck=0
+EOF
+
+setenforce 0
+if [ _"$TYPE" = _"MASTER" ]; then
+  echo "  install kubectl in Master..." |tee -a $INSTALL_LOG
+  yum install -y kubectl >> $INSTALL_LOG 2>&1
+fi
+yum install -y docker kubelet kubeadm kubernetes-cni >> $INSTALL_LOG 2>&1
+systemctl enable docker >> $INSTALL_LOG 2>&1
+echo "#######Set docker proxy when needed. If ready, press any to continue..." |tee -a $INSTALL_LOG
+read
+systemctl restart docker >> $INSTALL_LOG 2>&1
+systemctl enable kubelet & systemctl restart kubelet >> $INSTALL_LOG 2>&1
+
+echo
 date
 echo "##Step 3: pull google containers..." |tee -a $INSTALL_LOG
-PROXY="kube-proxy-amd64:v1.4.0"
+PROXY="kube-proxy-amd64:v1.4.5"
 DISCOVERY="kube-discovery-amd64:1.0"
-SCHEDULER="kube-scheduler-amd64:v1.4.0"
-CONTROLLER="kube-controller-manager-amd64:v1.4.0"
-APISERVER="kube-apiserver-amd64:v1.4.0"
-PAUSE="pause-amd64"
+SCHEDULER="kube-scheduler-amd64:v1.4.5"
+CONTROLLER="kube-controller-manager-amd64:v1.4.5"
+APISERVER="kube-apiserver-amd64:v1.4.5"
+PAUSE="pause-amd64:3.0"
+ETCD="etcd-amd64:2.2.5"
+DNS="kubedns-amd64:1.7 "
+DNSMASQ="kube-dnsmasq-amd64:1.3"
+HEALTHZ="exechealthz-amd64:1.1"
+DASHBOARD="kubernetes-dashboard-amd64:v1.4.1"
 
-ALL_IMAGES="${PROXY} ${DISCOVERY} ${SCHEDULER} ${CONTROLLER} ${APISERVER} ${PAUSE}"
+ALL_IMAGES="${PROXY} ${DISCOVERY} ${SCHEDULER} ${CONTROLLER} ${APISERVER} ${PAUSE} ${ETCD} ${DNS} ${DNSMASQ} ${HEALTHZ} ${DASHBOARD}"
 
 CNT=0
 echo "Now begin to pull images from liumiaocn" |tee -a $INSTALL_LOG
