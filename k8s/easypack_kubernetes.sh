@@ -44,9 +44,9 @@ EOF
 setenforce 0
 if [ _"$TYPE" = _"MASTER" ]; then
   echo "  install kubectl in Master..." |tee -a $INSTALL_LOG
-  yum install -y kubectl >> $INSTALL_LOG 2>&1
+  yum install -y kubectl kubernetes-cni >> $INSTALL_LOG 2>&1
 fi
-yum install -y docker kubelet kubeadm kubernetes-cni >> $INSTALL_LOG 2>&1
+yum install -y docker kubelet kubeadm >> $INSTALL_LOG 2>&1
 systemctl enable docker >> $INSTALL_LOG 2>&1
 echo "#######Set docker proxy when needed. If ready, press any to continue..." |tee -a $INSTALL_LOG
 read
