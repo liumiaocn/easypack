@@ -56,17 +56,17 @@ systemctl enable kubelet & systemctl restart kubelet >> $INSTALL_LOG 2>&1
 echo
 date
 echo "##Step 3: pull google containers..." |tee -a $INSTALL_LOG
-PROXY="kube-proxy-amd64:v1.4.5"
+PROXY="kube-proxy-amd64:v1.4.1"
 DISCOVERY="kube-discovery-amd64:1.0"
-SCHEDULER="kube-scheduler-amd64:v1.4.5"
-CONTROLLER="kube-controller-manager-amd64:v1.4.5"
-APISERVER="kube-apiserver-amd64:v1.4.5"
+SCHEDULER="kube-scheduler-amd64:v1.4.1"
+CONTROLLER="kube-controller-manager-amd64:v1.4.1"
+APISERVER="kube-apiserver-amd64:v1.4.1"
 PAUSE="pause-amd64:3.0"
 ETCD="etcd-amd64:2.2.5"
 DNS="kubedns-amd64:1.7 "
 DNSMASQ="kube-dnsmasq-amd64:1.3"
 HEALTHZ="exechealthz-amd64:1.1"
-DASHBOARD="kubernetes-dashboard-amd64:v1.4.2"
+DASHBOARD="kubernetes-dashboard-amd64:v1.4.1"
 
 ALL_IMAGES="${PROXY} ${DISCOVERY} ${SCHEDULER} ${CONTROLLER} ${APISERVER} ${PAUSE} ${ETCD} ${DNS} ${DNSMASQ} ${HEALTHZ} ${DASHBOARD}"
 
