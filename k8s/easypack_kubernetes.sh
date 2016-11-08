@@ -112,6 +112,8 @@ if [ _"$TYPE" = _"MASTER" ]; then
   kubectl apply -f https://git.io/weave-kube |tee -a $INSTALL_LOG
   kubectl get pods |tee -a $INSTALL_LOG
 else
+  rm -rf /etc/kubernetes/manifests/
+  rm -rf /etc/kubernetes/kubelet.conf /etc/kubernetes/admin.conf
   echo "##Step 4: kubeadm join" |tee -a $INSTALL_LOG
   kubeadm join --token ${TOKEN} ${MASTERIP} |tee -a $INSTALL_LOG
 
