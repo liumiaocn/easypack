@@ -5,6 +5,7 @@
 #Variable Init
 #
 ###############################################################################
+TMP_LOG_FILE=/tmp/tmp_log_file.$$.log
 FILE_ETC_HOSTS=/etc/hosts
 SOFT_RPM_MESOS="http://repos.mesosphere.com/el/7/noarch/RPMS/mesosphere-el-repo-7-1.noarch.rpm"
 SOFT_PKG_MESOS=mesos
@@ -27,16 +28,16 @@ CONFIG_MESOS_SLAVE_CONTAINER="docker,mesos"
 CONFIG_MESOS_SLAVE_FILE_REG_TMO=/etc/mesos-slave/executor_registration_timeout
 CONFIG_MESOS_SLAVE_REG_TMO=5mins
 
-MESOS_MASTER1_IP="192.168.32.32"
-MESOS_MASTER2_IP="192.168.32.33"
-MESOS_MASTER3_IP="192.168.32.34"
+MESOS_MASTER1_IP="192.168.146.32"
+MESOS_MASTER2_IP="192.168.146.33"
+MESOS_MASTER3_IP="192.168.146.34"
 MESOS_MASTER1_HOSTNAME="host32"
 MESOS_MASTER2_HOSTNAME="host33"
 MESOS_MASTER3_HOSTNAME="host34"
 
-MESOS_SLAVE1_IP="192.168.32.42"
-MESOS_SLAVE2_IP="192.168.32.43"
-MESOS_SLAVE3_IP="192.168.32.44"
+MESOS_SLAVE1_IP="192.168.146.42"
+MESOS_SLAVE2_IP="192.168.146.43"
+MESOS_SLAVE3_IP="192.168.146.44"
 MESOS_SLAVE1_HOSTNAME="host42"
 MESOS_SLAVE2_HOSTNAME="host43"
 MESOS_SLAVE3_HOSTNAME="host44"
@@ -44,7 +45,6 @@ MESOS_SLAVE3_HOSTNAME="host44"
 PORT_ZK_MASTER=2888
 PORT_ZK_VOTE=3888
 PORT_ZK_MESOS=2181
-
 ###############################################################################
 #
 #Function Def
@@ -73,28 +73,34 @@ append_mesos_master_hosts(){
 
 mgnt_master(){
   ACTION=$1
-  
+
   if [ _"$ACTION" = _"INSTALL" ]; then
+    echo "##Install: deltarpm"
+    yum -y install deltarpm
+    echo "##       : mesos"
     rpm -Uvh ${SOFT_RPM_MESOS}
-    yum install -y ${SOFT_PKG_MESOS} ${SOFT_PKG_MARATHON}
+    yum install -y ${SOFT_PKG_MESOS}
+    echo "##       : marathon"
+    yum install -y ${SOFT_PKG_MARATHON}
+    echo "##       : zookeeper"
     yum install -y ${SOFT_PKG_ZOOKEEPER}
   elif [ _"$ACTION" = _"CONFIG" ]; then
-    #Configure the Master Servers' Zookeeper Configuration
+    #Config: Zookeeper
     echo "server.1=${MESOS_MASTER1_IP}:${PORT_ZK_MASTER}:${PORT_ZK_VOTE}" >> ${CONFIG_ZK_FILE}
     echo "server.2=${MESOS_MASTER1_IP}:${PORT_ZK_MASTER}:${PORT_ZK_VOTE}" >> ${CONFIG_ZK_FILE}
     echo "server.3=${MESOS_MASTER1_IP}:${PORT_ZK_MASTER}:${PORT_ZK_VOTE}" >> ${CONFIG_ZK_FILE}
 
-    #Set up the Zookeeper Connection Info for Mesos
+    #Config: Zookeeper for mesos
     echo "zk://${MESOS_MASTER1_IP}:${PORT_ZK_MESOS},${MESOS_MASTER2_IP}:${PORT_ZK_MESOS},${MESOS_MASTER3_IP}:${PORT_ZK_MESOS}/mesos" > ${CONFIG_MESOS_ZK}
 
-    #Modify the Quorum to Reflect your Cluster Size
+    #Config: Setting quorum
     echo "${CONFIG_NUM_QUORUM}" > ${CONFIG_MESOS_QUORUM}
 
     #define a unique ID number
-    echo "1" > ${CONFIG_ZK}
+    echo "${NODE_NUM}" > ${CONFIG_ZK}
     #Configure the Hostname and IP Address
-    echo "MESOS_MASTER_IP" > ${CONFIG_MESOS_MASTER_IP}
-    echo "MESOS_MASTER_HOSTNAME" > ${CONFIG_MESOS_MASTER_HOSTNAME}
+    echo "${MESOS_MASTER_IP}" > ${CONFIG_MESOS_MASTER_IP}
+    echo "${MESOS_MASTER_HOSTNAME}" > ${CONFIG_MESOS_MASTER_HOSTNAME}
 
     #All Master nodes
     #Configure Marathon on the Master Servers
@@ -113,18 +119,15 @@ mgnt_master(){
 
 mgnt_slave(){
   ACTION=$1
-  
+
   if [ _"$ACTION" = _"INSTALL" ]; then
     rpm -Uvh ${SOFT_RPM_MESOS}
     yum -y install mesos
     echo "zk://${MESOS_MASTER1_IP}:${PORT_ZK_MESOS},${MESOS_MASTER2_IP}:${PORT_ZK_MESOS},${MESOS_MASTER3_IP}:${PORT_ZK_MESOS}/mesos" > /etc/mesos/zk
   elif [ _"$ACTION" = _"CONFIG" ]; then
-    # for Deploy Image
+    #config mesos slave
     echo "${CONFIG_MESOS_SLAVE_CONTAINER}" > ${CONFIG_MESOS_SLAVE_FILE_CONTAINER}
     echo "${CONFIG_MESOS_SLAVE_REG_TMO}" > ${CONFIG_MESOS_SLAVE_REG_TMO}
-
-
-    # Mesos Slave
     echo "${MESOS_SLAVE_IP}" > ${CONFIG_MESOS_SLAVE_IP}
     echo "${MESOS_SLAVE_HOSTNAME}" > ${CONFIG_MESOS_SLAVE_HOSTNAME}
   elif [ _"$ACTION" = _"INIT" ]; then
@@ -138,13 +141,35 @@ mgnt_slave(){
 mgnt_service(){
   ACTION=$1
   TYPE=$2
-  
+
   if [ _"$TYPE" = _"MASTER" ]; then
     systemctl ${ACTION} zookeeper
     systemctl ${ACTION} marathon
     systemctl ${ACTION} mesos-master
   elif [ _"$TYPE" = _"SLAVE" ]; then
     systemctl ${ACTION} mesos-slave
+  fi
+}
+
+get_ip_or_hostname(){
+  ACTION=$1
+  TYPE=$2
+  if [ _"$ACTION" = _"IP" ]; then
+    if [ _"$TYPE" = _"MASTER" ]; then
+      NODE_NUM=${NODE}
+      eval echo "\${MESOS_MASTER${NODE}_IP}"
+    elif [ _"$TYPE" = _"SLAVE" ]; then
+      NODE_NUM=$NODE
+      eval echo "\${MESOS_SLAVE${NODE}_IP}"
+    fi
+  elif [ _"$ACTION" = _"HOSTNAME" ]; then
+    if [ _"$TYPE" = _"MASTER" ]; then
+      NODE_NUM=$1
+      eval echo "\${MESOS_MASTER${NODE}_HOSTNAME}"
+    elif [ _"$TYPE" = _"SLAVE" ]; then
+      NODE_NUM=$NODE
+      eval echo "\${MESOS_SLAVE${NODE}_HOSTNAME}"
+    fi
   fi
 }
 
@@ -210,15 +235,44 @@ TYPE=$2
 #NODE  : 1|2|3
 NODE=$3
 
+MESOS_MASTER_IP=`get_ip_or_hostname IP MASTER`
+MESOS_MASTER_HOSTNAME=`get_ip_or_hostname IP MASTER`
+MESOS_SLAVE_IP=`get_ip_or_hostname IP SLAVE`
+MESOS_SLAVE_HOSTNAME=`get_ip_or_hostname IP SLAVE`
+
+date |tee ${TMP_LOG_FILE}
 if [ _"$ACTION" = _"INSTALL" ]; then
-  append_mesos_master_hosts
-  mgnt_master INSTALL 
-  mgnt_master CONFIG 
-  mgnt_master INIT 
-  
-  mgnt_slave INSTALL 
-  mgnt_slave CONFIG 
-  mgnt_slave INIT 
+  echo "## Intall Log file : $TMP_LOG_FILE"
+  if [ _"$TYPE" = _"MASTER" ]; then
+    echo -n "## Install for Master Node:            :"
+    mgnt_master INSTALL >> ${TMP_LOG_FILE} 2>&1
+    echo "OK"
+
+    echo -n "## Config for Master Node: /etc/hosts  :"
+    append_mesos_master_hosts >> ${TMP_LOG_FILE} 2>&1
+    echo "OK"
+
+    echo -n "## Config   for Master Node:           :"
+    mgnt_master CONFIG
+    echo "OK"
+
+    echo -n "## Init     for Master Node:           :"
+    mgnt_master INIT
+    echo "OK"
+
+  elif [ _"$TYPE" = _"SLAVE" ]; then
+    echo -n "## Install for Slave   Node:             "
+    mgnt_slave INSTALL >> ${TMP_LOG_FILE} 2>&1
+    echo "OK"
+
+    echo -n "## Config   for Slave   Node:            "
+    mgnt_slave CONFIG
+    echo "OK"
+
+    echo -n "## Init     for Slave   Node:            "
+    mgnt_slave INIT
+    echo "OK"
+  fi
 elif [ _"$ACTION" = _"UNINSTALL" ]; then
   uninstall
 elif [ _"$ACTION" = _"STATUS" ]; then
