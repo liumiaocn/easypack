@@ -75,6 +75,8 @@ mgnt_master(){
   ACTION=$1
 
   if [ _"$ACTION" = _"INSTALL" ]; then
+    systemctl stop firewalld && systemctl disable firewalld
+    iptables -F
     echo "##Install: deltarpm"
     yum -y install deltarpm
     echo "##       : mesos"
@@ -87,8 +89,8 @@ mgnt_master(){
   elif [ _"$ACTION" = _"CONFIG" ]; then
     #Config: Zookeeper
     echo "server.1=${MESOS_MASTER1_IP}:${PORT_ZK_MASTER}:${PORT_ZK_VOTE}" >> ${CONFIG_ZK_FILE}
-    echo "server.2=${MESOS_MASTER1_IP}:${PORT_ZK_MASTER}:${PORT_ZK_VOTE}" >> ${CONFIG_ZK_FILE}
-    echo "server.3=${MESOS_MASTER1_IP}:${PORT_ZK_MASTER}:${PORT_ZK_VOTE}" >> ${CONFIG_ZK_FILE}
+    echo "server.2=${MESOS_MASTER2_IP}:${PORT_ZK_MASTER}:${PORT_ZK_VOTE}" >> ${CONFIG_ZK_FILE}
+    echo "server.3=${MESOS_MASTER3_IP}:${PORT_ZK_MASTER}:${PORT_ZK_VOTE}" >> ${CONFIG_ZK_FILE}
 
     #Config: Zookeeper for mesos
     echo "zk://${MESOS_MASTER1_IP}:${PORT_ZK_MESOS},${MESOS_MASTER2_IP}:${PORT_ZK_MESOS},${MESOS_MASTER3_IP}:${PORT_ZK_MESOS}/mesos" > ${CONFIG_MESOS_ZK}
@@ -97,7 +99,7 @@ mgnt_master(){
     echo "${CONFIG_NUM_QUORUM}" > ${CONFIG_MESOS_QUORUM}
 
     #define a unique ID number
-    echo "${NODE_NUM}" > ${CONFIG_ZK}
+    echo "${NODE}" > ${CONFIG_ZK}
     #Configure the Hostname and IP Address
     echo "${MESOS_MASTER_IP}" > ${CONFIG_MESOS_MASTER_IP}
     echo "${MESOS_MASTER_HOSTNAME}" > ${CONFIG_MESOS_MASTER_HOSTNAME}
@@ -121,6 +123,8 @@ mgnt_slave(){
   ACTION=$1
 
   if [ _"$ACTION" = _"INSTALL" ]; then
+    systemctl stop firewalld && systemctl disable firewalld
+    iptables -F  
     rpm -Uvh ${SOFT_RPM_MESOS}
     yum -y install mesos
     echo "zk://${MESOS_MASTER1_IP}:${PORT_ZK_MESOS},${MESOS_MASTER2_IP}:${PORT_ZK_MESOS},${MESOS_MASTER3_IP}:${PORT_ZK_MESOS}/mesos" > /etc/mesos/zk
