@@ -52,7 +52,7 @@ PORT_ZK_MESOS=2181
 ###############################################################################
 usage(){
   echo "Usage: $0 ACTION TYPE NODE"
-  echo "       ACTION: INSTALL|UNINSTALL|STATUS|START|STOP|RESTART"
+  echo "       ACTION: INSTALL|INIT|UNINSTALL|STATUS|START|STOP|RESTART"
   echo "       TYPE  : MASTER|SLAVE"
   echo "       NODE  : 1|2|3|ALL"
 }
@@ -256,10 +256,6 @@ if [ _"$ACTION" = _"INSTALL" ]; then
     mgnt_master CONFIG >> ${TMP_LOG_FILE} 2>&1
     echo "OK"
 
-    echo -n "## Init     for Master Node:           :"
-    mgnt_master INIT   >> ${TMP_LOG_FILE} 2>&1
-    echo "OK"
-
   elif [ _"$TYPE" = _"SLAVE" ]; then
     echo -n "## Install for Slave   Node:             "
     mgnt_slave INSTALL >> ${TMP_LOG_FILE} 2>&1
@@ -268,7 +264,15 @@ if [ _"$ACTION" = _"INSTALL" ]; then
     echo -n "## Config   for Slave   Node:            "
     mgnt_slave CONFIG  >> ${TMP_LOG_FILE} 2>&1
     echo "OK"
+  fi
+elif [ _"$ACTION" = _"INIT" ]; then
+  echo "## Intall Log file : $TMP_LOG_FILE"
+  if [ _"$TYPE" = _"MASTER" ]; then
+    echo -n "## Init     for Master Node:           :"
+    mgnt_master INIT   >> ${TMP_LOG_FILE} 2>&1
+    echo "OK"
 
+  elif [ _"$TYPE" = _"SLAVE" ]; then
     echo -n "## Init     for Slave   Node:            "
     mgnt_slave INIT    >> ${TMP_LOG_FILE} 2>&1
     echo "OK"
