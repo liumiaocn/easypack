@@ -71,7 +71,7 @@ echo "#JDK Setting" >>${PROFILES}
 echo "export JAVA_HOME=${JAVA_HOME}/${DIR_NEW_JDK}" >>${PROFILES}
 echo "export PATH=\${JAVA_HOME}/bin:\$PATH" >>${PROFILES}
 export JAVA_HOME=${JAVA_HOME}/${DIR_NEW_JDK}
-export export PATH=\${JAVA_HOME}/bin:$PATH
+export export PATH=${JAVA_HOME}/bin:$PATH
 
 echo "## Env setting : M2_HOME :  + PATH"
 echo "" >>${PROFILES}
@@ -79,7 +79,7 @@ echo "#Maven Setting" >>${PROFILES}
 echo "export M2_HOME=${MVN_HOME}/${DIR_NEW_MVN}" >>${PROFILES}
 echo "export PATH=\${M2_HOME}/bin:\$PATH" >>${PROFILES}
 export M2_HOME=${MVN_HOME}/${DIR_NEW_MVN}
-export PATH=\${M2_HOME}/bin:$PATH
+export PATH=${M2_HOME}/bin:$PATH
 
 ###############################################################################
 #
