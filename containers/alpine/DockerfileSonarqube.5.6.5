@@ -42,6 +42,7 @@ RUN set -x \
     && curl -o sonarqube.zip.asc -fSL https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-$SONAR_VERSION.zip.asc \
     && gpg --batch --verify sonarqube.zip.asc sonarqube.zip \
     && unzip sonarqube.zip \
+    && chmod 755 run.${SOFTWARE}.${SONAR_VERSION}.sh \
     && mv sonarqube-$SONAR_VERSION sonarqube \
     && rm sonarqube.zip* \
     && rm -rf $SONARQUBE_HOME/bin/*
