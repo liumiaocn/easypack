@@ -1,6 +1,6 @@
 ![这里写图片描述](http://img.blog.csdn.net/20161017215750901)
 
-#Usage
+#Usage ：1.4
 #Step 1: Get easypack_kubernetes.sh
 >git clone or download or copy-paste to create local easypack_kubernetes.sh   
 git clone https://github.com/liumiaocn/easypack
@@ -86,3 +86,7 @@ No events.[root@host31 k8s]#
 ##http://blog.csdn.net/liumiaocn/article/details/53137936
 ##http://blog.csdn.net/liumiaocn/article/details/53150288
 ##http://blog.csdn.net/liumiaocn/article/details/53155479
+#Usage：1.5
+##自动脚本：easypack_kubernetes_1.5.1_nowall.sh
+##安装文章：Easypack: 30分钟安装kubernetes1.5.1：http://blog.csdn.net/liumiaocn/article/details/54132880
+##限制：一部分安装文件暂时没有找到稳定的国内的源，上述文章在VPN中确认完毕
