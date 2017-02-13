@@ -1,4 +1,5 @@
 ![这里写图片描述](http://img.blog.csdn.net/20160809065608330)
+
 在Easypack中的Alpine容器中，我们将会挑选一些非常流行的工具进行自定义设定以及进行最佳实践的整理，基本思路都是在官方镜像的最新版本之上进行强化。本次为持续集成利器Jenkins。
 #强化之处
 * 尺寸较小，base镜像均基于alpine
@@ -11,9 +12,9 @@
 与dockerhub结合，自动构建，时刻保证最新版本。每月两次版本调整。
 
 #当前版本
-|项番|当前版本|jenkins官方稳定最新版本
-|--|--|--|
-|版本|2.45|2.32
+当前版本：2.45
+jenkins官方稳定最新版本：2.32
+
 
 #docker pull
 ```
@@ -59,14 +60,8 @@ faf2cea49e0b212da20049918e72c42758373a4d9086ee7e711ab5e6467f4676
 可以看到此处不再有Jenkins2以后必须要进行交互的部分。
 ![这里写图片描述](http://img.blog.csdn.net/20170213075314386?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbGl1bWlhb2Nu/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
 
-|缺省登陆用户名|用户密码
-|--|--|
-|admin|admin|
-
-#github地址
-|项目|URL
-|--|--|
-|Jenkins-Alpine容器|https://github.com/liumiaocn/easypack/tree/master/containers/alpine/jenkins|
+|缺省登陆用户名：admin
+|用户密码：admin|
 
 #自定义方式
 ##修改缺省登陆用户名及密码
@@ -79,3 +74,5 @@ faf2cea49e0b212da20049918e72c42758373a4d9086ee7e711ab5e6467f4676
 |对象文件|修正内容
 |--|--|
 |Dockerfile|ENV JENKINS_VERSION ${JENKINS_VERSION:-2.45}  以及 ARG JENKINS_SHA=6631f46903b6f325880ab95d47718d22308e6e3a 
+#CSDN
+http://blog.csdn.net/liumiaocn/article/details/55004120
