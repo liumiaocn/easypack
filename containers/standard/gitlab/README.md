@@ -18,7 +18,7 @@ docker run --detach \
     --volume /srv/gitlab/config:/etc/gitlab \
     --volume /srv/gitlab/logs:/var/log/gitlab \
     --volume /srv/gitlab/data:/var/opt/gitlab \
-    gitlab/gitlab-ce:latest
+    liumiaocn/gitlab:latest
 ```
 
 #登陆画面
