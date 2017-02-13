@@ -1,3 +1,7 @@
+# easypack
+##让Linux下没有难装的流行开源软件
+##Make popular OSS easily installed in linux
+
 ![这里写图片描述](http://img.blog.csdn.net/20161017215750901)
 
 #Usage ：1.4
