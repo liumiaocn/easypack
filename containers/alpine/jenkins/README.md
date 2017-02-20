@@ -76,5 +76,6 @@ faf2cea49e0b212da20049918e72c42758373a4d9086ee7e711ab5e6467f4676
 ##更新版本的Jenkins
  * 对象文件：Dockerfile
  * 修正内容：ENV JENKINS_VERSION ${JENKINS_VERSION:-2.45}  以及 ARG JENKINS_SHA=6631f46903b6f325880ab95d47718d22308e6e3a 
-#CSDN
+
+#CSDN详细
 http://blog.csdn.net/liumiaocn/article/details/55004120
