@@ -1,0 +1,11 @@
+pipeline-build-step:2.4
+pipeline-input-step:2.5
+pipeline-graph-analysis:1.3
+pipeline-milestone-step:1.3
+pipeline-model-api:0.8.2
+pipeline-model-declarative-agent:0.8.2
+pipeline-model-definition:0.8.2
+pipeline-rest-api:2.4
+pipeline-stage-step:2.2
+pipeline-stage-tags-metadata:0.8.2
+pipeline-stage-view:2.4
