@@ -1,7 +1,7 @@
 ###############################################################################
 #
 #IMAGE:   Jenkins(Alpine)
-#VERSION: 2.45
+#VERSION: 2.47
 #
 ###############################################################################
 FROM openjdk:8-jdk-alpine
@@ -51,10 +51,10 @@ COPY init_login.groovy /usr/share/jenkins/ref/init.groovy.d/set-user-security.gr
 
 # jenkins version being bundled in this docker image
 ARG JENKINS_VERSION
-ENV JENKINS_VERSION ${JENKINS_VERSION:-2.45}
+ENV JENKINS_VERSION ${JENKINS_VERSION:-2.47}
 
 # jenkins.war checksum, download will be validated using it
-ARG JENKINS_SHA=6631f46903b6f325880ab95d47718d22308e6e3a
+ARG JENKINS_SHA=16d7e0762964bd5fbc43a7ad5121cccf88fb4816
 
 # Can be used to customize where jenkins.war get downloaded from
 ARG JENKINS_URL=https://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-war/${JENKINS_VERSION}/jenkins-war-${JENKINS_VERSION}.war
