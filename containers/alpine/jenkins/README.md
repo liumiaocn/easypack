@@ -69,13 +69,12 @@ faf2cea49e0b212da20049918e72c42758373a4d9086ee7e711ab5e6467f4676
 
 #自定义方式
 ##修改缺省登陆用户名及密码
-|对象文件|init_login.groovy
-|修正内容|adminID="admin" adminPW="admin"
+ * 对象文件：init_login.groovy
+ * 修正内容：adminID="admin" adminPW="admin"
 后续会使用环境变量等侵入性小的方式进行
 
 ##更新版本的Jenkins
-|对象文件|Dockerfile
-|--|--|
-|修正内容|ENV JENKINS_VERSION ${JENKINS_VERSION:-2.45}  以及 ARG JENKINS_SHA=6631f46903b6f325880ab95d47718d22308e6e3a 
+ * 对象文件：Dockerfile
+ * 修正内容：ENV JENKINS_VERSION ${JENKINS_VERSION:-2.45}  以及 ARG JENKINS_SHA=6631f46903b6f325880ab95d47718d22308e6e3a 
 #CSDN
 http://blog.csdn.net/liumiaocn/article/details/55004120
