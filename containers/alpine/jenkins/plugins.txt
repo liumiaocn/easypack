@@ -19,4 +19,4 @@ workflow-step-api 2.7
 pipeline-model-definition 1.0
 pipeline-stage-step 2.2
 pipeline-build-step 2.4
-pipeline-milestone-step 1
+pipeline-milestone-step 1.3
