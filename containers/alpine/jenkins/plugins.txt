@@ -29,3 +29,5 @@ branch-api 2.0.6
 structs 1.5
 cloudbees-folder 5.17
 scm-api 2.0.4
+script-security 1.25
+mailer:1.18
