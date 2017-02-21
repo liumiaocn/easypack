@@ -9,9 +9,9 @@ workflow-job 2.9
 workflow-basic-steps 2.3
 workflow-durable-task-step 2.8
 workflow-api 2.10
-workflow-cps 2.24
-workflow-support 2.2
-workflow-cps-global-lib 2.5
+workflow-cps 2.25
+workflow-support 2.11
+workflow-cps-global-lib 2.6
 workflow-multibranch 2.9.2
 pipeline-stage-view 2.4
 workflow-scm-step 2.3
@@ -35,7 +35,10 @@ display-url-api 1.1.1
 junit 1.20
 support-core 2.38
 metrics 3.0.0
-credentials 2.1.10
+credentials 2.1.11
 async-http-client 1.7.8
 jackson2-api 2.5.4
 durable-task 1.13
+git-client 1.19.7
+git-server 1.5
+ssh-credentials 1.12
