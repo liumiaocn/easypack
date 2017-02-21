@@ -25,3 +25,7 @@ momentjs 1.1
 handlebars 1.1
 pipeline-rest-api 2.5
 jquery-detached 1.2.1
+branch-api 2.06
+structs 1.5
+cloudbees-folder 5.17
+scm-api 2.0.4
