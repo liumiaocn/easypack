@@ -1,4 +1,4 @@
-workflow-aggregator 2.7.3
+workflow-aggregator 2.5
 pipeline-input-step 2.5
 workflow-job 2.9
 workflow-basic-steps 2.3
