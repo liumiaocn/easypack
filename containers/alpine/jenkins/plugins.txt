@@ -20,3 +20,8 @@ pipeline-model-definition 1.0
 pipeline-stage-step 2.2
 pipeline-build-step 2.4
 pipeline-milestone-step 1.3
+#Dependency
+momentjs 1.1
+handlebars 1.1
+pipeline-rest-api 2.5
+jquery-detached 1.2.1
