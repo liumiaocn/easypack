@@ -52,3 +52,4 @@ pipeline-model-api 1.0.1
 pipeline-model-declarative-agent 1.0.1
 pipeline-stage-tags-metadata 1.0.1
 docker-commons 1.6
+pipeline-graph-analysis 1.1
