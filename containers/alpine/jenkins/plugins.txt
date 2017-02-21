@@ -1,11 +1,17 @@
-pipeline-build-step:2.4
-pipeline-input-step:2.5
-pipeline-graph-analysis:1.3
-pipeline-milestone-step:1.3
-pipeline-model-api:0.8.2
-pipeline-model-declarative-agent:0.8.2
-pipeline-model-definition:0.8.2
-pipeline-rest-api:2.4
-pipeline-stage-step:2.2
-pipeline-stage-tags-metadata:0.8.2
-pipeline-stage-view:2.4
+workflow-aggregator 2.7.3
+pipeline-input-step 2.5
+workflow-job 2.9
+workflow-basic-steps 2.3
+workflow-durable-task-step 2.8
+workflow-api 2.8
+workflow-cps 2.24
+workflow-support 2.12
+workflow-cps-global-lib 2.5
+workflow-multibranch 2.9.2
+pipeline-stage-view 2.4
+workflow-scm-step 2.3
+workflow-step-api 2.7
+pipeline-model-definition 1.0
+pipeline-stage-step 2.2
+pipeline-build-step 2.4
+pipeline-milestone-step 1
