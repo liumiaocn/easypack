@@ -8,14 +8,14 @@ pipeline-input-step 2.5
 workflow-job 2.9
 workflow-basic-steps 2.3
 workflow-durable-task-step 2.8
-workflow-api 2.8
+workflow-api 2.10
 workflow-cps 2.24
-workflow-support 2.12
+workflow-support 2.2
 workflow-cps-global-lib 2.5
 workflow-multibranch 2.9.2
 pipeline-stage-view 2.4
 workflow-scm-step 2.3
-workflow-step-api 2.7
+workflow-step-api 2.9
 pipeline-model-definition 1.0
 pipeline-stage-step 2.2
 pipeline-build-step 2.4
@@ -30,4 +30,12 @@ structs 1.5
 cloudbees-folder 5.17
 scm-api 2.0.4
 script-security 1.25
-mailer:1.18
+mailer:1.19
+display-url-api 1.1.1
+junit 1.20
+support-core 2.38
+metrics 3.0.0
+credentials 2.1.10
+async-http-client 1.7.8
+jackson2-api 2.5.4
+durable-task 1.13
