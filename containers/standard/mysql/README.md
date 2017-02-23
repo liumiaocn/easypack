@@ -1,16 +1,12 @@
 ![这里写图片描述](http://img.blog.csdn.net/20170222150651784?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbGl1bWlhb2Nu/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
 
 #MYSQL
-|年份|事件
-|--|--|
-|1995年| Michael Widenius, David Axmark和Allan Larsson创立MYSQL AB公司
-|2008年| Michael 以10亿$的价格将MYSQL卖于Sun公司
-|2010年| Oracle买下Sun同时拥有了MySQL
+* 1995年| Michael Widenius, David Axmark和Allan Larsson创立MYSQL AB公司
+* 2008年| Michael 以10亿$的价格将MYSQL卖于Sun公司
+* 2010年| Oracle买下Sun同时拥有了MySQL
 
 #当前最新版本
-|项目|内容
-|--|--|
-|目前最新版本|8.0
+* 目前最新版本|8.0
 
 #docker pull
 ```
