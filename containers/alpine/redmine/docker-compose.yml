@@ -1,0 +1,21 @@
+version: '2'
+
+services:
+
+  redmine:
+    image: liumiaocn/redmine
+    ports:
+      - 3000:3000
+    environment:
+      REDMINE_DB_MYSQL: redmine
+      REDMINE_DB_PASSWORD: secret
+    depends_on:
+      - redminedb
+    restart: never
+
+  redminedb:
+    image: liumiaocn/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: redmine
+    restart: never
