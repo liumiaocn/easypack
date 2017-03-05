@@ -15,6 +15,7 @@ date
 echo "## Install Preconfirm"
 echo "## Uname"
 uname -r
+echo
 echo "## OS bit"
 getconf LONG_BIT
 echo
@@ -49,6 +50,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 echo "## Setting ends   : yum-config-manager"
+echo
 
 ###############################################################################
 #
@@ -62,6 +64,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 echo "## Setting ends   : Update package cache"
+echo
 
 ###############################################################################
 #
@@ -70,7 +73,7 @@ echo "## Setting ends   : Update package cache"
 ###############################################################################
 date
 echo "## Install begins : docker-ce"
-yum install -y docker-ce >/dev/null 2>&1
+yum install -y docker-ce
 if [ $? -ne 0 ]; then
   echo "Install failed..."
   exit 1
@@ -96,6 +99,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 echo "## Setting ends   : stop firewall"
+echo
 
 ###############################################################################
 #
@@ -109,6 +113,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 echo "## Setting ends   : clear iptable rules"
+echo
 
 ###############################################################################
 #
@@ -122,6 +127,7 @@ if [ $? -ne 0 ]; then
   exit 1
 fi
 echo "## Setting ends   : systemctl enable docker"
+echo
 
 
 ###############################################################################
@@ -129,13 +135,14 @@ echo "## Setting ends   : systemctl enable docker"
 #start docker
 #
 ###############################################################################
-echo "## Setting begins : systemctl start docker"
-systemctl start docker
+echo "## Setting begins : systemctl restart docker"
+systemctl restart docker
 if [ $? -ne 0 ]; then
   echo "Install failed..."
   exit 1
 fi
-echo "## Setting ends   : systemctl start docker"
+echo "## Setting ends   : systemctl restart docker"
+echo
 
 
 ###############################################################################
@@ -143,5 +150,9 @@ echo "## Setting ends   : systemctl start docker"
 #confirm docker version
 #
 ###############################################################################
-echo "## docker version"
+echo "## docker info"
 docker info
+echo
+
+echo "## docker version"
+docker version
