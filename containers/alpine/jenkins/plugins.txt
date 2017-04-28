@@ -30,16 +30,16 @@ structs 1.5
 cloudbees-folder 5.17
 scm-api 2.0.4
 script-security 1.25
-mailer:1.19
+mailer:1.20
 display-url-api 1.1.1
 junit 1.20
 support-core 2.38
 metrics 3.0.0
 credentials 2.1.11
-async-http-client 1.7.8
+async-http-client 1.7.24.1
 jackson2-api 2.5.4
 durable-task 1.13
-git-client 1.19.7
+git-client 2.4.4
 git-server 1.5
 ssh-credentials 1.12
 ace-editor 1.1
