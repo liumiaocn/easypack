@@ -1,0 +1,35 @@
+version: '2'
+
+services:
+  # database service: mysql
+  mysql:
+    image: mysql:5.7.18
+    ports:
+      - "3306:3306"
+    volumes:
+      - /home/local/mysql/data/:/var/lib/mysql
+      - /home/local/mysql/conf.d/:/etc/mysql/conf.d
+    environment:
+      - MYSQL_ROOT_PASSWORD=hello123
+      - MYSQL_DATABASE=sonarqube
+    restart: "no"
+
+    
+  # Security service: sonarqube
+  sonarqube:
+    image: liumiaocn/sonarqube:5.6.5
+    ports:
+      - "9000:9000"
+    volumes:
+      - /home/local/sonar/data/:/usr/share/sonarqube/data
+      - /home/local/sonar/extensions/:/usr/share/sonarqube/extensions
+      - /home/local/sonar/conf/:/usr/share/sonarqube/conf
+    environment:
+      - SONARQUBE_JDBC_USERNAME=root
+      - SONARQUBE_JDBC_PASSWORD=hello123
+      - SONARQUBE_JDBC_URL=jdbc:mysql://mysql:3306/sonarqube?useUnicode=true&characterEncoding=utf8&rewriteBatchedStatements=true&useConfigs=maxPerformance
+    links:
+      - mysql:mysql
+    depends_on:
+      - mysql
+    restart: "no"
