@@ -1,0 +1,35 @@
+version: '2'
+
+services:
+  # database service: mysql
+  mysql:
+    image: mysql:5.7.18
+    ports:
+      - "3306:3306"
+    volumes:
+      - /home/local/mysql/data/:/var/lib/mysql
+      - /home/local/mysql/conf.d/:/etc/mysql/conf.d
+    environment:
+      - MYSQL_ROOT_PASSWORD=hello123
+      - MYSQL_DATABASE=redmine
+    restart: "no"
+
+    
+  # Security service: redmine
+  redmine:
+    image: liumiaocn/redmine
+    ports:
+      - "3000:3000"
+    volumes:
+      - /home/local/redmine/:/usr/src/redmine/files 
+    environment:
+      - REDMINE_DB_MYSQL=mysql
+      - REDMINE_DB_DATABASE=redmine
+      - REDMINE_DB_USERNAME=root
+      - REDMINE_DB_PASSWORD=hello123
+      - REDMINE_DB_PORT=3306
+    links:
+      - mysql:mysql
+    depends_on:
+      - mysql
+    restart: "no"
