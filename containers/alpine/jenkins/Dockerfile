@@ -4,7 +4,7 @@
 #VERSION: 2.60.1
 #
 ###############################################################################
-FROM openjdk:8-jdk-alpine
+FROM openjdk:8u121-jdk-alpine
 
 ###############################################################################
 #MAINTAINER
@@ -17,8 +17,11 @@ RUN apk add --no-cache git openssh-client curl unzip bash ttf-dejavu coreutils
 ###############################################################################
 #ENV
 ###############################################################################
+ARG http_port=8080
+ARG agent_port=50000
+
 ENV JENKINS_HOME /var/jenkins_home
-ENV JENKINS_SLAVE_AGENT_PORT 50000
+ENV JENKINS_SLAVE_AGENT_PORT ${agent_port}
 
 ###############################################################################
 #User
@@ -37,12 +40,12 @@ VOLUME /var/jenkins_home
 #Create Init groovy dir
 RUN mkdir -p /usr/share/jenkins/ref/init.groovy.d
 
-ENV TINI_VERSION 0.13.2
-ENV TINI_SHA afbf8de8a63ce8e4f18cb3f34dfdbbd354af68a1
+ENV TINI_VERSION 0.14.0
+ENV TINI_SHA 6c41ec7d33e857d4779f14d9c74924cab0c7973485d2972419a3b7c7620ff5fd
 
 # Use tini as subreaper in Docker container to adopt zombie processes 
 RUN curl -fsSL https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-static-amd64 -o /bin/tini && chmod +x /bin/tini \
-  && echo "$TINI_SHA  /bin/tini" | sha1sum -c -
+  && echo "$TINI_SHA  /bin/tini" | sha256sum -c -
 
 COPY init.groovy /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy
 
@@ -54,7 +57,7 @@ ARG JENKINS_VERSION
 ENV JENKINS_VERSION ${JENKINS_VERSION:-2.60.1}
 
 # jenkins.war checksum, download will be validated using it
-ARG JENKINS_SHA=1ab1c60b4659e709b2419817a20b2749e6bf29e5
+ARG JENKINS_SHA=34fde424dde0e050738f5ad1e316d54f741c237bd380bd663a07f96147bb1390
 
 # Can be used to customize where jenkins.war get downloaded from
 ARG JENKINS_URL=https://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-war/${JENKINS_VERSION}/jenkins-war-${JENKINS_VERSION}.war
@@ -62,16 +65,16 @@ ARG JENKINS_URL=https://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-w
 # could use ADD but this one does not check Last-Modified header neither does it allow to control checksum 
 # see https://github.com/docker/docker/issues/8331
 RUN curl -fsSL ${JENKINS_URL} -o /usr/share/jenkins/jenkins.war \
-  && echo "${JENKINS_SHA}  /usr/share/jenkins/jenkins.war" | sha1sum -c -
+  && echo "${JENKINS_SHA}  /usr/share/jenkins/jenkins.war" | sha256sum -c -
 
 ENV JENKINS_UC https://updates.jenkins.io
 RUN chown -R ${user} "$JENKINS_HOME" /usr/share/jenkins/ref
 
 # for main web interface:
-EXPOSE 8080
+EXPOSE ${http_port}
 
 # will be used by attached slave agents:
-EXPOSE 50000
+EXPOSE ${agent_port}
 
 ENV COPY_REFERENCE_FILE_LOG $JENKINS_HOME/copy_reference_file.log
 
