@@ -88,6 +88,8 @@ ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
 COPY plugins.sh /usr/local/bin/plugins.sh
 COPY install-plugins.sh /usr/local/bin/install-plugins.sh
 
+RUN /usr/local/bin/install-plugins.sh mailer sonar redmine gitlab-plugin docker-build-step
+
 #COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
 #RUN /usr/local/bin/plugins.sh /usr/share/jenkins/ref/plugins.txt
 #RUN /usr/local/bin/install-plugins.sh ansible build-pipeline-plugin buildgraph-view docker-build-step gitlab-plugin workflow-aggregator pipeline-maven pipeline-utility-steps redmine sonar ssh-slaves
