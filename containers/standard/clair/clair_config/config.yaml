@@ -20,7 +20,8 @@ clair:
     options:
       # PostgreSQL Connection string
       # https://www.postgresql.org/docs/current/static/libpq-connect.html#LIBPQ-CONNSTRING
-      source: host=localhost port=5432 user=postgres sslmode=disable statement_timeout=60000
+      # source: host=localhost port=5432 user=postgres sslmode=disable statement_timeout=60000
+      source: postgresql://postgres:password@postgres:5432?sslmode=disable
 
       # Number of elements kept in the cache
       # Values unlikely to change (e.g. namespaces) are cached in order to save prevent needless roundtrips to the database.
