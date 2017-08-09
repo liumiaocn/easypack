@@ -9,6 +9,7 @@ FILETARGZ=docker-1.13.1.tgz
 
 if [ ! -f ${FILETARGZ} ]; then
   echo "Docker binary tgz files does not exist, please check it"
+  echo "wget https://get.docker.com/builds/Linux/x86_64/docker-1.13.1.tgz"
   exit 1
 fi
 
