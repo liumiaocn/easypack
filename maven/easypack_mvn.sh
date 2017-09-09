@@ -8,7 +8,7 @@ JAVA_HOME=/usr/local/java
 MVN_HOME=/usr/local/maven
 DIR_DOWNLOAD=/tmp/download.$$
 DIR_NEW_MVN=apache-maven-3.5.0
-DIR_NEW_JDK=jdk1.8
+DIR_NEW_JDK=jdk1.8.0_144
 
 JDK_TAR_GZ=jdk-8u144-linux-x64.tar.gz
 JDK_URL="http://download.oracle.com/otn-pub/java/jdk/8u144-b01/090f390dda5b47b9b721c7dfaa008135/${JDK_TAR_GZ}"
