@@ -7,13 +7,13 @@
 JAVA_HOME=/usr/local/java
 MVN_HOME=/usr/local/maven
 DIR_DOWNLOAD=/tmp/download.$$
-DIR_NEW_MVN=apache-maven-3.3.9
-DIR_NEW_JDK=jdk1.8.0_131
+DIR_NEW_MVN=apache-maven-3.5.0
+DIR_NEW_JDK=jdk1.8
 
-JDK_TAR_GZ=jdk-8u121-linux-x64.tar.gz
-JDK_URL="http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/${JDK_TAR_GZ}"
-MAVEN_TAR_GZ=apache-maven-3.3.9-bin.tar.gz
-MAVEN_URL="http://www-us.apache.org/dist/maven/maven-3/3.3.9/binaries/${MAVEN_TAR_GZ}"
+JDK_TAR_GZ=jdk-8u144-linux-x64.tar.gz
+JDK_URL="http://download.oracle.com/otn-pub/java/jdk/8u144-b01/090f390dda5b47b9b721c7dfaa008135/${JDK_TAR_GZ}"
+MAVEN_TAR_GZ=apache-maven-3.5.0-bin.tar.gz
+MAVEN_URL="http://www-us.apache.org/dist/maven/maven-3/3.5.0/binaries/${MAVEN_TAR_GZ}"
 PROFILES=/etc/profile
 
 
