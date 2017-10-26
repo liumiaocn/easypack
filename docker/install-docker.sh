@@ -1,15 +1,29 @@
 #!/bin/sh
 
+usage(){
+  echo "Usage: $0 FILE_NAME_DOCKER_CE_TAR_GZ"
+  echo "       $0 docker-17.09.0-ce.tgz"
+  echo "Get docker-ce binary from: https://download.docker.com/linux/static/stable/x86_64/"
+  echo "eg: wget https://download.docker.com/linux/static/stable/x86_64/docker-17.09.0-ce.tgz"
+  echo ""
+}
 SYSTEMDDIR=/usr/lib/systemd/system
 SERVICEFILE=docker.service
 DOCKERDIR=/usr/bin
 DOCKERBIN=docker
 SERVICENAME=docker
-FILETARGZ=docker-1.13.1.tgz
+
+if [ $# -ne 1 ]; then
+  usage
+  exit 1
+else
+  FILETARGZ="$1"
+fi
 
 if [ ! -f ${FILETARGZ} ]; then
   echo "Docker binary tgz files does not exist, please check it"
-  echo "wget https://get.docker.com/builds/Linux/x86_64/docker-1.13.1.tgz"
+  echo "Get docker-ce binary from: https://download.docker.com/linux/static/stable/x86_64/"
+  echo "eg: wget https://download.docker.com/linux/static/stable/x86_64/docker-17.09.0-ce.tgz"
   exit 1
 fi
 
@@ -28,7 +42,6 @@ cat >${SYSTEMDDIR}/${SERVICEFILE} <<EOF
 Description=Docker Application Container Engine
 Documentation=http://docs.docker.com
 After=network.target docker.socket
-
 [Service]
 Type=notify
 EnvironmentFile=-/run/flannel/docker
@@ -38,7 +51,6 @@ ExecStart=/usr/bin/dockerd \
                 -H unix:///var/run/docker.sock \
                 --selinux-enabled=false \
                 --log-opt max-size=1g
-
 ExecReload=/bin/kill -s HUP $MAINPID
 # Having non-zero Limit*s causes performance problems due to accounting overhead
 # in the kernel. We recommend using cgroups to do container-local accounting.
@@ -54,7 +66,6 @@ Delegate=yes
 # kill only the docker process, not all processes in the cgroup
 KillMode=process
 Restart=on-failure
-
 [Install]
 WantedBy=multi-user.target
 EOF
@@ -71,3 +82,6 @@ systemctl status ${SERVICENAME}
 
 echo "##Service enabled: ${SERVICENAME}"
 systemctl enable ${SERVICENAME}
+
+echo "## docker version"
+docker version
