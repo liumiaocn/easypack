@@ -54,10 +54,10 @@ COPY init_login.groovy /usr/share/jenkins/ref/init.groovy.d/set-user-security.gr
 
 # jenkins version being bundled in this docker image
 ARG JENKINS_VERSION
-ENV JENKINS_VERSION ${JENKINS_VERSION:-2.60.1}
+ENV JENKINS_VERSION ${JENKINS_VERSION:-2.90}
 
 # jenkins.war checksum, download will be validated using it
-ARG JENKINS_SHA=34fde424dde0e050738f5ad1e316d54f741c237bd380bd663a07f96147bb1390
+ARG JENKINS_SHA=1f697e7db6e42b3c34f3c9b77a8df9bc25b699ed3be24928b265a1bcd9520196
 
 # Can be used to customize where jenkins.war get downloaded from
 ARG JENKINS_URL=https://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-war/${JENKINS_VERSION}/jenkins-war-${JENKINS_VERSION}.war
@@ -93,3 +93,4 @@ RUN /usr/local/bin/install-plugins.sh mailer sonar redmine gitlab-plugin docker-
 #COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
 #RUN /usr/local/bin/plugins.sh /usr/share/jenkins/ref/plugins.txt
 #RUN /usr/local/bin/install-plugins.sh ansible build-pipeline-plugin buildgraph-view docker-build-step gitlab-plugin workflow-aggregator pipeline-maven pipeline-utility-steps redmine sonar ssh-slaves
+RUN /usr/local/bin/install-plugins.sh gitlab-plugin sonar redmine docker-build-step ansible build-pipeline-plugin buildgraph-view workflow-aggregator pipeline-maven pipeline-utility-steps
