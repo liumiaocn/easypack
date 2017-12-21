@@ -14,7 +14,7 @@ MAINTAINER LiuMiao <liumiaocn@outlook.com>
 #WORKDIR /usr/local/clamav
 
 #Install dependencies
-RUN yum install gcc openssl wget -y 
+RUN yum install gcc openssl openssl-devel wget -y 
 
 #Install from compiling source
 RUN FILE_VERSION=0.99.2 \
