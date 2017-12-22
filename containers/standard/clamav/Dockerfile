@@ -20,8 +20,8 @@ RUN yum install gcc openssl openssl-devel wget -y
 RUN FILE_VERSION=0.99.2 \
     && FILE_TAR_GZ=clamav-${FILE_VERSION} \
     && DOWNLOAD_URL="http://www.clamav.net/downloads/production/${FILE_TAR_GZ}.tar.gz" \
-    && mkdir download_dir \
-    && cd download_dir \
+    && mkdir -p /usr/local/clamav/download_dir \
+    && cd /usr/local/clamav/download_dir \
     && wget  ${DOWNLOAD_URL} \
     && tar xvpf ${FILE_TAR_GZ}.tar.gz \
     && cd ${FILE_TAR_GZ} \
