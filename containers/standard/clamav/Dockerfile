@@ -42,4 +42,7 @@ RUN FILE_VERSION=0.99.2 \
     && sed -i s@'#UpdateLogFile /var/log/freshclam.log'@'UpdateLogFile /usr/local/clamav/logs/freshclam.log'@g freshclam.conf \
     && sed -i s@'#PidFile /var/run/freshclam.pid'@'PidFile /usr/local/clamav/worktmp/freshclam.pid'@g freshclam.conf \
     && cd .. \
-    && bin/freshclam
+    && bin/freshclam \
+    && rm -rf /var/yum/cache/* \
+    && rm -rf /tmp/download_dir
+    
