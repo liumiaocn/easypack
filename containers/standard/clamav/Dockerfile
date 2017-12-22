@@ -11,7 +11,7 @@ FROM centos
 ###############################################################################
 MAINTAINER LiuMiao <liumiaocn@outlook.com>
 
-#WORKDIR /usr/local/clamav
+WORKDIR /usr/local/clamav
 
 #Install dependencies
 RUN yum install gcc openssl openssl-devel wget -y 
