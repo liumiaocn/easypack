@@ -30,7 +30,7 @@ RUN FILE_VERSION=0.99.2 \
     && make install \
     && groupadd clamav \
     && useradd -g clamav clamav \
-    && cd /usr/local/clamav
+    && cd /usr/local/clamav \
     && mkdir -p logs database worktmp \
     && chown clamav:clamav database \
     && touch logs/freshclam.log \
