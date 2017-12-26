@@ -16,6 +16,13 @@ WORKDIR /usr/local/clamav
 #Install dependencies
 RUN yum install gcc openssl openssl-devel wget -y 
 
+#Volume
+VOLUME /usr/local/clamav/database
+VOLUME /usr/local/clamav/logs
+VOLUME /usr/local/clamav/tools
+VOLUME /usr/local/clamav/src
+VOLUME /usr/local/clamav/rpt
+
 #Install from compiling source
 RUN FILE_VERSION=0.99.2 \
     && FILE_TAR_GZ=clamav-${FILE_VERSION} \
@@ -45,4 +52,3 @@ RUN FILE_VERSION=0.99.2 \
     && bin/freshclam \
     && rm -rf /var/yum/cache/* \
     && rm -rf /tmp/download_dir
-    
