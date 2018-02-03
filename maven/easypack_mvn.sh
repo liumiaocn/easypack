@@ -57,17 +57,17 @@ ls -l ${JDK_TAR_GZ} ${MAVEN_TAR_GZ}
 mkdir -p ${JAVA_HOME} ${MVN_HOME}
 
 date
-echo "## Install begins : JDK : {JAVA_HOME}"
+echo "## Install begins : JDK : ${JAVA_HOME}"
 cd ${JAVA_HOME}
-gunzip -c ${DIR_DOWNLOAD}/${JDK_TAR_GZ} | tar xv -
-echo "## Install ends   : JDK : {JAVA_HOME}"
+gunzip -c ${DIR_DOWNLOAD}/${JDK_TAR_GZ} | tar xv
+echo "## Install ends   : JDK : ${JAVA_HOME}"
 echo
 
 date
-echo "## Install begins : MAVEN : {JAVA_HOME}"
+echo "## Install begins : MAVEN : ${MVN_HOME}"
 cd ${MVN_HOME}
-gunzip -c ${DIR_DOWNLOAD}/${MAVEN_TAR_GZ} | tar xv -
-echo "## Install ends   : MAVEN : {MVN_HOME}"
+gunzip -c ${DIR_DOWNLOAD}/${MAVEN_TAR_GZ} | tar xv
+echo "## Install ends   : MAVEN : ${MVN_HOME}"
 
 ###############################################################################
 #
