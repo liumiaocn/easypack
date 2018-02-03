@@ -6,10 +6,10 @@
 ###############################################################################
 JAVA_HOME=/usr/local/java
 DIR_DOWNLOAD=/tmp/download.$$
-DIR_NEW_JDK=jdk1.8.0_144
+DIR_NEW_JDK=jdk-9.0.4
 
-JDK_TAR_GZ=jdk-8u144-linux-x64.tar.gz
-JDK_URL="http://download.oracle.com/otn-pub/java/jdk/8u144-b01/090f390dda5b47b9b721c7dfaa008135/${JDK_TAR_GZ}"
+JDK_TAR_GZ=jdk-9.0.4_linux-x64_bin.tar.gz
+JDK_URL="http://download.oracle.com/otn-pub/java/jdk/9.0.4+11/c2514751926b4512b076cc82f959763f/${JDK_TAR_GZ}"
 
 
 PROFILES=/etc/profile
