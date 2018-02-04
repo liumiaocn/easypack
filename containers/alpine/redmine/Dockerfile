@@ -15,12 +15,12 @@ MAINTAINER LiuMiao <liumiaocn@outlook.com>
 # is updated with the current date. It will force refresh of all
 # of the base images and things like `apk --update` won't be using
 # old cached versions when the Dockerfile is built.
-ENV REFRESHED_AT 2016-09-13
+ENV REFRESHED_AT 2018-02-10
 
 # Redmine Environment Info
 ENV RAILS_ENV=production
-ENV REDMINE_VERSION=3.3.0
-ENV REDMINE_DOWNLOAD_MD5=0c0abb2d4efde455c3505d8caf01cb2d
+ENV REDMINE_VERSION=3.4.4
+ENV REDMINE_DOWNLOAD_MD5=8152aa9fd2d5d01cf50ad898090b1d78
 
 # Gem Environment Info
 ENV GEM_HOME /usr/local/bundle
