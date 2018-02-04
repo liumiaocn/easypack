@@ -1,76 +1,120 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 
+# usage: file_env VAR [DEFAULT]
+#    ie: file_env 'XYZ_DB_PASSWORD' 'example'
+# (will allow for "$XYZ_DB_PASSWORD_FILE" to fill in the value of
+#  "$XYZ_DB_PASSWORD" from a file, especially for Docker's secrets feature)
+file_env() {
+	local var="$1"
+	local fileVar="${var}_FILE"
+	local def="${2:-}"
+	if [ "${!var:-}" ] && [ "${!fileVar:-}" ]; then
+		echo >&2 "error: both $var and $fileVar are set (but are exclusive)"
+		exit 1
+	fi
+	local val="$def"
+	if [ "${!var:-}" ]; then
+		val="${!var}"
+	elif [ "${!fileVar:-}" ]; then
+		val="$(< "${!fileVar}")"
+	fi
+	export "$var"="$val"
+	unset "$fileVar"
+}
+
 case "$1" in
-	rails|rake)
+	rails|rake|passenger)
 		if [ ! -f './config/database.yml' ]; then
-			if [ "$MYSQL_PORT_3306_TCP" ]; then
+			file_env 'REDMINE_DB_MYSQL'
+			file_env 'REDMINE_DB_POSTGRES'
+			file_env 'REDMINE_DB_SQLSERVER'
+			
+			if [ "$MYSQL_PORT_3306_TCP" ] && [ -z "$REDMINE_DB_MYSQL" ]; then
+				export REDMINE_DB_MYSQL='mysql'
+			elif [ "$POSTGRES_PORT_5432_TCP" ] && [ -z "$REDMINE_DB_POSTGRES" ]; then
+				export REDMINE_DB_POSTGRES='postgres'
+			fi
+			
+			if [ "$REDMINE_DB_MYSQL" ]; then
 				adapter='mysql2'
-				host='mysql'
-				port="${MYSQL_PORT_3306_TCP_PORT:-3306}"
-				username="${MYSQL_ENV_MYSQL_USER:-root}"
-				password="${MYSQL_ENV_MYSQL_PASSWORD:-$MYSQL_ENV_MYSQL_ROOT_PASSWORD}"
-				database="${MYSQL_ENV_MYSQL_DATABASE:-${MYSQL_ENV_MYSQL_USER:-redmine}}"
-				encoding=
+				host="$REDMINE_DB_MYSQL"
+				file_env 'REDMINE_DB_PORT' '3306'
+				file_env 'REDMINE_DB_USERNAME' "${MYSQL_ENV_MYSQL_USER:-root}"
+				file_env 'REDMINE_DB_PASSWORD' "${MYSQL_ENV_MYSQL_PASSWORD:-${MYSQL_ENV_MYSQL_ROOT_PASSWORD:-}}"
+				file_env 'REDMINE_DB_DATABASE' "${MYSQL_ENV_MYSQL_DATABASE:-${MYSQL_ENV_MYSQL_USER:-redmine}}"
+				file_env 'REDMINE_DB_ENCODING' ''
+			elif [ "$REDMINE_DB_POSTGRES" ]; then
+				adapter='postgresql'
+				host="$REDMINE_DB_POSTGRES"
+				file_env 'REDMINE_DB_PORT' '5432'
+				file_env 'REDMINE_DB_USERNAME' "${POSTGRES_ENV_POSTGRES_USER:-postgres}"
+				file_env 'REDMINE_DB_PASSWORD' "${POSTGRES_ENV_POSTGRES_PASSWORD}"
+				file_env 'REDMINE_DB_DATABASE' "${POSTGRES_ENV_POSTGRES_DB:-${REDMINE_DB_USERNAME:-}}"
+				file_env 'REDMINE_DB_ENCODING' 'utf8'
+			elif [ "$REDMINE_DB_SQLSERVER" ]; then
+				adapter='sqlserver'
+				host="$REDMINE_DB_SQLSERVER"
+				file_env 'REDMINE_DB_PORT' '1433'
+				file_env 'REDMINE_DB_USERNAME' ''
+				file_env 'REDMINE_DB_PASSWORD' ''
+				file_env 'REDMINE_DB_DATABASE' ''
+				file_env 'REDMINE_DB_ENCODING' ''
 			else
-				echo >&2 'warning: missing MYSQL_PORT_3306_TCP environment variables'
-				echo >&2 '  Did you forget to --link some_mysql_container:mysql?'
+				echo >&2
+				echo >&2 'warning: missing REDMINE_DB_MYSQL, REDMINE_DB_POSTGRES, or REDMINE_DB_SQLSERVER environment variables'
 				echo >&2
 				echo >&2 '*** Using sqlite3 as fallback. ***'
-
+				echo >&2
+				
 				adapter='sqlite3'
 				host='localhost'
-				username='redmine'
-				database='sqlite/redmine.db'
-				encoding=utf8
-
-				mkdir -p "$(dirname "$database")"
-				chown -R redmine:redmine "$(dirname "$database")"
+				file_env 'REDMINE_DB_PORT' ''
+				file_env 'REDMINE_DB_USERNAME' 'redmine'
+				file_env 'REDMINE_DB_PASSWORD' ''
+				file_env 'REDMINE_DB_DATABASE' 'sqlite/redmine.db'
+				file_env 'REDMINE_DB_ENCODING' 'utf8'
+				
+				mkdir -p "$(dirname "$REDMINE_DB_DATABASE")"
+				chown -R redmine:redmine "$(dirname "$REDMINE_DB_DATABASE")"
 			fi
-
-			cat > './config/database.yml' <<-YML
-				$RAILS_ENV:
-				  adapter: $adapter
-				  database: $database
-				  host: $host
-				  username: $username
-				  password: "$password"
-				  encoding: $encoding
-				  port: $port
-			YML
+			
+			REDMINE_DB_ADAPTER="$adapter"
+			REDMINE_DB_HOST="$host"
+			echo "$RAILS_ENV:" > config/database.yml
+			for var in \
+				adapter \
+				host \
+				port \
+				username \
+				password \
+				database \
+				encoding \
+			; do
+				env="REDMINE_DB_${var^^}"
+				val="${!env}"
+				[ -n "$val" ] || continue
+				echo "  $var: \"$val\"" >> config/database.yml
+			done
+		else
+			# parse the database config to get the database adapter name
+			# so we can use the right Gemfile.lock
+			adapter="$(
+				ruby -e "
+					require 'yaml'
+					conf = YAML.load_file('./config/database.yml')
+					puts conf['$RAILS_ENV']['adapter']
+				"
+			)"
 		fi
-
-		if [ ! -f './config/configuration.yml' ]; then
-			if [ "$REDMINE_GOOGLE_USER" ]; then
-				username="${REDMINE_GOOGLE_USER}"
-				password="${REDMINE_GOOGLE_PASSWORD}"
-
-				if [ "$REDMINE_GOOGLEAPPS_DOMAIN" ]; then
-					domain="${REDMINE_GOOGLEAPPS_DOMAIN}"
-				else
-					domain="smtp.gmail.com"
-				fi
-
-				cat > './config/configuration.yml' <<-YML
-				$RAILS_ENV:
-					  email_delivery:
-					    delivery_method: :smtp
-					    smtp_settings:
-					      enable_starttls_auto: true
-					      address: "smtp.gmail.com"
-					      port: 587
-					      domain: "$domain"
-					      authentication: :plain
-					      user_name: "$username"
-					      password: "$password"
-				YML
-			fi
-		fi
-
+		
 		# ensure the right database adapter is active in the Gemfile.lock
-		bundle install --without development test
-
+		cp "Gemfile.lock.${adapter}" Gemfile.lock
+		# install additional gems for Gemfile.local and plugins
+		bundle check || bundle install --without development test
+		
 		if [ ! -s config/secrets.yml ]; then
+			file_env 'REDMINE_SECRET_KEY_BASE'
 			if [ "$REDMINE_SECRET_KEY_BASE" ]; then
 				cat > 'config/secrets.yml' <<-YML
 					$RAILS_ENV:
@@ -83,12 +127,24 @@ case "$1" in
 		if [ "$1" != 'rake' -a -z "$REDMINE_NO_DB_MIGRATE" ]; then
 			gosu redmine rake db:migrate
 		fi
-
+		
+		# https://www.redmine.org/projects/redmine/wiki/RedmineInstall#Step-8-File-system-permissions
 		chown -R redmine:redmine files log public/plugin_assets
-
+		# directories 755, files 644:
+		chmod -R ugo-x,u+rwX,go+rX,go-w files log tmp public/plugin_assets
+		
+		if [ "$1" != 'rake' -a -n "$REDMINE_PLUGINS_MIGRATE" ]; then
+			gosu redmine rake redmine:plugins:migrate
+		fi
+		
 		# remove PID file to enable restarting the container
 		rm -f /usr/src/redmine/tmp/pids/server.pid
-
+		
+		if [ "$1" = 'passenger' ]; then
+			# Don't fear the reaper.
+			set -- tini -- "$@"
+		fi
+		
 		set -- gosu redmine "$@"
 		;;
 esac
