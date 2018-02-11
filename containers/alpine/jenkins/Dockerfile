@@ -11,35 +11,26 @@ FROM openjdk:8u121-jdk-alpine
 ###############################################################################
 MAINTAINER LiuMiao <liumiaocn@outlook.com>
 
-#Update
-RUN apk add --no-cache git openssh-client curl unzip bash ttf-dejavu coreutils
-
-###############################################################################
-#ENV
-###############################################################################
-ARG http_port=8080
-ARG agent_port=50000
-
-ENV JENKINS_HOME /var/jenkins_home
-ENV JENKINS_SLAVE_AGENT_PORT ${agent_port}
-
 ###############################################################################
 #ARG Setting
 ###############################################################################
+ARG http_port=8080
+ARG agent_port=50000
 ARG user=jenkins
 ARG group=jenkins
 ARG uid=1000
 ARG gid=1000
-ARG JENKINS_SHA=79f176e9388cdeb0deb0e6af49ff9d1ff4b7a3c47102af11e3e9461bf268983a \
-    JENKINS_URL=https://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-war/${JENKINS_VERSION}/jenkins-war-${JENKINS_VERSION}.war \
-    TINI_SHA=6c41ec7d33e857d4779f14d9c74924cab0c7973485d2972419a3b7c7620ff5fd \  
-    JENKINS_UC=https://updates.jenkins.io \
-    JENKINS_UC_EXPERIMENTAL=https://updates.jenkins.io/experimental \
+ARG JENKINS_SHA=79f176e9388cdeb0deb0e6af49ff9d1ff4b7a3c47102af11e3e9461bf268983a
+ARG JENKINS_URL=https://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-war/${JENKINS_VERSION}/jenkins-war-${JENKINS_VERSION}.war
+ARG TINI_SHA=6c41ec7d33e857d4779f14d9c74924cab0c7973485d2972419a3b7c7620ff5fd
+ARG JENKINS_UC=https://updates.jenkins.io
+ARG JENKINS_UC_EXPERIMENTAL=https://updates.jenkins.io/experimental
 
 ###############################################################################
 #ENV Setting
 ###############################################################################
-ENV TINI_VERSION=0.14.0 \
+ENV JENKINS_SLAVE_AGENT_PORT ${agent_port} \
+    TINI_VERSION=0.14.0 \
     JENKINS_HOME="/data/jenkins" \
     JENKINS_VERSION=${JENKINS_VERSION:-2.89.3} \
     JENKINS_SLAVE_VER="3.9" \
@@ -53,11 +44,12 @@ ENV TINI_VERSION=0.14.0 \
     KUBECTL_VER="1.7.10" \
     TIMEZONE="Asia/Shanghai"
 
-
 ###############################################################################
 #Install && Setting
 ###############################################################################
-RUN addgroup -g ${gid} ${group} \
+RUN  apk add --no-cache git openssh-client curl unzip bash ttf-dejavu coreutils \
+  && apk add --update py-pip postgresql-dev gcc python-dev musl-dev \
+  && addgroup -g ${gid} ${group} \ 
   && adduser -h "$JENKINS_HOME" -u ${uid} -G ${group} -s /bin/bash -D ${user} \
   && mkdir -p /usr/share/jenkins/ref/init.groovy.d  \
   && curl -fsSL https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-static-amd64 -o /bin/tini \
@@ -80,7 +72,6 @@ RUN addgroup -g ${gid} ${group} \
   && unzip sonar-scanner-$SONAR_SCANNER_VER.zip.     \
   && mv sonar-scanner-$SONAR_SCANNER_VER $SONAR_HOME \
   && rm sonar-scanner-$SONAR_SCANNER_VER.zip         \
-  && apk add --update py-pip postgresql-dev gcc python-dev musl-dev \
   && pip install --no-cache-dir decorator Django django-filter djangorestframework docutils \
   && pip install --no-cache-dir Markdown psycopg2 PyMySQL requests robotframework \
   && pip install --no-cache-dir robotframework-databaselibrary robotframework-ftplibrary \
