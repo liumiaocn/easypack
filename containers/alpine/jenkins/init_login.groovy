@@ -3,15 +3,13 @@ import jenkins.model.*
 
 def instance = Jenkins.getInstance()
 
-//def adminID = System.getenv("JENKINS_ADMIN_ID")
-//def adminPW = System.getenv("JENKINS_ADMIN_PW")
-adminID="admin"
-adminPW="admin"
+def adminID = System.getenv("JENKINS_ADMIN_ID")
+def adminPW = System.getenv("JENKINS_ADMIN_PW")
 
-println "--> Checking security status"
+println "--> Checking user information"
 
 if (!instance.isUseSecurity()) {
-    println "--> Setting user security info"
+    println "--> Creating jenkins user"
 
     def hudsonRealm = new HudsonPrivateSecurityRealm(false)
     hudsonRealm.createAccount(adminID, adminPW)

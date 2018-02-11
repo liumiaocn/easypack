@@ -1,7 +1,7 @@
 ###############################################################################
 #
 #IMAGE:   Jenkins(Alpine)
-#VERSION: 2.90
+#VERSION: 2.89.3
 #
 ###############################################################################
 FROM openjdk:8u121-jdk-alpine
@@ -24,73 +24,106 @@ ENV JENKINS_HOME /var/jenkins_home
 ENV JENKINS_SLAVE_AGENT_PORT ${agent_port}
 
 ###############################################################################
-#User
+#ARG Setting
 ###############################################################################
 ARG user=jenkins
 ARG group=jenkins
 ARG uid=1000
 ARG gid=1000
+ARG JENKINS_SHA=79f176e9388cdeb0deb0e6af49ff9d1ff4b7a3c47102af11e3e9461bf268983a \
+    JENKINS_URL=https://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-war/${JENKINS_VERSION}/jenkins-war-${JENKINS_VERSION}.war \
+    TINI_SHA=6c41ec7d33e857d4779f14d9c74924cab0c7973485d2972419a3b7c7620ff5fd \  
+    JENKINS_UC=https://updates.jenkins.io \
+    JENKINS_UC_EXPERIMENTAL=https://updates.jenkins.io/experimental \
 
+###############################################################################
+#ENV Setting
+###############################################################################
+ENV TINI_VERSION=0.14.0 \
+    JENKINS_HOME="/data/jenkins" \
+    JENKINS_VERSION=${JENKINS_VERSION:-2.89.3} \
+    JENKINS_SLAVE_VER="3.9" \
+    JENKINS_ADMIN_ID=${JENKINS_ADMIN_ID:-root} \
+    JENKINS_ADMIN_PW=${JENKINS_ADMIN_PW:-hello123} \
+    COPY_REFERENCE_FILE_LOG=$JENKINS_HOME/copy_reference_file.log \
+    MAVEN_HOME="/usr/local/share/maven" \
+    MAVEN_VER="3.5.2" \
+    SONAR_HOME="/usr/local/share/sonar" \
+    SONAR_SCANNER_VER="3.0.3.778" \
+    KUBECTL_VER="1.7.10" \
+    TIMEZONE="Asia/Shanghai"
+
+
+###############################################################################
+#Install && Setting
+###############################################################################
 RUN addgroup -g ${gid} ${group} \
-    && adduser -h "$JENKINS_HOME" -u ${uid} -G ${group} -s /bin/bash -D ${user}
+  && adduser -h "$JENKINS_HOME" -u ${uid} -G ${group} -s /bin/bash -D ${user} \
+  && mkdir -p /usr/share/jenkins/ref/init.groovy.d  \
+  && curl -fsSL https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-static-amd64 -o /bin/tini \
+  && chmod +x /bin/tini \
+  && echo "$TINI_SHA  /bin/tini" | sha256sum -c - \
+  && curl -fsSL ${JENKINS_URL} -o /usr/share/jenkins/jenkins.war \
+  && echo "${JENKINS_SHA}  /usr/share/jenkins/jenkins.war" | sha256sum -c - \
+  && curl -L -o /usr/share/jenkins/slave.jar        \
+  && https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${JENKINS_SLAVE_VER}/remoting-${JENKINS_SLAVE_VER}.jar.  \
+  && curl -L -o apache-maven-$MAVEN_VER-bin.tar.gz   \
+  && http://apache.mirror.cdnetworks.com/maven/maven-3/$MAVEN_VER/binaries/apache-maven-$MAVEN_VER-bin.tar.gz \
+  && tar xf apache-maven-$MAVEN_VER-bin.tar.gz       \
+  && mv apache-maven-$MAVEN_VER $MAVEN_HOME          \
+  && rm apache-maven-$MAVEN_VER-bin.tar.gz           \
+  && curl -L -o /usr/local/bin/kubectl               \
+  && https://storage.googleapis.com/kubernetes-release/release/v$KUBECTL_VER/bin/linux/amd64/kubectl         \
+  && chmod a+x /usr/local/bin/kubectl                \
+  && curl -L -o sonar-scanner-$SONAR_SCANNER_VER.zip \
+  && https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_SCANNER_VER.zip  \
+  && unzip sonar-scanner-$SONAR_SCANNER_VER.zip.     \
+  && mv sonar-scanner-$SONAR_SCANNER_VER $SONAR_HOME \
+  && rm sonar-scanner-$SONAR_SCANNER_VER.zip         \
+  && apk add --update py-pip postgresql-dev gcc python-dev musl-dev \
+  && pip install --no-cache-dir decorator Django django-filter djangorestframework docutils \
+  && pip install --no-cache-dir Markdown psycopg2 PyMySQL requests robotframework \
+  && pip install --no-cache-dir robotframework-databaselibrary robotframework-ftplibrary \
+  && pip install --no-cache-dir robotframework-requests robotframework-ride \
+  && pip install --no-cache-dir robotframework-selenium2library \
+  && ln -s /usr/share/maven/bin/* /usr/local/bin \
+  && ln -s /usr/share/sonar/bin/* /usr/local/bin \
+  && mkdir -p /data/jenkins  \
+  && mkdir -p /data/maven    \
+  && mkdir -p /data/kube     \
+  && mkdir -p /data/sonar    \
+  && apk del --purge postgresql-dev gcc python-dev musl-dev \
+  && rm -rf /var/cache/apk/* \
+  && rm -rf /tmp/*.apk       \
+  && chown -R ${user} "$JENKINS_HOME" /usr/share/jenkins/ref
 
-#Volume setting
+###############################################################################
+#Prepare Setting
+###############################################################################
+COPY init.groovy /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy
+COPY init_login.groovy /usr/share/jenkins/ref/init.groovy.d/set-user-security.groovy
+COPY jenkins-support /usr/local/bin/jenkins-support
+COPY jenkins.sh /usr/local/bin/jenkins.sh
+COPY install-plugins.sh /usr/local/bin/install-plugins.sh
+
+###############################################################################
+#Install plugins
+###############################################################################
+RUN /usr/local/bin/install-plugins.sh gitlab-plugin sonar redmine docker-build-step ansible build-pipeline-plugin buildgraph-view workflow-aggregator pipeline-maven pipeline-utility-steps ssh-slaves
+
+###############################################################################
+#Volume Setting
+###############################################################################
 VOLUME /var/jenkins_home
 
-#Create Init groovy dir
-RUN mkdir -p /usr/share/jenkins/ref/init.groovy.d
-
-ENV TINI_VERSION 0.14.0
-ENV TINI_SHA 6c41ec7d33e857d4779f14d9c74924cab0c7973485d2972419a3b7c7620ff5fd
-
-# Use tini as subreaper in Docker container to adopt zombie processes 
-RUN curl -fsSL https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-static-amd64 -o /bin/tini && chmod +x /bin/tini \
-  && echo "$TINI_SHA  /bin/tini" | sha256sum -c -
-
-COPY init.groovy /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy
-
-#set for default login user
-COPY init_login.groovy /usr/share/jenkins/ref/init.groovy.d/set-user-security.groovy
-
-# jenkins version being bundled in this docker image
-ARG JENKINS_VERSION
-ENV JENKINS_VERSION ${JENKINS_VERSION:-2.90}
-
-# jenkins.war checksum, download will be validated using it
-ARG JENKINS_SHA=1f697e7db6e42b3c34f3c9b77a8df9bc25b699ed3be24928b265a1bcd9520196
-
-# Can be used to customize where jenkins.war get downloaded from
-ARG JENKINS_URL=https://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-war/${JENKINS_VERSION}/jenkins-war-${JENKINS_VERSION}.war
-
-# could use ADD but this one does not check Last-Modified header neither does it allow to control checksum 
-# see https://github.com/docker/docker/issues/8331
-RUN curl -fsSL ${JENKINS_URL} -o /usr/share/jenkins/jenkins.war \
-  && echo "${JENKINS_SHA}  /usr/share/jenkins/jenkins.war" | sha256sum -c -
-
-ENV JENKINS_UC https://updates.jenkins.io
-RUN chown -R ${user} "$JENKINS_HOME" /usr/share/jenkins/ref
-
+###############################################################################
+#expose Setting
+###############################################################################
 # for main web interface:
 EXPOSE ${http_port}
-
 # will be used by attached slave agents:
 EXPOSE ${agent_port}
 
-ENV COPY_REFERENCE_FILE_LOG $JENKINS_HOME/copy_reference_file.log
-
 USER ${user}
 
-COPY jenkins-support /usr/local/bin/jenkins-support
-COPY jenkins.sh /usr/local/bin/jenkins.sh
 ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
-
-# from a derived Dockerfile, can use `RUN plugins.sh active.txt` to setup /usr/share/jenkins/ref/plugins from a support bundle
-COPY plugins.sh /usr/local/bin/plugins.sh
-COPY install-plugins.sh /usr/local/bin/install-plugins.sh
-
-RUN /usr/local/bin/install-plugins.sh mailer sonar redmine gitlab-plugin docker-build-step
-
-#COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
-#RUN /usr/local/bin/plugins.sh /usr/share/jenkins/ref/plugins.txt
-#RUN /usr/local/bin/install-plugins.sh ansible build-pipeline-plugin buildgraph-view docker-build-step gitlab-plugin workflow-aggregator pipeline-maven pipeline-utility-steps redmine sonar ssh-slaves
-RUN /usr/local/bin/install-plugins.sh gitlab-plugin sonar redmine docker-build-step ansible build-pipeline-plugin buildgraph-view workflow-aggregator pipeline-maven pipeline-utility-steps
