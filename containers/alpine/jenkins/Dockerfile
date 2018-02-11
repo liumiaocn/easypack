@@ -72,8 +72,8 @@ RUN  apk add --no-cache git openssh-client curl unzip bash ttf-dejavu coreutils 
   && pip install --no-cache-dir robotframework-databaselibrary robotframework-ftplibrary \
   && pip install --no-cache-dir robotframework-requests robotframework-ride \
   && pip install --no-cache-dir robotframework-selenium2library \
-  && ln -s /usr/share/maven/bin/* /usr/local/bin \
-  && ln -s /usr/share/sonar/bin/* /usr/local/bin \
+  && ln -s /usr/local/share/maven/bin/mvn /usr/local/bin/mvn \
+  && ln -s /usr/local/share/sonar/bin/sonar-scanner /usr/local/bin/sonar-scanner \
   && mkdir -p /data/jenkins  \
   && mkdir -p /data/maven    \
   && mkdir -p /data/kube     \
