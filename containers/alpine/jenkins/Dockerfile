@@ -20,6 +20,7 @@ ARG user=jenkins
 ARG group=jenkins
 ARG uid=1000
 ARG gid=1000
+ARG JENKINS_VERSION=${JENKINS_VERSION:-2.89.3}
 ARG JENKINS_SHA=79f176e9388cdeb0deb0e6af49ff9d1ff4b7a3c47102af11e3e9461bf268983a
 ARG JENKINS_URL=https://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-war/${JENKINS_VERSION}/jenkins-war-${JENKINS_VERSION}.war
 ARG TINI_SHA=6c41ec7d33e857d4779f14d9c74924cab0c7973485d2972419a3b7c7620ff5fd
@@ -32,7 +33,6 @@ ARG JENKINS_UC_EXPERIMENTAL=https://updates.jenkins.io/experimental
 ENV JENKINS_SLAVE_AGENT_PORT ${agent_port} \
     TINI_VERSION=0.14.0 \
     JENKINS_HOME="/data/jenkins" \
-    JENKINS_VERSION=${JENKINS_VERSION:-2.89.3} \
     JENKINS_SLAVE_VER="3.9" \
     JENKINS_ADMIN_ID=${JENKINS_ADMIN_ID:-root} \
     JENKINS_ADMIN_PW=${JENKINS_ADMIN_PW:-hello123} \
