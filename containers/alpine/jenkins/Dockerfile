@@ -90,8 +90,8 @@ RUN  apk add --no-cache git openssh-client curl unzip bash ttf-dejavu coreutils 
   && mkdir -p /data/sonar    \
   && apk del --purge postgresql-dev gcc python-dev musl-dev \
   && rm -rf /var/cache/apk/* \
-  && rm -rf /tmp/*.apk       \
-  && chown -R ${user} "$JENKINS_HOME" /usr/share/jenkins/ref
+  && rm -rf /tmp/*.apk
+#  && chown -R ${user} "$JENKINS_HOME" /usr/share/jenkins/ref
 
 ###############################################################################
 #Prepare Setting
@@ -105,7 +105,7 @@ COPY install-plugins.sh /usr/local/bin/install-plugins.sh
 ###############################################################################
 #Install plugins
 ###############################################################################
-RUN /usr/local/bin/install-plugins.sh gitlab-plugin sonar redmine docker-build-step ansible build-pipeline-plugin buildgraph-view workflow-aggregator pipeline-maven pipeline-utility-steps ssh-slaves
+RUN /usr/local/bin/install-plugins.sh gitlab-plugin sonar redmine docker-build-step ansible build-pipeline-plugin buildgraph-view workflow-aggregator pipeline-maven pipeline-utility-steps ssh-slaves blueocean
 
 ###############################################################################
 #Volume Setting
@@ -120,6 +120,6 @@ EXPOSE ${http_port}
 # will be used by attached slave agents:
 EXPOSE ${agent_port}
 
-USER ${user}
+#USER ${user}
 
 ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
