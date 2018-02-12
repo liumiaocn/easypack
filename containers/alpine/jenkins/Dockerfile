@@ -41,6 +41,15 @@ ARG SONAR_SCANNER_VER="3.0.3.778"
 ARG KUBECTL_VER="1.7.10"
 ARG TIMEZONE="Asia/Shanghai"
 
+ENV JENKINS_HOME {JENKINS_HOME}
+ENV JENKINS_SLAVE_AGENT_PORT ${agent_port}
+ENV TINI_VERSION 0.14.0
+ENV TINI_SHA 6c41ec7d33e857d4779f14d9c74924cab0c7973485d2972419a3b7c7620ff5fd
+ENV JENKINS_VERSION ${JENKINS_VERSION}
+ENV JENKINS_UC https://updates.jenkins.io
+ENV JENKINS_UC_EXPERIMENTAL=https://updates.jenkins.io/experimental
+ENV COPY_REFERENCE_FILE_LOG $JENKINS_HOME/copy_reference_file.log
+
 ###############################################################################
 #Install && Setting
 ###############################################################################
