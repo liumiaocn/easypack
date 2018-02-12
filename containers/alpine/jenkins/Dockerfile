@@ -112,7 +112,7 @@ RUN /usr/local/bin/install-plugins.sh gitlab-plugin sonar redmine docker-build-s
 ###############################################################################
 #Volume Setting
 ###############################################################################
-VOLUME /var/jenkins_home
+VOLUME ["/usr/share/jenkins/", "/data/jenkins", "/data/maven", "/data/kube", "/data/sonar", "/data/robot"]
 
 ###############################################################################
 #expose Setting
