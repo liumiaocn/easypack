@@ -26,29 +26,28 @@ ARG JENKINS_URL=https://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-w
 ARG TINI_SHA=6c41ec7d33e857d4779f14d9c74924cab0c7973485d2972419a3b7c7620ff5fd
 ARG JENKINS_UC=https://updates.jenkins.io
 ARG JENKINS_UC_EXPERIMENTAL=https://updates.jenkins.io/experimental
-
-###############################################################################
-#ENV Setting
-###############################################################################
-ENV JENKINS_SLAVE_AGENT_PORT ${agent_port} \
-    TINI_VERSION=0.14.0 \
-    JENKINS_HOME="/data/jenkins" \
-    JENKINS_SLAVE_VER="3.9" \
-    JENKINS_ADMIN_ID=${JENKINS_ADMIN_ID:-root} \
-    JENKINS_ADMIN_PW=${JENKINS_ADMIN_PW:-hello123} \
-    COPY_REFERENCE_FILE_LOG=$JENKINS_HOME/copy_reference_file.log \
-    MAVEN_HOME="/usr/local/share/maven" \
-    MAVEN_VER="3.5.2" \
-    SONAR_HOME="/usr/local/share/sonar" \
-    SONAR_SCANNER_VER="3.0.3.778" \
-    KUBECTL_VER="1.7.10" \
-    TIMEZONE="Asia/Shanghai"
+ARG JENKINS_HOME="/data/jenkins"
+ARG TINI_VERSION=0.14.0
+ARG JENKINS_HOME="/data/jenkins"
+ARG JENKINS_SLAVE_VER="3.9"
+ARG JENKINS_ADMIN_ID=${JENKINS_ADMIN_ID:-root}
+ARG JENKINS_ADMIN_PW=${JENKINS_ADMIN_PW:-hello123}
+ARG JENKINS_SLAVE_AGENT_PORT=${agent_port}
+ARG COPY_REFERENCE_FILE_LOG=$JENKINS_HOME/copy_reference_file.log
+ARG MAVEN_HOME="/usr/local/share/maven"
+ARG MAVEN_VER="3.5.2"
+ARG SONAR_HOME="/usr/local/share/sonar"
+ARG SONAR_SCANNER_VER="3.0.3.778"
+ARG KUBECTL_VER="1.7.10"
+ARG TIMEZONE="Asia/Shanghai"
 
 ###############################################################################
 #Install && Setting
 ###############################################################################
 RUN  apk add --no-cache git openssh-client curl unzip bash ttf-dejavu coreutils \
   && apk add --update py-pip postgresql-dev gcc python-dev musl-dev \
+  && echo "mkdir -p ${JENKINS_HOME}" \
+  && mkdir -p ${JENKINS_HOME} \
   && addgroup -g ${gid} ${group} \ 
   && adduser -h "$JENKINS_HOME" -u ${uid} -G ${group} -s /bin/bash -D ${user} \
   && mkdir -p /usr/share/jenkins/ref/init.groovy.d  \
@@ -57,18 +56,14 @@ RUN  apk add --no-cache git openssh-client curl unzip bash ttf-dejavu coreutils 
   && echo "$TINI_SHA  /bin/tini" | sha256sum -c - \
   && curl -fsSL ${JENKINS_URL} -o /usr/share/jenkins/jenkins.war \
   && echo "${JENKINS_SHA}  /usr/share/jenkins/jenkins.war" | sha256sum -c - \
-  && curl -L -o /usr/share/jenkins/slave.jar        \
-  && https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${JENKINS_SLAVE_VER}/remoting-${JENKINS_SLAVE_VER}.jar.  \
-  && curl -L -o apache-maven-$MAVEN_VER-bin.tar.gz   \
-  && http://apache.mirror.cdnetworks.com/maven/maven-3/$MAVEN_VER/binaries/apache-maven-$MAVEN_VER-bin.tar.gz \
+  && curl -L -o /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${JENKINS_SLAVE_VER}/remoting-${JENKINS_SLAVE_VER}.jar.  \
+  && curl -L -o apache-maven-$MAVEN_VER-bin.tar.gz http://apache.mirror.cdnetworks.com/maven/maven-3/$MAVEN_VER/binaries/apache-maven-$MAVEN_VER-bin.tar.gz \
   && tar xf apache-maven-$MAVEN_VER-bin.tar.gz       \
   && mv apache-maven-$MAVEN_VER $MAVEN_HOME          \
   && rm apache-maven-$MAVEN_VER-bin.tar.gz           \
-  && curl -L -o /usr/local/bin/kubectl               \
-  && https://storage.googleapis.com/kubernetes-release/release/v$KUBECTL_VER/bin/linux/amd64/kubectl         \
+  && curl -L -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v$KUBECTL_VER/bin/linux/amd64/kubectl         \
   && chmod a+x /usr/local/bin/kubectl                \
-  && curl -L -o sonar-scanner-$SONAR_SCANNER_VER.zip \
-  && https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_SCANNER_VER.zip  \
+  && curl -L -o sonar-scanner-$SONAR_SCANNER_VER.zip https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_SCANNER_VER.zip  \
   && unzip sonar-scanner-$SONAR_SCANNER_VER.zip.     \
   && mv sonar-scanner-$SONAR_SCANNER_VER $SONAR_HOME \
   && rm sonar-scanner-$SONAR_SCANNER_VER.zip         \
