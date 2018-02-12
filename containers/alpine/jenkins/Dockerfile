@@ -24,8 +24,6 @@ ARG JENKINS_VERSION=${JENKINS_VERSION:-2.89.3}
 ARG JENKINS_SHA=79f176e9388cdeb0deb0e6af49ff9d1ff4b7a3c47102af11e3e9461bf268983a
 ARG JENKINS_URL=https://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-war/${JENKINS_VERSION}/jenkins-war-${JENKINS_VERSION}.war
 ARG TINI_SHA=6c41ec7d33e857d4779f14d9c74924cab0c7973485d2972419a3b7c7620ff5fd
-ARG JENKINS_UC=https://updates.jenkins.io
-ARG JENKINS_UC_EXPERIMENTAL=https://updates.jenkins.io/experimental
 ARG JENKINS_HOME="/data/jenkins"
 ARG TINI_VERSION=0.14.0
 ARG JENKINS_HOME="/data/jenkins"
@@ -49,8 +47,8 @@ ENV JENKINS_SLAVE_AGENT_PORT ${agent_port}
 ENV TINI_VERSION 0.14.0
 ENV TINI_SHA 6c41ec7d33e857d4779f14d9c74924cab0c7973485d2972419a3b7c7620ff5fd
 ENV JENKINS_VERSION ${JENKINS_VERSION}
-ENV JENKINS_UC https://updates.jenkins.io
-ENV JENKINS_UC_EXPERIMENTAL=https://updates.jenkins.io/experimental
+#ENV JENKINS_UC https://updates.jenkins.io
+#ENV JENKINS_UC_EXPERIMENTAL=https://updates.jenkins.io/experimental
 ENV COPY_REFERENCE_FILE_LOG $JENKINS_HOME/copy_reference_file.log
 
 ###############################################################################
