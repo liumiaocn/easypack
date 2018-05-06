@@ -64,7 +64,7 @@ echo "## Step 5: get and setting oc: "
 yum install -y wget
 wget  ${OC_URL}
 tar xvpf ${OC_FILENAME_TARGZ}
-DIRNAME=`echo $${OC_FILENAME_TARGZ} |sed s/.tar.gz//g`
+DIRNAME=`echo ${OC_FILENAME_TARGZ} |sed s/.tar.gz//g`
 mv ${DIRNAME}/oc /usr/local/bin
 chmod 755 /usr/local/bin/oc
 which oc
