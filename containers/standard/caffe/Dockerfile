@@ -11,11 +11,6 @@ FROM centos
 ###############################################################################
 MAINTAINER LiuMiao <liumiaocn@outlook.com>
 
-yum install -y  
-yum install -y  
-yum install -y  
-yum install -y  
-
 #Install dependencies
 RUN    yum install -y epel-release \
     && yum install -y protobuf-devel leveldb-devel snappy-devel opencv-devel boost-devel hdf5-devel \
