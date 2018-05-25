@@ -4,8 +4,8 @@ import sys
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
-        #self.write("Hello, Service :")
-        print "Hello, Service :", sys.argv[1]
+        self.write("Hello, Service :" + sys.argv[1] + "\n")
+        #print "Hello, Service :", sys.argv[1]
 
 def make_app():
     return tornado.web.Application([
