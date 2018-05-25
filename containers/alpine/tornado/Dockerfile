@@ -18,7 +18,7 @@ COPY daemon.py /usr/local/bin/daemon.py
 ###############################################################################
 RUN apk upgrade --update-cache; \
     apk add py-pip; \
-    apk add tonardo; \
+    pip install tonardo; \
     rm -rf /tmp/* /var/cache/apk/*
 
 CMD ["python", "/usr/local/bin/daemon.py"]
