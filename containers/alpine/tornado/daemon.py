@@ -1,9 +1,11 @@
 import tornado.ioloop
 import tornado.web
+import sys
 
 class MainHandler(tornado.web.RequestHandler):
     def get(self):
-        self.write("Hello, Service form local port 8080")
+        #self.write("Hello, Service :")
+        print "Hello, Service :", sys.argv[1]
 
 def make_app():
     return tornado.web.Application([
