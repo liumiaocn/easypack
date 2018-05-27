@@ -22,4 +22,4 @@ RUN apk upgrade --update-cache; \
     pip install tornado; \
     rm -rf /tmp/* /var/cache/apk/*
 
-CMD ["python", "/usr/local/bin/daemon.py"]
+ENTRYPOINT python /usr/local/bin/daemon.py
