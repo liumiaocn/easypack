@@ -32,7 +32,7 @@ fi
 cat >${DOCKER_DAEMON_JSON} <<EOF
 {
    "insecure-registries": [
-     "192.169.0.0/16"
+     "192.168.0.0/16"
    ]
    "registry-mirrors": [
      "https://registry.docker-cn.com"
