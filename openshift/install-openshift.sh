@@ -32,7 +32,10 @@ fi
 cat >${DOCKER_DAEMON_JSON} <<EOF
 {
    "insecure-registries": [
-     "172.30.0.0/16"
+     "192.168.0.0/16"
+   ]
+   "registry-mirrors": [
+     "https://registry.docker-cn.com"
    ]
 }
 EOF
@@ -52,7 +55,7 @@ echo
 date
 echo "## Step 4: Set for firewall"
 firewall-cmd --permanent --new-zone dockerc
-firewall-cmd --permanent --zone dockerc --add-source 172.17.0.0/16
+firewall-cmd --permanent --zone dockerc --add-source 192.168.0.0/16
 firewall-cmd --permanent --zone dockerc --add-port 8443/tcp
 firewall-cmd --permanent --zone dockerc --add-port 53/udp
 firewall-cmd --permanent --zone dockerc --add-port 8053/udp
