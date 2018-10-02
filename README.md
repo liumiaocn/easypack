@@ -4,8 +4,8 @@
 
 # Why easypack
 ## tensorflow入门实战
-> 为什么放到这里: 顺便放到这里
-https://blog.csdn.net/liumiaocn/article/details/82851824
+> 为什么放到这里: 顺便. 详细如下教程：
+* https://blog.csdn.net/liumiaocn/article/details/82851824
 
 ## 快速安装MESOS
 ![这里写图片描述](http://img.blog.csdn.net/20170113065226244?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbGl1bWlhb2Nu/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
