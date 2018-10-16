@@ -23,7 +23,7 @@ services:
     command: [--log-level=debug, --config, /config/config.yml]
     
   clairctl:
-    image: jgsqware/clairctl:latest
+    image: liumiaocn/clairctl:latest
     restart: unless-stopped
     environment: 
       - DOCKER_API_VERSION=1.24
