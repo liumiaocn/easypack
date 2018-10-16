@@ -1,0 +1,11 @@
+clair:
+  port: 6060
+  healthPort: 6061
+  uri: http://clair
+  priority: Low
+  report:
+    path: /home/clairctl/reports
+    format: html
+clairctl:
+  port: 44480
+  tempfolder: /home/clairctl/tmp

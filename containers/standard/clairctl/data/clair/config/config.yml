@@ -1,0 +1,15 @@
+clair:
+  database:
+    type: pgsql
+    options:
+      source: postgresql://clair:password@postgres:5432/clair?sslmode=disable
+      cachesize: 16384
+  api:
+    port: 6060
+    healthport: 6061
+    timeout: 900s
+  updater:
+    interval: 2h
+  notifier:
+    attempts: 3
+    renotifyinterval: 2h

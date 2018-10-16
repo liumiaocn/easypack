@@ -1,0 +1,35 @@
+version: '2.1'
+
+services:
+  postgres:
+    image: postgres:9.6
+    restart: unless-stopped
+    volumes:
+      - ./data/postgres/data:/var/lib/postgresql/data:rw
+    environment:
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_USER=clair
+      - POSTGRES_DB=clair
+    
+  clair:
+    image: quay.io/coreos/clair:v2.0.0
+    restart: unless-stopped
+    volumes:
+      - ./data/clair/config/:/config/:ro
+      - ./data/clair/tmp/:/tmp/:rw
+    depends_on: 
+      postgres:
+        condition: service_started
+    command: [--log-level=debug, --config, /config/config.yml]
+    
+  clairctl:
+    image: jgsqware/clairctl:latest
+    restart: unless-stopped
+    environment: 
+      - DOCKER_API_VERSION=1.24
+    volumes:
+      - ./data/clairctl/reports/:/reports/:rw
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    depends_on: 
+      clair: 
+        condition: service_started
