@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <profile>
-    <name>Sonar way</name>
+    <name>java-sonarway-bug</name>
     <language>java</language>
     <rules>
         <rule>
