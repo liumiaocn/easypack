@@ -1,0 +1,22 @@
+version: '2'
+
+services:
+  openldap:
+    container_name: openldap
+    image: osixia/openldap:1.2.2
+    ports:
+      - "389:389"
+      - "636:636"
+    command: [--copy-service,  --loglevel, debug]
+  phpldapadmin:
+    container_name: phpldapadmin
+    image: osixia/phpldapadmin:0.7.2
+    ports:
+      - "80:80"
+    environment:
+      - PHPLDAPADMIN_HTTPS="false"
+      - PHPLDAPADMIN_LDAP_HOSTS=openldap
+    links:
+      - openldap
+    depends_on:
+      - openldap
