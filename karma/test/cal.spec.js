@@ -1,11 +1,11 @@
-describe('hello',function(){
-    it('test add',function(){
-        var a = cal(3,6,'add');
-        expect(a).toEqual(9);
+describe('cal test suit',function(){
+    it('test cal add',function(){
+        var ret = cal(40,2,'add');
+        expect(ret).toEqual(42);
     });
 
-    it('test add',function(){
-        var a = cal(3,6,'add');
-        expect(a).toEqual(10);
+    it('test cal mul',function(){
+        var ret = cal(21,2,'mul');
+        expect(ret).toEqual(42);
     });
 });
