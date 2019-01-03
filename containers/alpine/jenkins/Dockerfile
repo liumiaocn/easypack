@@ -1,7 +1,14 @@
 ###############################################################################
 #
 #IMAGE:   Jenkins(Alpine)
-#VERSION: 2.89.3
+#VERSION: 2.150.1
+#BASE:    Jenkins LTS Version
+#INTEGRATION:
+#         Jenkins Slave: 3.28
+#         tini         : 0.18.0
+#         maven        : 3.5.2
+#         sonar-scanner: 3.0.3.778
+#         kubectl      : 1.10.0
 #
 ###############################################################################
 FROM openjdk:8u121-jdk-alpine
@@ -16,18 +23,18 @@ MAINTAINER LiuMiao <liumiaocn@outlook.com>
 ###############################################################################
 ARG http_port=8080
 ARG agent_port=50000
-ARG user=jenkins
-ARG group=jenkins
-ARG uid=1000
-ARG gid=1000
-ARG JENKINS_VERSION=${JENKINS_VERSION:-2.89.3}
+# ARG user=jenkins
+# ARG group=jenkins
+# ARG uid=1000
+# ARG gid=1000
+ARG JENKINS_VERSION=${JENKINS_VERSION:-2.150.1}
 ARG JENKINS_SHA=79f176e9388cdeb0deb0e6af49ff9d1ff4b7a3c47102af11e3e9461bf268983a
-ARG JENKINS_URL=https://repo.jenkins-ci.org/public/org/jenkins-ci/main/jenkins-war/${JENKINS_VERSION}/jenkins-war-${JENKINS_VERSION}.war
+ARG JENKINS_URL=http://mirrors.jenkins.io/war-stable/${JENKINS_VERSION}/jenkins.war
 ARG TINI_SHA=6c41ec7d33e857d4779f14d9c74924cab0c7973485d2972419a3b7c7620ff5fd
 ARG JENKINS_HOME="/data/jenkins"
-ARG TINI_VERSION=0.14.0
+ARG TINI_VERSION=0.18.0
 ARG JENKINS_HOME="/data/jenkins"
-ARG JENKINS_SLAVE_VER="3.9"
+ARG JENKINS_SLAVE_VER="3.28"
 ARG JENKINS_ADMIN_ID=${JENKINS_ADMIN_ID:-root}
 ARG JENKINS_ADMIN_PW=${JENKINS_ADMIN_PW:-hello123}
 ARG JENKINS_SLAVE_AGENT_PORT=${agent_port}
@@ -44,8 +51,8 @@ ARG TIMEZONE="Asia/Shanghai"
 ###############################################################################
 ENV JENKINS_HOME ${JENKINS_HOME}
 ENV JENKINS_SLAVE_AGENT_PORT ${agent_port}
-ENV TINI_VERSION 0.14.0
-ENV TINI_SHA 6c41ec7d33e857d4779f14d9c74924cab0c7973485d2972419a3b7c7620ff5fd
+ENV TINI_VERSION 0.18.0
+ENV TINI_SHA ce3f642d73d58d7c8d745e65b5a9b5de7040fbfa1f7bee2f6207bb28207d8ca1
 ENV JENKINS_VERSION ${JENKINS_VERSION}
 ENV JENKINS_UC https://updates.jenkins.io
 ENV JENKINS_UC_EXPERIMENTAL=https://updates.jenkins.io/experimental
