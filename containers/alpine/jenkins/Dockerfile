@@ -65,8 +65,6 @@ RUN  apk add --no-cache git openssh-client curl unzip bash ttf-dejavu coreutils 
   && apk add --update py-pip postgresql-dev gcc python-dev musl-dev \
   && echo "mkdir -p ${JENKINS_HOME}" \
   && mkdir -p ${JENKINS_HOME} \
-  && addgroup -g ${gid} ${group} \ 
-  && adduser -h "$JENKINS_HOME" -u ${uid} -G ${group} -s /bin/bash -D ${user} \
   && mkdir -p /usr/share/jenkins/ref/init.groovy.d  \
   && curl -fsSL https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-static-amd64 -o /bin/tini \
   && chmod +x /bin/tini \
