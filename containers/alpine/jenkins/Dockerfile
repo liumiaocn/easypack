@@ -6,8 +6,8 @@
 #INTEGRATION:
 #         Jenkins Slave: 3.28
 #         tini         : 0.18.0
-#         maven        : 3.5.2
-#         sonar-scanner: 3.0.3.778
+#         maven        : 3.6.0
+#         sonar-scanner: 3.2.0.1227
 #         kubectl      : 1.10.0
 #
 ###############################################################################
@@ -28,9 +28,9 @@ ARG agent_port=50000
 # ARG uid=1000
 # ARG gid=1000
 ARG JENKINS_VERSION=${JENKINS_VERSION:-2.150.1}
-ARG JENKINS_SHA=79f176e9388cdeb0deb0e6af49ff9d1ff4b7a3c47102af11e3e9461bf268983a
+ARG JENKINS_SHA=7a38586d5a3a1a83498809a83715728bb2f01b58a7dd3a88366f076efdaf6669
 ARG JENKINS_URL=http://mirrors.jenkins.io/war-stable/${JENKINS_VERSION}/jenkins.war
-ARG TINI_SHA=6c41ec7d33e857d4779f14d9c74924cab0c7973485d2972419a3b7c7620ff5fd
+ARG TINI_SHA=eadb9d6e2dc960655481d78a92d2c8bc021861045987ccd3e27c7eae5af0cf33
 ARG JENKINS_HOME="/data/jenkins"
 ARG TINI_VERSION=0.18.0
 ARG JENKINS_HOME="/data/jenkins"
@@ -40,9 +40,9 @@ ARG JENKINS_ADMIN_PW=${JENKINS_ADMIN_PW:-hello123}
 ARG JENKINS_SLAVE_AGENT_PORT=${agent_port}
 ARG COPY_REFERENCE_FILE_LOG=$JENKINS_HOME/copy_reference_file.log
 ARG MAVEN_HOME="/usr/local/share/maven"
-ARG MAVEN_VER="3.5.2"
+ARG MAVEN_VER="3.6.0"
 ARG SONAR_HOME="/usr/local/share/sonar"
-ARG SONAR_SCANNER_VER="3.0.3.778"
+ARG SONAR_SCANNER_VER="3.2.0.1227"
 ARG KUBECTL_VER="1.7.10"
 ARG TIMEZONE="Asia/Shanghai"
 
@@ -52,7 +52,7 @@ ARG TIMEZONE="Asia/Shanghai"
 ENV JENKINS_HOME ${JENKINS_HOME}
 ENV JENKINS_SLAVE_AGENT_PORT ${agent_port}
 ENV TINI_VERSION 0.18.0
-ENV TINI_SHA ce3f642d73d58d7c8d745e65b5a9b5de7040fbfa1f7bee2f6207bb28207d8ca1
+ENV TINI_SHA eadb9d6e2dc960655481d78a92d2c8bc021861045987ccd3e27c7eae5af0cf33
 ENV JENKINS_VERSION ${JENKINS_VERSION}
 ENV JENKINS_UC https://updates.jenkins.io
 ENV JENKINS_UC_EXPERIMENTAL=https://updates.jenkins.io/experimental
@@ -73,14 +73,14 @@ RUN  apk add --no-cache git openssh-client curl unzip bash ttf-dejavu coreutils 
   && echo "${JENKINS_SHA}  /usr/share/jenkins/jenkins.war" | sha256sum -c - \
   && curl -L -o /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${JENKINS_SLAVE_VER}/remoting-${JENKINS_SLAVE_VER}.jar.  \
   && curl -L -o apache-maven-$MAVEN_VER-bin.tar.gz http://apache.mirror.cdnetworks.com/maven/maven-3/$MAVEN_VER/binaries/apache-maven-$MAVEN_VER-bin.tar.gz \
-  && tar xf apache-maven-$MAVEN_VER-bin.tar.gz       \
+  && tar xf apache-maven-$MAVEN_VER-bin.tar.gz      \
   && mv apache-maven-$MAVEN_VER $MAVEN_HOME          \
   && rm apache-maven-$MAVEN_VER-bin.tar.gz           \
   && curl -L -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v$KUBECTL_VER/bin/linux/amd64/kubectl         \
   && chmod a+x /usr/local/bin/kubectl                \
-  && curl -L -o sonar-scanner-$SONAR_SCANNER_VER.zip https://sonarsource.bintray.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-$SONAR_SCANNER_VER.zip  \
+  && curl -L -o sonar-scanner-$SONAR_SCANNER_VER.zip https://github.com/SonarSource/sonar-scanner-cli/archive/$SONAR_SCANNER_VER.zip           \
   && unzip sonar-scanner-$SONAR_SCANNER_VER.zip      \
-  && mv sonar-scanner-$SONAR_SCANNER_VER $SONAR_HOME \
+  && mv sonar-scanner-cli-$SONAR_SCANNER_VER $SONAR_HOME \
   && rm sonar-scanner-$SONAR_SCANNER_VER.zip         \
   && pip install --no-cache-dir decorator Django django-filter djangorestframework docutils \
   && pip install --no-cache-dir Markdown psycopg2 PyMySQL requests robotframework \
