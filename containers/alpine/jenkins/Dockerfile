@@ -9,6 +9,7 @@
 #         maven        : 3.6.0
 #         sonar-scanner: 3.2.0.1227
 #         kubectl      : 1.10.0
+#         docker       : 1.13.1
 #
 ###############################################################################
 FROM openjdk:8u121-jdk-alpine
@@ -34,6 +35,7 @@ ARG TINI_SHA=eadb9d6e2dc960655481d78a92d2c8bc021861045987ccd3e27c7eae5af0cf33
 ARG JENKINS_HOME="/data/jenkins"
 ARG TINI_VERSION=0.18.0
 ARG JENKINS_HOME="/data/jenkins"
+ARG JENKINS_MODE="${JENKINS_MODE:-master}"
 ARG JENKINS_SLAVE_VER="3.28"
 ARG JENKINS_ADMIN_ID=${JENKINS_ADMIN_ID:-root}
 ARG JENKINS_ADMIN_PW=${JENKINS_ADMIN_PW:-hello123}
@@ -50,6 +52,7 @@ ARG TIMEZONE="Asia/Shanghai"
 #ENV Setting
 ###############################################################################
 ENV JENKINS_HOME ${JENKINS_HOME}
+ENV JENKINS_MODE ${JENKINS_MODE}
 ENV JENKINS_SLAVE_AGENT_PORT ${agent_port}
 ENV TINI_VERSION 0.18.0
 ENV TINI_SHA eadb9d6e2dc960655481d78a92d2c8bc021861045987ccd3e27c7eae5af0cf33
@@ -80,7 +83,8 @@ RUN  apk add --no-cache git openssh-client curl unzip bash ttf-dejavu coreutils 
   && chmod a+x /usr/local/bin/kubectl                \
   && curl -L -o sonar-scanner-$SONAR_SCANNER_VER.zip https://github.com/SonarSource/sonar-scanner-cli/archive/$SONAR_SCANNER_VER.zip           \
   && unzip sonar-scanner-$SONAR_SCANNER_VER.zip      \
-  && mv sonar-scanner-cli-$SONAR_SCANNER_VER $SONAR_HOME \
+  && mv sonar-scanner-cli-$SONAR_SCANNER_VER sonar-scanner-$SONAR_SCANNER_VER     \
+  && mv sonar-scanner-$SONAR_SCANNER_VER $SONAR_HOME \
   && rm sonar-scanner-$SONAR_SCANNER_VER.zip         \
   && pip install --no-cache-dir decorator Django django-filter djangorestframework docutils \
   && pip install --no-cache-dir Markdown psycopg2 PyMySQL requests robotframework \
@@ -127,4 +131,4 @@ EXPOSE ${agent_port}
 
 #USER ${user}
 
-ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]
+ENTRYPOINT ["/bin/tini", "${JENKINS_MODE}", "/usr/local/bin/jenkins.sh"]
