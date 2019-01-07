@@ -131,4 +131,4 @@ EXPOSE ${agent_port}
 
 #USER ${user}
 
-ENTRYPOINT ["/bin/tini", "${JENKINS_MODE}", "/usr/local/bin/jenkins.sh"]
+ENTRYPOINT ["/bin/tini", "--", "/usr/local/bin/jenkins.sh"]

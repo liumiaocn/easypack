@@ -6,9 +6,9 @@ echo "--- Copying files at $(date)" >> "$COPY_REFERENCE_FILE_LOG"
 find /usr/share/jenkins/ref/ -type f -exec bash -c '. /usr/local/bin/jenkins-support; for arg; do copy_reference_file "$arg"; done' _ {} +
 
 # if `docker run` first argument start with `--` the user is passing jenkins launcher arguments
-if [[ $# -lt 1 ]] || [[ "$1" == "--"* ]] || [ _"$1" == _"master" ]; then
+if [[ $# -lt 1 ]] || [ _"$JENKINS_MODE" == _"master" ]; then
   exec java "$JAVA_OPTS" -jar /usr/share/jenkins/jenkins.war "${JENKINS_OPTS}" "$@"
-elif [ _"$1" == _"slave" ]; then
+elif [ _"$JENKINS_MODE" == _"slave" ]; then
   exec java "$JAVA_OPTS" -jar /usr/share/jenkins/slave.jar "${JENKINS_OPTS}" "$@"
 fi
 
