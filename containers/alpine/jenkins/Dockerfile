@@ -35,10 +35,7 @@ ARG TINI_SHA=eadb9d6e2dc960655481d78a92d2c8bc021861045987ccd3e27c7eae5af0cf33
 ARG JENKINS_HOME="/data/jenkins"
 ARG TINI_VERSION=0.18.0
 ARG JENKINS_HOME="/data/jenkins"
-ARG JENKINS_MODE="${JENKINS_MODE:-master}"
 ARG JENKINS_SLAVE_VER="3.28"
-ARG JENKINS_ADMIN_ID=${JENKINS_ADMIN_ID:-root}
-ARG JENKINS_ADMIN_PW=${JENKINS_ADMIN_PW:-hello123}
 ARG JENKINS_SLAVE_AGENT_PORT=${agent_port}
 ARG COPY_REFERENCE_FILE_LOG=$JENKINS_HOME/copy_reference_file.log
 ARG MAVEN_HOME="/usr/local/share/maven"
@@ -54,6 +51,11 @@ ARG TIMEZONE="Asia/Shanghai"
 ENV JENKINS_HOME ${JENKINS_HOME}
 ENV JENKINS_MODE ${JENKINS_MODE}
 ENV JENKINS_SLAVE_AGENT_PORT ${agent_port}
+ENV JENKINS_ADMIN_ID=${JENKINS_ADMIN_ID:-root}
+ENV JENKINS_ADMIN_PW=${JENKINS_ADMIN_PW:-hello123}
+ENV JENKINS_MASTER_URL=${JENKINS_MASTER_URL}
+ENV JENKINS_SLAVE_NAME=${JENKINS_SLAVE_NAME}
+ENV JENKINS_SLAVE_SECRET=${JENKINS_SLAVE_SECRET}
 ENV TINI_VERSION 0.18.0
 ENV TINI_SHA eadb9d6e2dc960655481d78a92d2c8bc021861045987ccd3e27c7eae5af0cf33
 ENV JENKINS_VERSION ${JENKINS_VERSION}
@@ -74,7 +76,7 @@ RUN  apk add --no-cache git openssh-client curl unzip bash ttf-dejavu coreutils 
   && echo "$TINI_SHA  /bin/tini" | sha256sum -c - \
   && curl -fsSL ${JENKINS_URL} -o /usr/share/jenkins/jenkins.war \
   && echo "${JENKINS_SHA}  /usr/share/jenkins/jenkins.war" | sha256sum -c - \
-  && curl -L -o /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${JENKINS_SLAVE_VER}/remoting-${JENKINS_SLAVE_VER}.jar.  \
+  && curl -L -o /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${JENKINS_SLAVE_VER}/remoting-${JENKINS_SLAVE_VER}.jar  \
   && curl -L -o apache-maven-$MAVEN_VER-bin.tar.gz http://apache.mirror.cdnetworks.com/maven/maven-3/$MAVEN_VER/binaries/apache-maven-$MAVEN_VER-bin.tar.gz \
   && tar xf apache-maven-$MAVEN_VER-bin.tar.gz      \
   && mv apache-maven-$MAVEN_VER $MAVEN_HOME          \

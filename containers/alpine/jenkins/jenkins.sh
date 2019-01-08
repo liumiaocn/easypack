@@ -6,10 +6,30 @@ echo "--- Copying files at $(date)" >> "$COPY_REFERENCE_FILE_LOG"
 find /usr/share/jenkins/ref/ -type f -exec bash -c '. /usr/local/bin/jenkins-support; for arg; do copy_reference_file "$arg"; done' _ {} +
 
 # if `docker run` first argument start with `--` the user is passing jenkins launcher arguments
-if [[ $# -lt 1 ]] || [ _"$JENKINS_MODE" == _"master" ]; then
-  exec java "$JAVA_OPTS" -jar /usr/share/jenkins/jenkins.war "${JENKINS_OPTS}" "$@"
+if [ _"$JENKINS_MODE" == _"master" ]; then
+  # read JAVA_OPTS and JENKINS_OPTS into arrays to avoid need for eval (and associated vulnerabilities)
+  java_opts_array=()
+  while IFS= read -r -d '' item; do
+    java_opts_array+=( "$item" )
+  done < <([[ $JAVA_OPTS ]] && xargs printf '%s\0' <<<"$JAVA_OPTS")
+
+  jenkins_opts_array=( )
+  while IFS= read -r -d '' item; do
+    jenkins_opts_array+=( "$item" )
+  done < <([[ $JENKINS_OPTS ]] && xargs printf '%s\0' <<<"$JENKINS_OPTS")
+  exec java "${java_opts_array[@]}" -jar /usr/share/jenkins/jenkins.war "${jenkins_opts_array[@]}" "$@"
 elif [ _"$JENKINS_MODE" == _"slave" ]; then
-  exec java "$JAVA_OPTS" -jar /usr/share/jenkins/slave.jar "${JENKINS_OPTS}" "$@"
+  # read JAVA_OPTS and JENKINS_OPTS into arrays to avoid need for eval (and associated vulnerabilities)
+  java_opts_array=()
+  while IFS= read -r -d '' item; do
+    java_opts_array+=( "$item" )
+  done < <([[ $JAVA_OPTS ]] && xargs printf '%s\0' <<<"$JAVA_OPTS")
+
+  jenkins_opts_array=( )
+  while IFS= read -r -d '' item; do
+    jenkins_opts_array+=( "$item" )
+  done < <([[ $JENKINS_OPTS ]] && xargs printf '%s\0' <<<"$JENKINS_OPTS")
+  exec java "${java_opts_array[@]}" -jar /usr/share/jenkins/slave.jar "${jenkins_opts_array[@]}" "$@" -url $JENKINS_MASTER_URL $JENKINS_SLAVE_SECRET $JENKINS_SLAVE_NAME
 fi
 
 # As argument is not jenkins, assume user want to run his own process, for example a `bash` shell to explore this image
