@@ -8,8 +8,8 @@
 #         tini         : 0.18.0
 #         maven        : 3.6.0
 #         sonar-scanner: 3.2.0.1227
-#         kubectl      : 1.10.0
-#         docker       : 1.13.1
+#         kubectl      : 1.10.12
+#         docker       : 18.09.0
 #
 ###############################################################################
 FROM openjdk:8u121-jdk-alpine
@@ -42,7 +42,8 @@ ARG MAVEN_HOME="/usr/local/share/maven"
 ARG MAVEN_VER="3.6.0"
 ARG SONAR_HOME="/usr/local/share/sonar"
 ARG SONAR_SCANNER_VER="3.2.0.1227"
-ARG KUBECTL_VER="1.7.10"
+ARG KUBECTL_VER="1.10.12"
+ARG DOCKER_VERSION=18.09.0
 ARG TIMEZONE="Asia/Shanghai"
 
 ###############################################################################
@@ -72,6 +73,13 @@ RUN  apk add --no-cache git openssh-client curl unzip bash ttf-dejavu coreutils 
   && echo "mkdir -p ${JENKINS_HOME}" \
   && mkdir -p ${JENKINS_HOME} \
   && mkdir -p /usr/share/jenkins/ref/init.groovy.d  \
+  && curl -L -o docker.tgz https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz \
+  && tar xf docker.tgz                               \
+  && mv docker/docker /usr/local/bin/docker          \
+  && chmod a+x /usr/local/bin/docker                 \
+  && rm -rf docker                                   \
+  && curl -sSL -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v$KUBECTL_VER/bin/linux/amd64/kubectl \
+  && chmod a+x /usr/local/bin/kubectl \
   && curl -fsSL https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-static-amd64 -o /bin/tini \
   && chmod +x /bin/tini \
   && echo "$TINI_SHA  /bin/tini" | sha256sum -c - \
