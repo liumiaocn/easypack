@@ -29,7 +29,7 @@ elif [ _"$JENKINS_MODE" == _"slave" ]; then
   while IFS= read -r -d '' item; do
     jenkins_opts_array+=( "$item" )
   done < <([[ $JENKINS_OPTS ]] && xargs printf '%s\0' <<<"$JENKINS_OPTS")
-  exec java "${java_opts_array[@]}" -jar /usr/share/jenkins/slave.jar "${jenkins_opts_array[@]}" "$@" -url $JENKINS_MASTER_URL $JENKINS_SLAVE_SECRET $JENKINS_SLAVE_NAME
+  exec java "${java_opts_array[@]}" -jar /usr/share/jenkins/slave.jar "${jenkins_opts_array[@]}" "$@" -jnlpUrl $JENKINS_MASTER_URL -secret $JENKINS_SLAVE_SECRET -workDir "$JENKINS_SLAVE_WORKDIR"
 fi
 
 # As argument is not jenkins, assume user want to run his own process, for example a `bash` shell to explore this image
