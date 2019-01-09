@@ -8,7 +8,7 @@ def adminPW = System.getenv("JENKINS_ADMIN_PW")
 
 println "--> Checking user information"
 
-# if (!instance.isUseSecurity()) {
+// if (!instance.isUseSecurity()) {
     println "--> Creating jenkins user"
 
     def hudsonRealm = new HudsonPrivateSecurityRealm(false)
@@ -18,4 +18,4 @@ println "--> Checking user information"
     def strategy = new FullControlOnceLoggedInAuthorizationStrategy()
     instance.setAuthorizationStrategy(strategy)
     instance.save()
-# }
+// }
