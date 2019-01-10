@@ -1,0 +1,16 @@
+version: '2'
+
+services:
+  # jenkins service based on Jenkins LTS version
+  jenkins:
+    image: liumiaocn/jenkins:2.150.1
+    ports:
+      - "32002:8080"
+      - "50000:50000"
+    environment:
+      - JENKINS_ADMIN_ID=root
+      - JENKINS_ADMIN_PW=liumiaocn
+      - JENKINS_MODE=master
+    volumes:
+      - ./data/:/data/jenkins
+    restart: "no"

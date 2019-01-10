@@ -1,0 +1,14 @@
+version: '2'
+
+services:
+  # jenkins service based on Jenkins LTS version
+  jenkins:
+    image: liumiaocn/jenkins:2.150.1
+    environment:
+      - JENKINS_MODE=slave
+      - JENKINS_MASTER_URL=http://192.168.163.118:32002/computer/agent001/slave-agent.jnlp
+      - JENKINS_SLAVE_SECRET=48de37b3bb2cbf61b2ff7eca62b692a436f54d6bf930e4e6a6f8b1d5f64fa4be
+      - JENKINS_SLAVE_WORKDIR=/tmp/agent/jenkins
+    volumes:
+      - ./data/:/data/jenkins
+    restart: "no"
