@@ -117,7 +117,7 @@ COPY install-plugins.sh /usr/local/bin/install-plugins.sh
 #Install plugins
 ###############################################################################
 #RUN /usr/local/bin/install-plugins.sh gitlab-plugin sonar redmine docker-build-step ansible build-pipeline-plugin buildgraph-view workflow-aggregator pipeline-maven pipeline-utility-steps ssh-slaves
-RUN /usr/local/bin/install-plugins.sh gitlab-plugin sonar docker-build-step ansible ssh-slaves
+RUN /usr/local/bin/install-plugins.sh gitlab-plugin ansible sonar redmine docker-build-step
 
 ###############################################################################
 #Volume Setting
