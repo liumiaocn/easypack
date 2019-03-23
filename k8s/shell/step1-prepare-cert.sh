@@ -70,11 +70,12 @@ cat <<EOF >${ENV_SSL_ETCD_DIR}/${ENV_SSL_FILE_ETCD_CSR}
 {
     "CN": "${ENV_SSL_ETCD_CSR_CN}",
     "hosts": [
+    "127.0.0.1",
 EOF
 
 
 # append etcd hosts list
-echo ${ENV_ETC_HOSTS} |awk -F" " '{
+echo ${ENV_ETCD_HOSTS} |awk -F" " '{
     for(cnt=1; cnt<NF; cnt++){
         printf("    \"%s\",\n",$cnt);
     }
@@ -112,5 +113,42 @@ cfssl gencert -ca=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_PEM} -ca-key=${ENV_SSL_CA_
 
 # confirm cert pem: cert-etcd-key.pem  cert-etcd.pem
 ls ${ENV_SSL_ETCD_DIR}/*.pem
+
+# Deploy the master node.
+mkdir -p ${ENV_SSL_K8S_DIR}
+cat >${ENV_SSL_K8S_DIR}/${ENV_SSL_FILE_K8S_CSR} <<EOF
+{
+    "CN": "${ENV_SSL_K8S_CSR_CN}",
+    "hosts": [
+      "${ENV_SSL_CSR_HOSTS_SRV}",
+      "127.0.0.1",
+      "${ENV_CURRENT_HOSTIP}",
+      "kubernetes",
+      "kubernetes.default",
+      "kubernetes.default.svc",
+      "kubernetes.default.svc.cluster",
+      "kubernetes.default.svc.cluster.local"
+    ],
+    "key": {
+        "algo": "${ENV_SSL_KEY_ALGO}",
+        "size": ${ENV_SSL_KEY_SIZE}
+    },
+    "names": [
+        {
+            "C": "${ENV_SSL_NAMES_C}",
+            "L": "${ENV_SSL_NAMES_L}",
+            "ST": "${ENV_SSL_NAMES_ST}",
+            "O": "${ENV_SSL_NAMES_O}",
+            "OU": "${ENV_SSL_NAMES_OU}"
+        }
+    ]
+}
+EOF
+
+cd ${ENV_SSL_K8S_DIR}
+cfssl gencert -ca=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_PEM}  -ca-key=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_KEY} -config=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_CONFIG} -profile=${ENV_SSL_PROFILE_K8S} ${ENV_SSL_FILE_K8S_CSR} | cfssljson -bare ${ENV_SSL_K8S_CERT_PRIFIX}
+
+# confirm cert pem: cert-k8s.pem cert-k8s-key.pem
+ls ${ENV_SSL_K8S_DIR}/*.pem
 
 cd $ODIR
