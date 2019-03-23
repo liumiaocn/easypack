@@ -5,7 +5,7 @@
 echo -e "\n##  kube-apiserver service"
 systemctl stop kube-apiserver 2>/dev/null
 
-mkdir -p ${ENV_KUBE_DIR_BIN} ${ENV_KUBE_DIR_ETC}
+mkdir -p ${ENV_KUBE_DIR_BIN} ${ENV_KUBE_DIR_ETC} ${ENV_KUBE_OPT_LOG_DIR}
 chmod 755 ${ENV_HOME_K8S}/*
 cp -p ${ENV_HOME_K8S}/{kubectl,kube-apiserver} ${ENV_KUBE_DIR_BIN}
 if [ $? -ne 0 ]; then
