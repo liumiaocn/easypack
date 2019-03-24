@@ -57,3 +57,10 @@ systemctl status docker
 echo
 echo -e "##  check docker version"
 docker version
+
+echo
+echo -e "##  load pause imgage for kubelet"
+cd data
+gunzip pause-amd64-3.1.tar.gz
+docker load -i pause-amd64-3.1.tar
+gzip pause-amd64-3.1.tar

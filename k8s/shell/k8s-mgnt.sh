@@ -2,7 +2,7 @@
 
 usage(){
   echo "Usage: $0 ACTION TYPE"
-  echo "       ACTION:start|stop|restart|status|install"
+  echo "       ACTION:start|stop|restart|status|install|uninstall"
   echo "       TYPE:master|node|docker|apiserver|scheduler|controller"
   echo "            kubelet|kubeproxy|flannel|etcd"
   echo ""

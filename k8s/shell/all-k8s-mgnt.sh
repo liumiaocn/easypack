@@ -2,7 +2,7 @@
 
 usage(){
   echo "Usage: $0 ACTION TYPE"
-  echo "       ACTION:start|stop|restart|status|install"
+  echo "       ACTION:start|stop|restart|status|install|clear"
   echo "       TYPE:master|node|docker|ssl|apiserver|scheduler|controller"
   echo "            kubelet|kubeproxy|flannel|etcd"
   echo ""
@@ -14,6 +14,21 @@ TYPE=$2
 if [ $# -ne 2 ]; then
   usage
   exit 1
+fi
+
+if [ _"$ACTION" = _"clear" ]; then
+  # in order to avoid rm -rf / : here hard coding for default dir
+  echo "## data dir clear operation begins..."
+  echo " # clear ssl dirs "
+  rm -rf /etc/ssl/{ca,etcd,flannel,k8s} 
+  echo " # clear etc dirs " 
+  rm -rf /etc/{docker,flannel,k8s,etcd,kubernetes}
+  echo " # clear log dirs "
+  rm -rf /var/log/kubernetes
+  echo " # clear working dirs or data dirs"
+  rm -rf /var/lib/kubelet /var/lib/k8s /var/lib/docker /var/lib/etcd 
+  echo "## data dir clear operation ends  ..."
+  exit 0
 fi
 
 if [ _"$TYPE" = _"all" -o _"$TYPE" = _"master" -o _"$TYPE" = _"ssl" ]; then

@@ -5,8 +5,13 @@
 echo -e "\n##  stop etcd service"
 systemctl stop etcd 2>/dev/null
 
-echo "## are you sure to delete ${ENV_ETCD_DATA_DIR} with all files in it ? "
-read answers
+if [ _"INSTALL_MODE" = _"manual" ]; then
+  echo "## are you sure to delete ${ENV_ETCD_DATA_DIR} with all files in it ? "
+  read answers
+else
+  answers="y"
+fi
+
 if [ _"${answers}" = _"y" -o _"${answers}" = _"Y" ]; then
   rm -rf "${ENV_ETCD_DATA_DIR}/default.etcd"
 fi
