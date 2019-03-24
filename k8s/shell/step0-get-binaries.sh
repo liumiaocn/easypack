@@ -7,6 +7,7 @@ VER_KUBERNETES=v1.13.4
 VER_ETCD=v3.3.12
 VER_DOCKER=17.03.2-ce
 VER_CNI=v0.7.4
+VER_FLANNEL=v0.10.0
 DIR_DOWNLOAD=/tmp
 
 
@@ -85,6 +86,13 @@ rm cni-plugins-${TYPE_ARCH}-${VER_CNI}.tgz
 cd ..
 ls cni
 date
+
+echo "## download flannel"
+mkdir -p flannel
+cd flannel
+curl -Lo flannel-${VER_FLANNEL}-${TYPE_OS}-${TYPE_ARCH}.tar.gz https://github.com/coreos/flannel/releases/download/${VER_FLANNEL}/flannel-${VER_FLANNEL}-${TYPE_OS}-${TYPE_ARCH}.tar.gz >/dev/null 2>&1
+tar -zxvf flannel-${VER_FLANNEL}-${TYPE_OS}-${TYPE_ARCH}.tar.gz
+rm flannel-${VER_FLANNEL}-${TYPE_OS}-${TYPE_ARCH}.tar.gz README.md
 
 echo "## download completed"
 
