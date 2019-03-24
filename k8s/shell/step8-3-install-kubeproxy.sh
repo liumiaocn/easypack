@@ -61,4 +61,4 @@ systemctl start kube-proxy
 echo -e "\n##  enable kube-proxy service " 
 systemctl enable kube-proxy
 echo -e "\n##  check  kube-proxy status"
-systemctl status kube-proxy
+systemctl status kube-proxy |egrep '\.service|Active:|\-\-'

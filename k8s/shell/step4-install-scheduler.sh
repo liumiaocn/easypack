@@ -44,7 +44,7 @@ systemctl start kube-scheduler
 echo -e "\n##  enable kube-scheduler service " 
 systemctl enable kube-scheduler
 echo -e "\n##  check  kube-scheduler status"
-systemctl status kube-scheduler
+systemctl status kube-scheduler |egrep '\.service|Active:|\-\-'
 
 # sleep 2 seconds for checking
 sleep 2

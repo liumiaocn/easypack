@@ -43,7 +43,7 @@ service_action(){
     service_name=""
     echo "[no action executed]"
   fi
-  echo "## ACTION: $act_type  Service: $act_obj begins ..."
+  echo "## `date` ACTION: $act_type  Service: $act_obj begins ..."
   if [ _"$act_type" = _"install" -o "$act_type" = _"INSTALL" ]; then
     for cmd in $cmds
     do
@@ -55,7 +55,7 @@ service_action(){
       systemctl $act_type $service_name
     fi
   fi
-  echo "## ACTION: $act_type  Service: $act_obj ends  ..."
+  echo "## `date` ACTION: $act_type  Service: $act_obj ends  ..."
   echo
 }
 
@@ -74,7 +74,8 @@ elif [ _"$ACTION" = _"start" -o _"$ACTION" = _"START" ]; then
 elif [ _"$ACTION" = _"restart" -o _"$ACTION" = _"RESTART" ]; then
   service_action ${ACTION} ${TYPE}
 elif [ _"$ACTION" = _"status" -o _"$ACTION" = _"STATUS" ]; then
-  service_action ${ACTION} ${TYPE}
+  service_action ${ACTION} ${TYPE} |egrep '\.service|Active:|\-\-| ACTION: ' 
+  echo
 elif [ _"$ACTION" = _"install" -o _"$ACTION" = _"INSTALL" ]; then
   service_action ${ACTION} ${TYPE}
 else

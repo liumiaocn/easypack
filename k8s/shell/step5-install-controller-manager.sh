@@ -51,7 +51,7 @@ systemctl start kube-controller-manager
 echo -e "\n##  enable kube-controller-manager service " 
 systemctl enable kube-controller-manager
 echo -e "\n##  check  kube-controller-manager status"
-systemctl status kube-controller-manager
+systemctl status kube-controller-manager |egrep '\.service|Active:|\-\-'
 
 # sleep 2 seconds for checking
 sleep 2

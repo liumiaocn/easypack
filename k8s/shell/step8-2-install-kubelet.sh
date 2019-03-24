@@ -90,7 +90,7 @@ systemctl start kubelet
 echo -e "\n##  enable kubelet service " 
 systemctl enable kubelet
 echo -e "\n##  check  kubelet status"
-systemctl status kubelet
+systemctl status kubelet |egrep '\.service|Active:|\-\-'
 
 
 echo

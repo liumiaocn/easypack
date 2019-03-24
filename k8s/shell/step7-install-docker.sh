@@ -52,7 +52,7 @@ systemctl start docker
 echo -e "\n##  enable docker service " 
 systemctl enable docker
 echo -e "\n##  check  docker status"
-systemctl status docker
+systemctl status docker |egrep '\.service|Active:|\-\-'
 
 echo
 echo -e "##  check docker version"

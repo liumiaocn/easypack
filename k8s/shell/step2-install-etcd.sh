@@ -118,7 +118,7 @@ systemctl start etcd
 echo -e "\n##  enable etcd service " 
 systemctl enable etcd
 echo -e "\n##  check  etcd status"
-systemctl status etcd
+systemctl status etcd |egrep '\.service|Active:|\-\-'
 
 echo -e "\n##  etcd version"
 etcd --version

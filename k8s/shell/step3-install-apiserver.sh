@@ -80,7 +80,7 @@ systemctl start kube-apiserver
 echo -e "\n##  enable kube-apiserver service " 
 systemctl enable kube-apiserver
 echo -e "\n##  check  kube-apiserver status"
-systemctl status kube-apiserver
+systemctl status kube-apiserver |egrep '\.service|Active:|\-\-'
 
 echo -e "\n##  kubectl version"
 kubectl version

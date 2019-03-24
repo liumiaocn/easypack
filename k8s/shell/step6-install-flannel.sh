@@ -114,5 +114,5 @@ systemctl start flanneld
 systemctl restart flanneld
 echo -e "\n##  enable flannel service " 
 systemctl enable flanneld
-echo -e "\n##  check  flannel status"
+echo -e "\n##  check  flannel status" |egrep '\.service|Active:|\-\-'
 systemctl status flanneld
