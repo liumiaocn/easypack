@@ -36,13 +36,13 @@ echo ${ENV_ETCD_HOSTS} |awk -v etcd_names="${ENV_ETCD_NAMES}" \
     printf("https://%s:%s ",$cnt,port);
 }' >>${ENV_KUBE_DIR_ETC}/${ENV_KUBE_API_CONF}
 
-#--insecure-port=0 \\
 cat >>${ENV_KUBE_DIR_ETC}/${ENV_KUBE_API_CONF} <<EOF
 --authorization-mode=${ENV_KUBE_OPT_AUTH_MODE} \\
 --enable-admission-plugins=${ENV_KUBE_ADM_PLUGINS} \\
 --anonymous-auth=false \\
 --bind-address=${ENV_CURRENT_HOSTIP} \\
 --kubelet-https=true \\
+--insecure-port=0 \\
 --runtime-config=api/all=true \\
 --advertise-address=${ENV_CURRENT_HOSTIP} \\
 --allow-privileged=${ENV_KUBE_OPT_ALLOW_PRIVILEGE} \\
