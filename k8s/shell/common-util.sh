@@ -37,3 +37,27 @@ csr_auto_approve(){
     kubectl certificate approve $csr_id
   done
 }
+
+create_dashboard_token(){
+  echo "## create service account for dashboard"
+  kubectl get serviceaccount dashboard-admin -n kube-system >/dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    kubectl delete serviceaccount dashboard-admin -n kube-system
+  fi
+  kubectl create serviceaccount dashboard-admin -n kube-system
+
+  echo "## create clusterrolebinding for dashboard"
+  kubectl get clusterrolebinding dashboard-admin >/dev/null 2>&1
+  if [ $? -eq 0 ]; then
+    kubectl delete clusterrolebinding dashboard-admin
+  fi
+  kubectl create clusterrolebinding dashboard-admin --clusterrole=cluster-admin --serviceaccount=kube-system:dashboard-admin
+}
+
+display_dashboard_token(){
+  dashboard_secret=`kubectl get secrets -n kube-system | grep dashboard-admin | awk '{print $1}'`
+  echo "## dashboard_secrete: $dashboard_secret"
+
+  echo "## dashboard_token: "
+  kubectl describe secret -n kube-system ${dashboard_secret} | grep -E '^token' | awk '{print $2}'
+}
