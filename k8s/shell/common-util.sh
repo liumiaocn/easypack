@@ -29,10 +29,10 @@ create_kubedonfig(){
 }
 
 csr_auto_approve(){
-  CSR_PENDINGS=`kubectl get csr |grep -i pending`
+  CSR_PENDINGS=`kubectl get csr |grep -i pending |awk '{print $1}'`
   for pending in $CSR_PENDINGS
   do
-    csr_id=`echo $pending |awk '{print $1}'
+    csr_id=`echo $pending |awk '{print $1}'`
     echo "## auto approve $csr_id"
     kubectl certificate approve $csr_id
   done
