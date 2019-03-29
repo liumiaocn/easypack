@@ -36,23 +36,29 @@ echo ${ENV_ETCD_HOSTS} |awk -v etcd_names="${ENV_ETCD_NAMES}" \
     printf("https://%s:%s ",$cnt,port);
 }' >>${ENV_KUBE_DIR_ETC}/${ENV_KUBE_API_CONF}
 
+#--insecure-port=0 \\
 cat >>${ENV_KUBE_DIR_ETC}/${ENV_KUBE_API_CONF} <<EOF
---bind-address=${ENV_CURRENT_HOSTIP} \
---secure-port=${ENV_KUBE_OPT_API_SSL_PORT} \
---advertise-address=${ENV_CURRENT_HOSTIP} \
---allow-privileged=${ENV_KUBE_OPT_ALLOW_PRIVILEGE} \
---service-cluster-ip-range=${ENV_KUBE_OPT_CLUSTER_IP_RANGE} \
---enable-admission-plugins=${ENV_KUBE_ADM_PLUGINS} \
---authorization-mode=${ENV_KUBE_OPT_AUTH_MODE} \
---enable-bootstrap-token-auth \
---token-auth-file=${ENV_KUBE_DIR_ETC}/${ENV_KUBE_API_TOKEN} \
---service-node-port-range=${ENV_KUBE_OPT_CLUSTER_PORT_RANGE} \
---tls-cert-file=${ENV_SSL_K8S_DIR}/${ENV_SSL_K8S_CERT_PRIFIX}.pem  \
---tls-private-key-file=${ENV_SSL_K8S_DIR}/${ENV_SSL_K8S_CERT_PRIFIX}-key.pem \
---client-ca-file=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_PEM} \
---service-account-key-file=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_KEY} \
---etcd-cafile=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_PEM} \
---etcd-certfile=${ENV_SSL_ETCD_DIR}/${ENV_SSL_ETCD_CERT_PRIFIX}.pem \
+--authorization-mode=${ENV_KUBE_OPT_AUTH_MODE} \\
+--enable-admission-plugins=${ENV_KUBE_ADM_PLUGINS} \\
+--anonymous-auth=false \\
+--bind-address=${ENV_CURRENT_HOSTIP} \\
+--kubelet-https=true \\
+--runtime-config=api/all=true \\
+--advertise-address=${ENV_CURRENT_HOSTIP} \\
+--allow-privileged=${ENV_KUBE_OPT_ALLOW_PRIVILEGE} \\
+--service-cluster-ip-range=${ENV_KUBE_OPT_CLUSTER_IP_RANGE} \\
+--service-node-port-range=${ENV_KUBE_OPT_CLUSTER_PORT_RANGE} \\
+--enable-bootstrap-token-auth \\
+--token-auth-file=${ENV_KUBE_DIR_ETC}/${ENV_KUBE_API_TOKEN} \\
+--tls-cert-file=${ENV_SSL_K8S_DIR}/${ENV_SSL_K8S_CERT_PRIFIX}.pem  \\
+--tls-private-key-file=${ENV_SSL_K8S_DIR}/${ENV_SSL_K8S_CERT_PRIFIX}-key.pem \\
+--client-ca-file=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_PEM} \\
+--service-account-key-file=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_KEY} \\
+--kubelet-certificate-authority=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_PEM} \\
+--kubelet-client-certificate=${ENV_SSL_K8S_DIR}/${ENV_SSL_K8S_CERT_PRIFIX}.pem  \\
+--kubelet-client-key=${ENV_SSL_K8S_DIR}/${ENV_SSL_K8S_CERT_PRIFIX}-key.pem \\
+--etcd-cafile=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_PEM} \\
+--etcd-certfile=${ENV_SSL_ETCD_DIR}/${ENV_SSL_ETCD_CERT_PRIFIX}.pem \\
 --etcd-keyfile=/${ENV_SSL_ETCD_DIR}/${ENV_SSL_ETCD_CERT_PRIFIX}-key.pem"
 EOF
 

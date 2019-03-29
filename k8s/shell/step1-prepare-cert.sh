@@ -123,6 +123,7 @@ cat >${ENV_SSL_K8S_DIR}/${ENV_SSL_FILE_K8S_CSR} <<EOF
       "${ENV_SSL_CSR_HOSTS_SRV}",
       "127.0.0.1",
       "${ENV_CURRENT_HOSTIP}",
+      "${ENV_K8S_CLUSTER_SERVICE_IP}",
       "kubernetes",
       "kubernetes.default",
       "kubernetes.default.svc",

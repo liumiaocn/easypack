@@ -17,6 +17,9 @@ if [ $# -ne 2 ]; then
 fi
 
 if [ _"$ACTION" = _"clear" ]; then
+  # stop service first
+  sh $0 stop all
+
   # in order to avoid rm -rf / : here hard coding for default dir
   echo "## data dir clear operation begins..."
   echo " # clear ssl dirs "
@@ -25,6 +28,8 @@ if [ _"$ACTION" = _"clear" ]; then
   rm -rf /etc/{docker,flannel,k8s,etcd,kubernetes}
   echo " # clear log dirs "
   rm -rf /var/log/kubernetes
+  echo " # cler ~/.kube"
+  rm -rf ~/.kube
   echo " # clear working dirs or data dirs"
   rm -rf /var/lib/kubelet /var/lib/k8s /var/lib/docker /var/lib/etcd 
   echo "## data dir clear operation ends  ..."

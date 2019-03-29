@@ -15,10 +15,10 @@ fi
 
 # create kube-scheduler configuration file
 cat >${ENV_KUBE_DIR_ETC}/${ENV_KUBE_SCH_ETC} <<EOF
-KUBE_SCHEDULER_OPTS="--logtostderr=true \
---v=${ENV_KUBE_OPT_LOG_LEVEL} \
---log-dir=${ENV_KUBE_OPT_LOG_DIR} \
---master=${ENV_KUBE_MASTER_ADDR} \
+KUBE_SCHEDULER_OPTS="--logtostderr=${ENV_KUBE_OPT_LOGTOSTDERR} \\
+--v=${ENV_KUBE_OPT_LOG_LEVEL} \\
+--log-dir=${ENV_KUBE_OPT_LOG_DIR} \\
+--master=${ENV_KUBE_MASTER_ADDR} \\
 --leader-elect"
 EOF
 
