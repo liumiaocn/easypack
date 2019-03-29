@@ -14,10 +14,13 @@ kubectl create -f etc/plugins/dashboard/kubernetes-dashboard.yaml
 
 # create and display dashboard token
 create_dashboard_token
+sleep 2
+
 display_dashboard_token
+sleep 2
 
 echo "## display pods information"
-sleep 3
+sleep 2 
 kubectl get pods -n kube-system
 
 echo "## display service information"

@@ -4,7 +4,7 @@ usage(){
   echo "Usage: $0 ACTION TYPE"
   echo "       ACTION:start|stop|restart|status|install|uninstall"
   echo "       TYPE:master|node|docker|apiserver|scheduler|controller"
-  echo "            kubelet|kubeproxy|flannel|etcd"
+  echo "            kubelet|kubeproxy|flannel|etcd|dashboard"
   echo ""
 }
 
@@ -42,6 +42,9 @@ service_action(){
   elif [ _"$act_obj" = _"init" ]; then
     service_name=""
     cmds="step9-1-setting-for-init.sh"
+  elif [ _"$act_obj" = _"dashboard" ]; then
+    service_name=""
+    cmds="step9-2-install-plugin-dashboard.sh"
   else
     service_name=""
     echo "[no action executed]"

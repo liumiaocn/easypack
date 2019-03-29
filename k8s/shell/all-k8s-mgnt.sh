@@ -80,3 +80,7 @@ fi
 if [ _"$TYPE" = _"all" -o _"$TYPE" = _"init" ]; then
   sh k8s-mgnt.sh $ACTION "init"
 fi
+
+if [ _"$TYPE" = _"dashboard" ]; then
+  sh k8s-mgnt.sh $ACTION "dashboard"
+fi
