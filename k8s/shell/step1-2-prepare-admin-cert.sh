@@ -1,6 +1,7 @@
 #!/bin/sh
 
 . ./install.cfg
+. ./common-util.sh
 
 # set cfssl tools in search path
 chmod 755 ${ENV_HOME_CFSSL}/*
@@ -64,3 +65,6 @@ kubectl config set-context ${ENV_KUBECONFIG_CLUSTER} \
   --kubeconfig=${ENV_KUBECONFIG_KUBECTL}
 
 kubectl config use-context ${ENV_KUBECONFIG_CLUSTER} --kubeconfig=${ENV_KUBECONFIG_KUBECTL}
+
+echo "## copy ${ENV_KUBECONFIG_KUBECTL} to ~/.kube/config"
+cp ${ENV_SSL_CA_DIR}/${ENV_KUBECONFIG_KUBECTL} ~/.kube/config

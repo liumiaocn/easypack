@@ -14,7 +14,7 @@ service_action(){
 
   if [ _"$act_obj" = _"ssl" ]; then
     service_name=""
-    cmds="step1-prepare-cert.sh"
+    cmds="step1-prepare-cert.sh step1-2-prepare-admin-cert.sh step1-3-prepare-setting.sh"
   elif [ _"$act_obj" = _"etcd" ]; then
     service_name="etcd"
     cmds="step2-install-etcd.sh"

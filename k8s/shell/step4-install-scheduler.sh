@@ -13,13 +13,22 @@ if [ $? -ne 0 ]; then
   exit 
 fi
 
-# create kube-scheduler configuration file
+# create kube-scheduler configration file
+#cat  >${ENV_KUBE_DIR_ETC}/${ENV_KUBE_SCH_OPT_CONFIG} <<EOF
+#apiVersion: componentconfig/v1alpha1
+#kind: KubeSchedulerConfiguration
+#clientConnection:
+#  kubeconfig: "/${ENV_SSL_K8S_DIR}/${ENV_KUBECONFIG_KUBE_SCHEDULER}"
+#leaderElection:
+#  leaderElect: ${ENV_KUBE_OPT_LEADER_ELECT}
+#EOF
+
+# create kube-scheduler option file
 cat >${ENV_KUBE_DIR_ETC}/${ENV_KUBE_SCH_ETC} <<EOF
 KUBE_SCHEDULER_OPTS="--logtostderr=${ENV_KUBE_OPT_LOGTOSTDERR} \\
 --v=${ENV_KUBE_OPT_LOG_LEVEL} \\
 --log-dir=${ENV_KUBE_OPT_LOG_DIR} \\
---master=${ENV_KUBE_MASTER_ADDR} \\
---leader-elect"
+--kubeconfig=${ENV_SSL_K8S_DIR}/${ENV_KUBECONFIG_KUBE_SCHEDULER}"
 EOF
 
 # Create the kube-scheduler service.

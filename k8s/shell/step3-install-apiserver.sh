@@ -89,6 +89,7 @@ echo -e "\n##  check  kube-apiserver status"
 systemctl status kube-apiserver |egrep '\.service|Active:|\-\-'
 
 echo -e "\n##  kubectl version"
+kubectl version >/dev/null 2>&1
 kubectl version
 
 echo -e "\n##  get cs"

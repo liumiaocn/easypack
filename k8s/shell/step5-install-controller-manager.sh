@@ -13,20 +13,30 @@ if [ $? -ne 0 ]; then
   exit 
 fi
 
+#--port=0 \\
+#--secure-port=${ENV_KUBE_OPT_CM_SECURE_PORT} \\
+#--bind-address=${ENV_KUBE_OPT_LOCALHOST} \\
 # create kube-controller-manager configuration file
 cat >${ENV_KUBE_DIR_ETC}/${ENV_KUBE_CM_ETC} <<EOF
-KUBE_CONTROLLER_MANAGER_OPTS="--logtostderr=${ENV_KUBE_OPT_LOGTOSTDERR} \
---v=${ENV_KUBE_OPT_LOG_LEVEL} \
---log-dir=${ENV_KUBE_OPT_LOG_DIR} \
---master=${ENV_KUBE_MASTER_ADDR} \
---leader-elect=${ENV_KUBE_OPT_LEADER_ELECT} \
---address=${ENV_KUBE_OPT_LOCALHOST} \
---service-cluster-ip-range=${ENV_KUBE_OPT_CLUSTER_IP_RANGE} \
---cluster-name=${ENV_KUBE_OPT_CLUSTER_NAME} \
---cluster-signing-cert-file=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_PEM} \
---cluster-signing-key-file=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_KEY}  \
---root-ca-file=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_PEM} \
---service-account-private-key-file=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_KEY}"
+KUBE_CONTROLLER_MANAGER_OPTS="--logtostderr=${ENV_KUBE_OPT_LOGTOSTDERR} \\
+--v=${ENV_KUBE_OPT_LOG_LEVEL} \\
+--log-dir=${ENV_KUBE_OPT_LOG_DIR} \\
+--kubeconfig=${ENV_SSL_K8S_DIR}/${ENV_KUBECONFIG_KUBE_CONTROLLER_MANAGER} \\
+--authentication-kubeconfig=${ENV_SSL_K8S_DIR}/${ENV_KUBECONFIG_KUBE_CONTROLLER_MANAGER} \\
+--authorization-kubeconfig=${ENV_SSL_K8S_DIR}/${ENV_KUBECONFIG_KUBE_CONTROLLER_MANAGER} \\
+--leader-elect=${ENV_KUBE_OPT_LEADER_ELECT} \\
+--service-cluster-ip-range=${ENV_KUBE_OPT_CLUSTER_IP_RANGE} \\
+--cluster-name=${ENV_KUBE_OPT_CLUSTER_NAME} \\
+--cluster-signing-cert-file=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_PEM} \\
+--cluster-signing-key-file=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_KEY}  \\
+--root-ca-file=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_PEM} \\
+--service-account-private-key-file=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_KEY} \\
+--controllers=*,bootstrapsigner,tokencleaner \\
+--horizontal-pod-autoscaler-use-rest-clients=true \\
+--horizontal-pod-autoscaler-sync-period=10s \\
+--tls-cert-file=${ENV_SSL_K8S_DIR}/${ENV_SSL_K8SCM_CERT_PRIFIX}.pem \\
+--tls-private-key-file=${ENV_SSL_K8S_DIR}/${ENV_SSL_K8SCM_CERT_PRIFIX}-key.pem \\
+--use-service-account-credentials=true"
 EOF
 
 # Create the kube-controller-manager service.

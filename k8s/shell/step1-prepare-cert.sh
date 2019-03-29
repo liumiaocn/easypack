@@ -1,6 +1,7 @@
 #!/bin/sh
 
 . ./install.cfg
+. ./common-util.sh
 
 # set cfssl tools in search path
 chmod 755 ${ENV_HOME_CFSSL}/*
@@ -149,7 +150,73 @@ EOF
 cd ${ENV_SSL_K8S_DIR}
 cfssl gencert -ca=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_PEM}  -ca-key=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_KEY} -config=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_CONFIG} -profile=${ENV_SSL_PROFILE_K8S} ${ENV_SSL_FILE_K8S_CSR} | cfssljson -bare ${ENV_SSL_K8S_CERT_PRIFIX}
 
+echo "## cert for kube-apiserver"
 # confirm cert pem: cert-k8s.pem cert-k8s-key.pem
-ls ${ENV_SSL_K8S_DIR}/*.pem
+ls ${ENV_SSL_K8S_DIR}/${ENV_SSL_K8S_CERT_PRIFIX}*.pem
+
+cat >${ENV_SSL_K8S_DIR}/${ENV_SSL_FILE_K8SCM_CSR} <<EOF
+{
+    "CN": "${ENV_SSL_K8SCM_CSR_CN}",
+    "hosts": [
+      "127.0.0.1",
+      "${ENV_CURRENT_HOSTIP}"
+    ],
+    "key": {
+        "algo": "${ENV_SSL_KEY_ALGO}",
+        "size": ${ENV_SSL_KEY_SIZE}
+    },
+    "names": [
+        {
+            "C": "${ENV_SSL_NAMES_C}",
+            "L": "${ENV_SSL_NAMES_L}",
+            "ST": "${ENV_SSL_NAMES_ST}",
+            "O": "${ENV_SSL_NAMES_O_K8SCM}",
+            "OU": "${ENV_SSL_NAMES_OU}"
+        }
+    ]
+}
+EOF
+
+cfssl gencert -ca=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_PEM}  -ca-key=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_KEY} -config=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_CONFIG} -profile=${ENV_SSL_PROFILE_K8S} ${ENV_SSL_FILE_K8SCM_CSR} | cfssljson -bare ${ENV_SSL_K8SCM_CERT_PRIFIX}
+
+echo "## cert for kube-controller-manager"
+# confirm cert pem: cert-k8scm.pem cert-k8scm-key.pem
+ls ${ENV_SSL_K8S_DIR}/${ENV_SSL_K8SCM_CERT_PRIFIX}*.pem
+
+cat >${ENV_SSL_K8S_DIR}/${ENV_SSL_FILE_K8SCH_CSR} <<EOF
+{
+    "CN": "${ENV_SSL_K8SCH_CSR_CN}",
+    "hosts": [
+      "127.0.0.1",
+      "${ENV_CURRENT_HOSTIP}"
+    ],
+    "key": {
+        "algo": "${ENV_SSL_KEY_ALGO}",
+        "size": ${ENV_SSL_KEY_SIZE}
+    },
+    "names": [
+        {
+            "C": "${ENV_SSL_NAMES_C}",
+            "L": "${ENV_SSL_NAMES_L}",
+            "ST": "${ENV_SSL_NAMES_ST}",
+            "O": "${ENV_SSL_NAMES_O_K8SCH}",
+            "OU": "${ENV_SSL_NAMES_OU}"
+        }
+    ]
+}
+EOF
+
+cfssl gencert -ca=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_PEM}  -ca-key=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_KEY} -config=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_CONFIG} -profile=${ENV_SSL_PROFILE_K8S} ${ENV_SSL_FILE_K8SCH_CSR} | cfssljson -bare ${ENV_SSL_K8SCH_CERT_PRIFIX}
+
+echo "## cert for kube-scheduler"
+# confirm cert pem: cert-k8sch.pem cert-k8sch-key.pem
+ls ${ENV_SSL_K8S_DIR}/${ENV_SSL_K8SCH_CERT_PRIFIX}*.pem
+
+echo
+echo "## create kubeconfig for kube-controller-manager"
+create_kubedonfig  ${ENV_KUBECONFIG_KUBE_CONTROLLER_MANAGER}  ${ENV_KUBECONFIG_CLIENT_KUBE_CONTROLLER_MANAGER} ${ENV_SSL_K8SCM_CERT_PRIFIX}
+
+echo "## create kubeconfig for kube-scheduler"
+create_kubedonfig  ${ENV_KUBECONFIG_KUBE_SCHEDULER}  ${ENV_KUBECONFIG_CLIENT_KUBE_SCHEDULER} ${ENV_SSL_K8SCH_CERT_PRIFIX}
 
 cd $ODIR
