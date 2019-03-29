@@ -31,12 +31,8 @@ if [ _"$ACTION" = _"clear" ]; then
   echo " # cler ~/.kube"
   rm -rf ~/.kube
   echo " # clear working dirs or data dirs"
-  umount_dirs=`rm -rf /var/lib/kubelet /var/lib/k8s /var/lib/docker /var/lib/etcd 2>&1 |awk -F\' '{print $2}'`
-  for umount_dir in $umount_dirs
-  do
-    echo "#   umount $umount_dir"
-    umount $umount_dir
-  done
+  umount_dirs=`rm -rf /var/lib/kubelet /var/lib/k8s /var/lib/docker /var/lib/etcd 2>&1 |awk '{print $4}'|sed s/sss//g`
+  echo $umount_dirs
   echo "## data dir clear operation ends  ..."
   exit 0
 fi

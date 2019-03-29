@@ -39,6 +39,9 @@ service_action(){
   elif [ _"$act_obj" = _"kubeproxy" ]; then
     service_name="kube-proxy"
     cmds="step8-3-install-kubeproxy.sh"
+  elif [ _"$act_obj" = _"init" ]; then
+    service_name=""
+    cmds="step9-1-setting-for-init.sh"
   else
     service_name=""
     echo "[no action executed]"

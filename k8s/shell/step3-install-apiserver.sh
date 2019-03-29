@@ -94,3 +94,6 @@ kubectl version
 
 echo -e "\n##  get cs"
 kubectl get cs
+
+echo "## set kubectl exec privilleges"
+kubectl create clusterrolebinding ${ENV_RBAC_KUBELTAPI_ROLE_BINDING} --clusterrole=${ENV_RBAC_KUBELET_ROLE_APIADMIN} --user ${ENV_KUBECONFIG_CLUSTER}

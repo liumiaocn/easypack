@@ -45,6 +45,7 @@ cfssl gencert -ca=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_PEM} -ca-key=${ENV_SSL_CA_
 ls ${ENV_SSL_CA_DIR}/${ENV_SSL_ADMIN_CERT_PRIFIX}*.pem
 
 #echo "openssl pkcs12 -export -out ${ENV_SSL_ADMIN_CERT_PRIFIX}.pfx -inkey ${ENV_SSL_ADMIN_CERT_PRIFIX}-key.pem -in ${ENV_SSL_ADMIN_CERT_PRIFIX}.pem -certfile ${ENV_SSL_FILE_CA_PEM}"
+openssl pkcs12 -export -out ${ENV_SSL_ADMIN_CERT_PRIFIX}.pfx -inkey ${ENV_SSL_ADMIN_CERT_PRIFIX}-key.pem -in ${ENV_SSL_ADMIN_CERT_PRIFIX}.pem -certfile ${ENV_SSL_FILE_CA_PEM} -password pass:${ENV_MAC_CLIENT_PRF_PASSWORD}
 
 # Create kubectl kubeconfig file. 
 kubectl config set-cluster ${ENV_KUBECONFIG_CLUSTER} \

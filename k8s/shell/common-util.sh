@@ -27,3 +27,13 @@ create_kubedonfig(){
   
   kubectl config use-context ${KUBECONFIG_USER} --kubeconfig=${KUBECONFIG_NAME}
 }
+
+csr_auto_approve(){
+  CSR_PENDINGS=`kubectl get csr |grep -i pending`
+  for pending in $CSR_PENDINGS
+  do
+    csr_id=`echo $pending |awk '{print $1}'
+    echo "## auto approve $csr_id"
+    kubectl certificate approve $csr_id
+  done
+}
