@@ -64,3 +64,6 @@ cd data
 gunzip pause-amd64-3.1.tar.gz
 docker load -i pause-amd64-3.1.tar
 gzip pause-amd64-3.1.tar
+
+echo "## load all other images needed"
+docker load -i ${ENV_IMAGE_ALL_LOAD_DIR}/${ENV_IMAGE_ALL_LOAD_FILES} 2>/dev/null
