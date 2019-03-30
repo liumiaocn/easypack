@@ -89,3 +89,7 @@ fi
 if [ _"$TYPE" = _"dashboard" ]; then
   sh k8s-mgnt.sh $ACTION "dashboard"
 fi
+
+if [ _"$TYPE" = _"heapster" ]; then
+  sh k8s-mgnt.sh $ACTION "heapster"
+fi

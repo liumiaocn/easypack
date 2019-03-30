@@ -19,12 +19,9 @@ install_coredns(){
 
   reset_service `pwd`
 
-  echo "## check service "
-  kubectl get svc -n kube-system
-
-  echo "## begin check pods, wait for ${ENV_DEFAULT_SLEEP_INTERVAL}s ..."
+  echo "## begin check coredns, wait for ${ENV_DEFAULT_SLEEP_INTERVAL}s ..."
   sleep ${ENV_DEFAULT_SLEEP_INTERVAL}
-  kubectl get pods -n kube-system
+  kubectl get all -n kube-system |egrep -e 'dns|NAME'
 }
 
 install_coredns

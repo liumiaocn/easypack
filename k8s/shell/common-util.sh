@@ -100,10 +100,12 @@ reset_service(){
   fi
   
   echo "## delete service first"
-  kubectl delete -f .
+  pwd
+  kubectl delete -f . >/dev/null 2>&1
   echo 
   
   echo "## create service "
+  kubectl create -f .
   echo
 }
 
@@ -117,6 +119,8 @@ check_image(){
 
   echo "## please make sure you can get the following images"
   grep ${ENV_DEFAULT_IMAGE_KEYWORD} ${YAML_FILE}
-  echo "## getting the above image ready in advance is preferred, please press any key when ready"
-  read
+  if [ _"INSTALL_MODE" = _"manual" ]; then
+    echo "## getting the above image ready in advance is preferred, please press any key when ready"
+    read
+  fi
 }

@@ -53,6 +53,9 @@ service_action(){
   elif [ _"$act_obj" = _"coredns" ]; then
     service_name=""
     cmds="step9-3-install-plugin-coredns.sh"
+  elif [ _"$act_obj" = _"heapster" ]; then
+    service_name=""
+    cmds="step9-4-install-plugin-heapster.sh"
   else
     service_name=""
     echo "[no action executed]"
