@@ -3,25 +3,26 @@
 . ./install.cfg
 . ./common-util.sh
 
-echo "## please make sure you can get the following images"
-grep image etc/plugins/dashboard/kubernetes-dashboard.yaml
-echo "## getting the above image ready in advance is preferred, please press any key when ready"
-read
+check_image ${ENV_DASHBOARD_YAML_DIR}/${ENV_DASHBOARD_YAML_FILE}
 
-echo "## create dashboard service"
-kubectl delete -f etc/plugins/dashboard/kubernetes-dashboard.yaml >/dev/null 2>&1
-kubectl create -f etc/plugins/dashboard/kubernetes-dashboard.yaml
+cd ${ENV_DASHBOARD_YAML_DIR}
+echo "## the following keyword needs to be replaced"
+grep -n ${ENV_DASHBOARD_KEYWORD} ${ENV_DASHBOARD_YAML_FILE}
+echo
+
+echo "## replace ENV_DASHBOARD_KEYWORD"
+sed -i -e "s/__DASHBOARD_NODE_PORT__/${ENV_DASHBOARD_NODEPORT}/" ${ENV_DASHBOARD_YAML_FILE}
+
+reset_service `pwd`
 
 # create and display dashboard token
 create_dashboard_token
-sleep 2
+sleep ${ENV_DEFAULT_SLEEP_INTERVAL}
 
 display_dashboard_token
-sleep 2
+sleep ${ENV_DEFAULT_SLEEP_INTERVAL}
 
-echo "## display pods information"
-sleep 2 
-kubectl get pods -n kube-system
+echo "## display dashboard information"
+sleep ${ENV_DEFAULT_SLEEP_INTERVAL}
 
-echo "## display service information"
-kubectl get service -n kube-system
+kubectl get all -n kube-system |egrep -e 'dashboard|NAME'
