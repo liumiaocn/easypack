@@ -28,6 +28,33 @@ create_kubedonfig(){
   kubectl config use-context ${KUBECONFIG_USER} --kubeconfig=${KUBECONFIG_NAME}
 }
 
+create_kubedonfig_bytoken(){
+  KUBECONFIG_NAME="$1"
+  KUBECONFIG_USER="$2"
+  KUBECONFIG_TOKEN="$3"
+  
+  # Create cluster kubeconfig file. 
+  kubectl config set-cluster ${ENV_KUBECONFIG_CLUSTER} \
+    --certificate-authority=${ENV_SSL_CA_DIR}/${ENV_SSL_FILE_CA_PEM} \
+    --embed-certs=${ENV_KUBECONFIG_EMBED_CERTS} \
+    --server=${ENV_KUBE_MASTER_HTTPS} \
+    --kubeconfig=${KUBECONFIG_NAME}
+  
+  kubectl config set-credentials ${KUBECONFIG_USER} \
+    --token=${KUBECONFIG_TOKEN} \
+    --kubeconfig=${KUBECONFIG_NAME}
+  
+  kubectl config set-context ${KUBECONFIG_USER} \
+    --cluster=${ENV_KUBECONFIG_CLUSTER} \
+    --user=${KUBECONFIG_USER} \
+    --kubeconfig=${KUBECONFIG_NAME}
+  
+  kubectl config use-context ${KUBECONFIG_USER} --kubeconfig=${KUBECONFIG_NAME}
+
+  echo "## kubeconfig file created: $KUBECONFIG_NAME"
+  ls ${KUBECONFIG_NAME}
+}
+
 csr_auto_approve(){
   CSR_PENDINGS=`kubectl get csr |grep -i pending |awk '{print $1}'`
   for pending in $CSR_PENDINGS
@@ -59,5 +86,37 @@ display_dashboard_token(){
   echo "## dashboard_secrete: $dashboard_secret"
 
   echo "## dashboard_token: "
-  kubectl describe secret -n kube-system ${dashboard_secret} | grep -E '^token' | awk '{print $2}'
+  ENV_DASHBOARD_TOKEN=`kubectl describe secret -n kube-system ${dashboard_secret} | grep -E '^token' | awk '{print $2}'`
+  echo ${ENV_DASHBOARD_TOKEN}
+}
+
+reset_service(){
+  service_yaml_dir="$1"
+
+  cd $service_yaml_dir
+  if [ $? -ne 0 ]; then
+    echo "## dir $service_yaml_dir does not exist"
+    exit 1
+  fi
+  
+  echo "## delete service first"
+  kubectl delete -f .
+  echo 
+  
+  echo "## create service "
+  echo
+}
+
+check_image(){
+  YAML_FILE="$1"
+
+  if [ ! -f ${YAML_FILE} ]; then
+    echo "## please check the file existence: ${YAML_FILE}"
+    exit 1
+  fi
+
+  echo "## please make sure you can get the following images"
+  grep ${ENV_DEFAULT_IMAGE_KEYWORD} ${YAML_FILE}
+  echo "## getting the above image ready in advance is preferred, please press any key when ready"
+  read
 }

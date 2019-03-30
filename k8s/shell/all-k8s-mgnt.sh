@@ -4,7 +4,7 @@ usage(){
   echo "Usage: $0 ACTION TYPE"
   echo "       ACTION:start|stop|restart|status|install|clear"
   echo "       TYPE:master|node|docker|ssl|apiserver|scheduler|controller"
-  echo "            kubelet|kubeproxy|flannel|etcd"
+  echo "            kubelet|kubeproxy|flannel|etcd|dashboard|coredns|heapster"
   echo ""
 }
 
@@ -79,6 +79,11 @@ fi
 
 if [ _"$TYPE" = _"all" -o _"$TYPE" = _"init" ]; then
   sh k8s-mgnt.sh $ACTION "init"
+  sh k8s-mgnt.sh $ACTION "coredns"
+fi
+
+if [ _"$TYPE" = _"coredns" ]; then
+  sh k8s-mgnt.sh $ACTION "coredns"
 fi
 
 if [ _"$TYPE" = _"dashboard" ]; then

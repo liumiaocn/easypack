@@ -1,12 +1,17 @@
 #!/bin/sh
 
+
 usage(){
   echo "Usage: $0 ACTION TYPE"
   echo "       ACTION:start|stop|restart|status|install|uninstall"
   echo "       TYPE:master|node|docker|apiserver|scheduler|controller"
-  echo "            kubelet|kubeproxy|flannel|etcd|dashboard"
+  echo "            kubelet|kubeproxy|flannel|etcd|dashboard|coredns|heapster"
   echo ""
 }
+
+# read env vars and common functions
+. ./install.cfg
+. ./common-util.sh
 
 service_action(){
   act_type=$1
@@ -45,6 +50,9 @@ service_action(){
   elif [ _"$act_obj" = _"dashboard" ]; then
     service_name=""
     cmds="step9-2-install-plugin-dashboard.sh"
+  elif [ _"$act_obj" = _"coredns" ]; then
+    service_name=""
+    cmds="step9-3-install-plugin-coredns.sh"
   else
     service_name=""
     echo "[no action executed]"
