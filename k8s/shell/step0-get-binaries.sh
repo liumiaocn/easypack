@@ -48,6 +48,11 @@ mv kubernetes/server/bin/kubectl .
 mv kubernetes/server/bin/kubelet .
 mv kubernetes/server/bin/kube-proxy .
 mv kubernetes/server/bin/kube-scheduler .
+mkdir -p plugin/coredns 
+cd kubernetes
+tar xf kubernetes-src.tar.gz
+mv cluster/addons/dns/coredns/coredns.yaml.base ../plugin/coredns/coredns.yaml
+cd ..
 rm -rf kubernetes
 rm kubernetes.tar.gz
 cd ..
