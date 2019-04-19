@@ -60,7 +60,7 @@ ENV COPY_REFERENCE_FILE_LOG $JENKINS_HOME/copy_reference_file.log
 ###############################################################################
 #Install && Setting
 ###############################################################################
-RUN  apk add --no-cache git openssh-client curl unzip bash ttf-dejavu coreutils py-pip\
+RUN  apk add --no-cache git openssh-client curl unzip bash ttf-dejavu coreutils py-pip ansible \
   && echo "mkdir -p ${JENKINS_HOME}" \
   && mkdir -p ${JENKINS_HOME} \
   && mkdir -p /usr/share/jenkins/ref/init.groovy.d  \
@@ -117,7 +117,7 @@ COPY install-plugins.sh /usr/local/bin/install-plugins.sh
 #Install plugins
 ###############################################################################
 #RUN /usr/local/bin/install-plugins.sh gitlab-plugin sonar redmine docker-build-step ansible build-pipeline-plugin buildgraph-view workflow-aggregator pipeline-maven pipeline-utility-steps ssh-slaves
-RUN /usr/local/bin/install-plugins.sh gitlab-plugin ansible sonar redmine docker-build-step
+RUN /usr/local/bin/install-plugins.sh gitlab-plugin ansible sonar redmine docker-build-step docker-workflow pipeline-stage-step pipeline-stage-view
 
 ###############################################################################
 #Volume Setting
