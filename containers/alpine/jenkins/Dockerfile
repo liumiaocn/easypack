@@ -10,6 +10,7 @@
 #         sonar-scanner: 3.2.0.1227
 #         kubectl      : 1.10.12
 #         docker       : 18.09.0
+#         svn          : 1.10.2
 #
 ###############################################################################
 FROM openjdk:8-jdk-alpine
@@ -60,7 +61,7 @@ ENV COPY_REFERENCE_FILE_LOG $JENKINS_HOME/copy_reference_file.log
 ###############################################################################
 #Install && Setting
 ###############################################################################
-RUN  apk add --no-cache git openssh-client curl unzip bash ttf-dejavu coreutils py-pip ansible \
+RUN  apk add --no-cache git openssh-client curl unzip bash ttf-dejavu coreutils py-pip ansible subversion \
   && echo "mkdir -p ${JENKINS_HOME}" \
   && mkdir -p ${JENKINS_HOME} \
   && mkdir -p /usr/share/jenkins/ref/init.groovy.d  \
