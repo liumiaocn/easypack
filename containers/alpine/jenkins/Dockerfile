@@ -60,7 +60,7 @@ ENV COPY_REFERENCE_FILE_LOG $JENKINS_HOME/copy_reference_file.log
 ###############################################################################
 #Install && Setting
 ###############################################################################
-RUN  apk add --no-cache git openssh-client curl unzip bash ttf-dejavu coreutils py-pip ansible \
+RUN  apk add --no-cache git openssh-client curl unzip bash ttf-dejavu coreutils py-pip ansible subversion \
   && echo "mkdir -p ${JENKINS_HOME}" \
   && mkdir -p ${JENKINS_HOME} \
   && mkdir -p /usr/share/jenkins/ref/init.groovy.d  \
