@@ -23,8 +23,9 @@ RUN mkdir -p ${DIR_MAVEN_BASE} && \
     rm -f /tmp/apache-maven.tar.gz &&\
     ln -s ${DIR_MAVEN_BASE}/bin/mvn /usr/bin/mvn
 
-ENV MAVEN_HOME ${DIR_MAVEN_BASE}
+ENV MAVEN_HOME   ${DIR_MAVEN_BASE}
 ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
+ENV LANG         en_US.UTF8
 
 COPY mvn-entrypoint.sh /usr/local/bin/mvn-entrypoint.sh
 COPY settings-docker.xml /usr/share/maven/ref/
