@@ -13,7 +13,7 @@ usage(){
   echo
   echo "Usage: $0 ACTION TYPE"
   echo "          ACTION: download|build|deploy|all"
-  echo "          TYPE:   boot|angular|all"
+  echo "          TYPE:   boot|angular|all|bootit(build)|angularit(build)"
   echo
 }
 
@@ -45,6 +45,7 @@ if [ _"$ACTION" = _"download" ]; then
 elif [ _"$ACTION" = _"build" ]; then
   
   if [ _"$TYPE" = _"boot" -o _"$TYPE" = _"all" ]; then
+    echo "## please use $0 download all first"
     echo "## begin build jeecg-boot by using : mvn package"
     echo "   please check build log file : $LOG_BOOT_BUILD"
     docker run --rm -v ${DOCKER_LOCAL_M2_DIR}:${DOCKER_M2_DIR} -v `pwd`/${PROJECT_NAME}:${DOCKER_BOOT_DIR} ${DOCKER_IMAGE} mvn clean package -f ${DOCKER_BOOT_DIR}/pom.xml >$LOG_BOOT_BUILD
@@ -55,12 +56,13 @@ elif [ _"$ACTION" = _"build" ]; then
     echo
   fi
   if [ _"$TYPE" = _"bootit" -o _"$TYPE" = _"all" ]; then
-    echo "## begin build jeecg-boot by using : mvn install"
-    echo "   please check build log file : $LOG_BOOT_BUILD"
-    docker run -it --rm -v ${DOCKER_LOCAL_M2_DIR}:${DOCKER_M2_DIR} -v `pwd`/${PROJECT_NAME}:${DOCKER_BOOT_DIR} ${DOCKER_IMAGE} -w ${DOCKER_BOOT_DIR} sh
+    echo "## please use $0 download all first"
+    echo "## enter jeecg-boot docker env : "
+    docker run -it --rm -v ${DOCKER_LOCAL_M2_DIR}:${DOCKER_M2_DIR} -v `pwd`/${PROJECT_NAME}:${DOCKER_BOOT_DIR} -w${DOCKER_BOOT_DIR} ${DOCKER_IMAGE} sh
   fi
 
   if [ _"$TYPE" = _"angular" -o _"$TYPE" = _"all" ]; then
+    echo "## please use $0 download all first"
     echo "## begin build angular by using : npm install"
     docker run --rm -v `pwd`/${PROJECT_NAME}:${DOCKER_BOOT_DIR}  -w ${DOCKER_BOOT_DIR}/ant-design-jeecg-angular liumiaocn/angular:7.3.8 npm install >$LOG_ANGULAR_BUILD 2>&1 &
     echo "## begin build angular by using : ng build"
@@ -70,7 +72,8 @@ elif [ _"$ACTION" = _"build" ]; then
   fi
 
   if [ _"$TYPE" = _"angularit" -o _"$TYPE" = _"all" ]; then
-    echo "## begin build angular by using : npm install"
+    echo "## please use $0 download all first"
+    echo "## enter jeecg angular docker env: "
     docker run --rm -v `pwd`/${PROJECT_NAME}:${DOCKER_BOOT_DIR}  -w ${DOCKER_BOOT_DIR}/ant-design-jeecg-angular liumiaocn/angular:7.3.8 sh 
   fi
 
