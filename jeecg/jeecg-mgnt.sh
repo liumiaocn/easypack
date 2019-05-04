@@ -74,7 +74,7 @@ elif [ _"$ACTION" = _"build" ]; then
   if [ _"$TYPE" = _"angularit" -o _"$TYPE" = _"all" ]; then
     echo "## please use $0 download all first"
     echo "## enter jeecg angular docker env: "
-    docker run --rm -v `pwd`/${PROJECT_NAME}:${DOCKER_BOOT_DIR}  -w ${DOCKER_BOOT_DIR}/ant-design-jeecg-angular liumiaocn/angular:7.3.8 sh 
+    docker run -it --rm -v `pwd`/${PROJECT_NAME}:${DOCKER_BOOT_DIR}  -w ${DOCKER_BOOT_DIR}/ant-design-jeecg-angular liumiaocn/angular:7.3.8 sh 
   fi
 
 elif [ _"$ACTION" = _"deploy" ]; then
