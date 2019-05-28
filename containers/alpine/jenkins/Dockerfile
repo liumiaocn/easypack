@@ -1,7 +1,7 @@
 ###############################################################################
 #
 #IMAGE:   Jenkins(Alpine)
-#VERSION: 2.164.2
+#VERSION: 2.164.3
 #BASE:    Jenkins LTS Version
 #INTEGRATION:
 #         Jenkins Slave: 3.28
@@ -30,8 +30,8 @@ ARG TINI_SHA=eadb9d6e2dc960655481d78a92d2c8bc021861045987ccd3e27c7eae5af0cf33
 ARG JENKINS_HOME="/data/jenkins"
 ARG JENKINS_SLAVE_VER="3.28"
 ARG JENKINS_SLAVE_AGENT_PORT=${agent_port}
-ARG JENKINS_VERSION=${JENKINS_VERSION:-2.164.2}
-ARG JENKINS_SHA=c851b603e3d320295eed671fde7c661209645c818da9b7564caee8371e52bede
+ARG JENKINS_VERSION=${JENKINS_VERSION:-2.164.3}
+ARG JENKINS_SHA=a8af991f9085ff7f12baa2c9978554b2a18e5c4ed84327224d30e269e8f4a50e
 ARG JENKINS_URL=http://mirrors.jenkins.io/war-stable/${JENKINS_VERSION}/jenkins.war
 ARG COPY_REFERENCE_FILE_LOG=$JENKINS_HOME/copy_reference_file.log
 ARG MAVEN_HOME="/usr/local/share/maven"
