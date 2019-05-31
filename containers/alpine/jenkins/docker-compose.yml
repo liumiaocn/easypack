@@ -3,7 +3,7 @@ version: '2'
 services:
   # jenkins service based on Jenkins LTS version
   jenkins:
-    image: liumiaocn/jenkins:2.164.3
+    image: liumiaocn/jenkins:2.176.1
     ports:
       - "32002:8080"
       - "50000:50000"
@@ -13,4 +13,5 @@ services:
       - JENKINS_MODE=master
     volumes:
       - ./data/:/data/jenkins
+      - /var/run/docker.sock:/var/run/docker.sock
     restart: "no"
