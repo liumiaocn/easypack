@@ -1,0 +1,32 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.15">
+<actions/>
+<description><!-- Managed by Jenkins Job Builder --></description>
+<keepDependencies>false</keepDependencies>
+<properties>
+<hudson.model.ParametersDefinitionProperty>
+<parameterDefinitions>
+<hudson.model.StringParameterDefinition>
+<name>executeId</name>
+<description/>
+<defaultValue/>
+</hudson.model.StringParameterDefinition>
+</parameterDefinitions>
+</hudson.model.ParametersDefinitionProperty>
+<org.jenkinsci.plugins.workflow.job.properties.DisableConcurrentBuildsJobProperty/>
+</properties>
+<definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.41">
+<script>pipeline {    
+    agent any    
+    stages {        
+        stage('Build') {            
+            steps {                
+                sh 'echo Build stage ...'            
+            }        
+        }    
+    }
+}</script>
+<sandbox>false</sandbox>
+</definition>
+<disabled>false</disabled>
+</flow-definition>
