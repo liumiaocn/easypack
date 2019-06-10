@@ -70,17 +70,6 @@ rm -r "$GNUPGHOME" /usr/local/bin/tini.asc; \
 chmod +x /usr/local/bin/tini; \
 tini -h; \
 \
-# install thems
-cd /usr/src/redmine/public/themes \
-wget https://github.com/mrliptontea/PurpleMine2/archive/v2.5.0.zip \
-wget https://github.com/akabekobeko/redmine-theme-minimalflat2/archive/v1.6.0.zip \
-unzip v2.5.0.zip \
-unzip v1.6.0.zip \
-rm v1.6.0.zip v2.5.0.zip \
-cd /usr/src/redmine/public/themes/PurpleMine2-2.5.0/stylesheets \
-sed -i s/36266b/438972/g *.css \
-sed -i s/614ba6/11aa87/g *.css \
-\
 # reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
 apt-mark auto '.*' > /dev/null; \
 [ -z "$savedAptMark" ] || apt-mark manual $savedAptMark; \
@@ -173,6 +162,23 @@ find /usr/local -type f -executable -exec ldd '{}' ';' \
 | xargs -r apt-mark manual \
 ; \
 apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false
+
+
+COPY themes.tar.gz /usr/src/redmine/public/
+
+# install thems
+RUN  cd /usr/src/redmine/public/themes \
+&& wget https://github.com/mrliptontea/PurpleMine2/archive/v2.5.0.zip \
+&& wget https://github.com/akabekobeko/redmine-theme-minimalflat2/archive/v1.6.0.zip \
+&& unzip v2.5.0.zip \
+&& unzip v1.6.0.zip \
+&& rm v1.6.0.zip v2.5.0.zip \
+&& cd /usr/src/redmine/public/themes/PurpleMine2-2.5.0/stylesheets \
+&& sed -i s/36266b/438972/g *.css \
+&& sed -i s/614ba6/11aa87/g *.css \
+&& cd /usr/src/redmine/public/ \
+&& tar xvpf themes.tar.gz \
+&& rm themes.tar.gz
 
 VOLUME /usr/src/redmine/files
 
