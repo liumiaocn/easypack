@@ -1,8 +1,7 @@
-
 ###############################################################################
 #
 #IMAGE:   Redmine
-#VERSION: 4.0.3
+#VERSION: 3.4.11
 #
 ###############################################################################
 FROM ruby:2.6-slim-stretch
@@ -87,8 +86,8 @@ mkdir -p "$HOME"; \
 chown redmine:redmine "$HOME"; \
 chmod 1777 "$HOME"
 
-ENV REDMINE_VERSION 4.0.0
-ENV REDMINE_DOWNLOAD_MD5 619675f04df3c960e334377e485581ca
+ENV REDMINE_VERSION 3.4.11
+ENV REDMINE_DOWNLOAD_MD5 796384ff56d335fe21da65acf4dba747
 
 RUN wget -O redmine.tar.gz "https://www.redmine.org/releases/redmine-${REDMINE_VERSION}.tar.gz" \
 && echo "$REDMINE_DOWNLOAD_MD5 redmine.tar.gz" | md5sum -c - \
