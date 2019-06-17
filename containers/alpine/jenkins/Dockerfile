@@ -1,7 +1,7 @@
 ###############################################################################
 #
 #IMAGE:   Jenkins(Alpine)
-#VERSION: 2.164.3
+#VERSION: 2.176.1
 #BASE:    Jenkins LTS Version
 #INTEGRATION:
 #         Jenkins Slave: 3.28
@@ -30,8 +30,8 @@ ARG TINI_SHA=eadb9d6e2dc960655481d78a92d2c8bc021861045987ccd3e27c7eae5af0cf33
 ARG JENKINS_HOME="/data/jenkins"
 ARG JENKINS_SLAVE_VER="3.28"
 ARG JENKINS_SLAVE_AGENT_PORT=${agent_port}
-ARG JENKINS_VERSION=${JENKINS_VERSION:-2.164.3}
-ARG JENKINS_SHA=a8af991f9085ff7f12baa2c9978554b2a18e5c4ed84327224d30e269e8f4a50e
+ARG JENKINS_VERSION=${JENKINS_VERSION:-2.176.1}
+ARG JENKINS_SHA=8bbc6e2043e7bd102f751aca94b51652e1e792ec0a11377d52c9d9ed484f0e8c
 ARG JENKINS_URL=http://mirrors.jenkins.io/war-stable/${JENKINS_VERSION}/jenkins.war
 ARG COPY_REFERENCE_FILE_LOG=$JENKINS_HOME/copy_reference_file.log
 ARG MAVEN_HOME="/usr/local/share/maven"
@@ -118,7 +118,7 @@ COPY install-plugins.sh /usr/local/bin/install-plugins.sh
 #Install plugins
 ###############################################################################
 #RUN /usr/local/bin/install-plugins.sh gitlab-plugin sonar redmine docker-build-step ansible build-pipeline-plugin buildgraph-view workflow-aggregator pipeline-maven pipeline-utility-steps ssh-slaves
-RUN /usr/local/bin/install-plugins.sh gitlab-plugin ansible sonar redmine docker-build-step docker-workflow pipeline-stage-step pipeline-stage-view
+RUN /usr/local/bin/install-plugins.sh gitlab-plugin ansible sonar redmine docker-build-step docker-workflow blue-ocean
 
 ###############################################################################
 #Volume Setting
