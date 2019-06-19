@@ -1,0 +1,65 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.32">
+  <actions>
+    <org.jenkinsci.plugins.pipeline.modeldefinition.actions.DeclarativeJobAction plugin="pipeline-model-definition@1.3.8"/>
+  </actions>
+  <description>Pipeline Job Sample</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.plugins.jira.JiraProjectProperty plugin="jira@3.0.7"/>
+    <com.dabsquared.gitlabjenkins.connection.GitLabConnectionProperty plugin="gitlab-plugin@1.5.12">
+      <gitLabConnection></gitLabConnection>
+    </com.dabsquared.gitlabjenkins.connection.GitLabConnectionProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.69">
+  <script>pipeline {
+    agent any 
+
+    environment {
+      ENVIRONMENT_TEST_FLAG = 'NO'
+    }
+    stages {
+        stage('Init') { 
+            steps { 
+              script {
+                BUILD_EXPRESSION = true
+                DEPLOY_USER = 'liumiaocn'
+              }
+            }
+        }
+        stage('Build') { 
+            steps { 
+              script {
+                if ( BUILD_EXPRESSION ) {
+                    sh 'echo Build stage ...' 
+                }
+              }
+            }
+        }
+        
+        stage('Test'){
+            steps {
+              script {
+                if ( ENVIRONMENT_TEST_FLAG == 'YES' ) {
+                  sh 'echo Test stage ...' 
+                }
+              }
+            }
+        }
+        
+        stage('Deploy') {
+            steps {
+              script {
+                if ( DEPLOY_USER == 'liumiaocn' ) {
+                  sh 'echo Deploy stage ...' 
+                }
+              }
+            }
+        }
+    }
+  }</script>
+  <sandbox>false</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>
