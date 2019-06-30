@@ -3,11 +3,12 @@
 TYPE_OS=linux
 TYPE_ARCH=amd64
 VER_CFSSL=R1.2
-VER_KUBERNETES=v1.13.4
-VER_ETCD=v3.3.12
-VER_DOCKER=17.03.2-ce
+#VER_KUBERNETES=v1.13.4
+VER_KUBERNETES=v1.15.0
+VER_ETCD=v3.3.13
+VER_DOCKER=18.09.7
 VER_CNI=v0.7.4
-VER_FLANNEL=v0.10.0
+VER_FLANNEL=v0.11.0
 DIR_DOWNLOAD=/tmp
 
 
@@ -75,7 +76,7 @@ cd docker
 curl -Lo docker-${VER_DOCKER}.tgz https://download.docker.com/${TYPE_OS}/static/stable/x86_64/docker-${VER_DOCKER}.tgz >/dev/null 2>&1
 tar zxf docker-${VER_DOCKER}.tgz
 mv docker tmpdocker
-mv -f tmpdocker/docker* .
+mv -f tmpdocker/* .
 rm -rf tmpdocker
 rm docker-${VER_DOCKER}.tgz
 cd ..

@@ -7,7 +7,7 @@ systemctl stop docker 2>/dev/null
 
 mkdir -p ${ENV_DOCKER_DIR_BIN} ${ENV_DOCKER_DIR_ETC} 
 chmod 755 ${ENV_HOME_DOCKER}/*
-cp -p ${ENV_HOME_DOCKER}/docker* ${ENV_DOCKER_DIR_BIN}
+cp -p ${ENV_HOME_DOCKER}/* ${ENV_DOCKER_DIR_BIN}
 if [ $? -ne 0 ]; then
   echo "please check docker binary files existed in ${ENV_HOME_DOCKER}/ or not"
   exit 

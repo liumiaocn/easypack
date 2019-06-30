@@ -26,7 +26,6 @@ KUBELET_OPTS="--logtostderr=${ENV_KUBE_OPT_LOGTOSTDERR} \\
 --kubeconfig=${ENV_KUBE_DIR_ETC}/${ENV_KUBELET_KUBECONFIG} \\
 --config=${ENV_KUBE_DIR_ETC}/${ENV_KUBELET_OPT_CONFIG} \\
 --pod-infra-container-image=${ENV_KUBE_OPT_PAUSE} \\
---allow-privileged=${ENV_KUBE_OPT_ALLOW_PRIVILEGE} \\
 --event-qps=${ENV_KUBELET_OPT_EVENT_QPS} \\
 --kube-api-qps=${ENV_KUBELET_OPT_KPI_QPS} \\
 --kube-api-burst=${ENV_KUBELET_OPT_API_BRUST} \\
