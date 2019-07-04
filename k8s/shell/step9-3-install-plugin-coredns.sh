@@ -5,6 +5,8 @@
 . ./common-util.sh
 
 install_coredns(){
+  docker load -i ${ENV_HOME_IMAGE_COREDNS}
+
   check_image ${ENV_COREDNS_YAML_DIR}/${ENV_COREDNS_YAML_FILE}
 
   cd ${ENV_COREDNS_YAML_DIR}
