@@ -11,6 +11,8 @@ usage(){
 ACTION=$1
 TYPE=$2
 
+. ./install.cfg
+
 if [ $# -ne 2 ]; then
   usage
   exit 1
@@ -39,6 +41,14 @@ if [ _"$ACTION" = _"clear" ]; then
   done
   echo "## data dir clear operation ends  ..."
   exit 0
+fi
+
+if [ _"$ACTION" = _"install" ]; then
+  if [ ! -d ${ENV_HOME_BINARY} ]; then
+    echo "## Error: offline binary files directory does not exist"
+    echo "   please check dir [$ENV_HOME_BINARY]"
+    exit
+  fi 
 fi
 
 if [ _"$TYPE" = _"all" -o _"$TYPE" = _"master" -o _"$TYPE" = _"ssl" ]; then

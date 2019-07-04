@@ -12,6 +12,9 @@ fi
 
 export PATH=${ENV_HOME_CFSSL}:$PATH
 
+# copy kubectl for preparement
+cp ${ENV_HOME_BINARY}/kubernetes/kubectl ${ENV_KUBE_DIR_BIN}
+
 # create dir for certs when not existing
 mkdir -p ${ENV_SSL_CA_DIR} ${ENV_SSL_K8S_DIR} ${ENV_SSL_ETCD_DIR}
 
