@@ -1,0 +1,19 @@
+---
+# string
+stringvar: hello this is a string
+
+# boolean Yes == True 
+boolvar: Yes
+
+# integer
+intvar: 1001
+
+# timestamp
+timevar: 2019-07-10 06:05:01 
+
+# Null
+nullvars:
+  - nullvar: null
+  - Nullvar: Null
+  - thenullvar: ~
+...

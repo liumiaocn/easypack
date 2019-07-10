@@ -1,0 +1,22 @@
+---
+# boolean value :false
+falsevar: false
+Falsevar: False
+FALSEvar: FALSE
+novar: no
+Novar: No
+NOvar: NO
+offvar: off
+Offvar: Off
+OFFvar: OFF
+
+# boolean value :true
+truevar: true
+Truevar: True
+TRUEvar: TRUE
+yesvar:  yes
+Yesvar:  Yes
+YESvar:  YES
+onvar:   on
+Onvar:   On
+ONvar:   ON

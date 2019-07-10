@@ -1,0 +1,7 @@
+---
+# without space behind person:
+person:{name: Liumiaocn, id: 1001}
+greetings:
+# use tab rather than space
+	message: Hello
+...

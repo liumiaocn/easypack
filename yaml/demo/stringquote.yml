@@ -1,0 +1,11 @@
+--- #Yaml sample usage: dictionary & comment
+
+# Yaml Sample usage
+# key/value pair
+# name and greeting messages
+
+name: liumiaocn
+greetingmessages: hello \n in a new line
+greetingmsg2: "message with double quotation \n in a new line"
+greetingmsg3: 'message with single quotation \n in a new line'
+...

@@ -1,0 +1,8 @@
+---
+name: Liumiaocn
+greeting: Hello
+canread: Yes
+yesmessage: !!str Yes
+id: '1001'
+integerid: !!int '1001'
+...

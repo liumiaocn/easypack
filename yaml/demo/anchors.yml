@@ -1,0 +1,15 @@
+---
+defaultgreeting: &defaultgreetingref
+  name: &nameref Liumiaocn
+  message: Hello
+
+# override message column
+welcomegreeting:
+  <<: *defaultgreetingref
+  message: Welcome
+
+# add new column
+newgreeting:
+  newname: *nameref
+  newmessage: New Message Information
+...

@@ -1,0 +1,22 @@
+---
+multiplelinemessages: |
+  sow a thought, reap an action; 
+  sow an action, reap a habit; 
+
+  sow a habit, reap a character; 
+  sow a character, reap a destiny.
+
+sinlelinemessagewithbr: >
+  sow a thought, reap an action; 
+  sow an action, reap a habit; 
+
+  sow a habit, reap a character; 
+  sow a character, reap a destiny.
+
+singlelinemessagewithoutbr: >- 
+  sow a thought, reap an action; 
+  sow an action, reap a habit; 
+
+  sow a habit, reap a character; 
+  sow a character, reap a destiny.
+...

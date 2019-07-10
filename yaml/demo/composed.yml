@@ -1,0 +1,9 @@
+---
+names: 
+  - LiuMiaocn
+  - Michael
+greetings:
+  message1: Welcome
+  message2: to
+  message3: YAML
+...
