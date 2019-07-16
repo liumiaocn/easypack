@@ -1,0 +1,5 @@
+---
+# vars file for download
+var_download_url_k8s: https://dl.k8s.io/v1.15.0/kubernetes-server-linux-amd64.tar.gz
+var_download_save_dir: /tmp/binary/kubernetes.tar.gz
+var_download_save_mode: '0644'

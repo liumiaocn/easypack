@@ -1,0 +1,7 @@
+---
+# tasks file for download
+- name: download binariy kubernetes
+  get_url:
+    url:  '{{ var_download_url_k8s }}'
+    dest: '{{ var_download_save_dir }}'
+    mode: '{{ var_download_save_mode }}'
