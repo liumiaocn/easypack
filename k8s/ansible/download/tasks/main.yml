@@ -1,7 +1,139 @@
 ---
+# prepare download dir
+- name: create download file in advance
+  file: 
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ var_download_base_dir }}"
+    - "{{ var_download_save_dir_k8s }}"
+    - "{{ var_download_save_dir_cfssl }}"
+    - "{{ var_download_save_dir_flannel }}"
+    - "{{ var_download_save_dir_etcd }}"
+    - "{{ var_download_save_dir_cni }}"
+    - "{{ var_download_save_dir_docker }}"
+
 # tasks file for download
-- name: download binariy kubernetes
+- name: download binary kubernetes
   get_url:
     url:  '{{ var_download_url_k8s }}'
-    dest: '{{ var_download_save_dir }}'
+    dest: '{{ var_download_tmp_file_k8s }}'
     mode: '{{ var_download_save_mode }}'
+
+- name: extract binary files of kubernetes
+  unarchive:
+    copy: no
+    src: "{{ var_download_tmp_file_k8s }}"
+    dest: "{{ var_download_base_dir }}" 
+    extra_opts: "{{ var_download_unarchive_extras_files_k8s }}"
+
+- name: create output kubernetes binary dir
+  synchronize:
+    src: "{{ var_download_tmp_dir_k8s }}/"
+    dest: "{{ var_download_save_dir_k8s }}" 
+
+- name: download binary :cfssl
+  get_url:
+    url:  '{{ var_download_url_cfssl }}'
+    dest: '{{ var_download_file_cfssl }}'
+    mode: '{{ var_download_save_mode_bin }}'
+
+- name: download binary :cfssljson
+  get_url:
+    url:  '{{ var_download_url_cfssljson }}'
+    dest: '{{ var_download_file_cfssljson }}'
+    mode: '{{ var_download_save_mode_bin }}'
+
+- name: download binary :cfsslcertinfo
+  get_url:
+    url:  '{{ var_download_url_cfsslcertinfo }}'
+    dest: '{{ var_download_file_cfsslcertinfo }}'
+    mode: '{{ var_download_save_mode_bin }}'
+
+- name: download binary :flannel
+  get_url:
+    url:  '{{ var_download_url_flannel }}'
+    dest: '{{ var_download_file_flannel }}'
+    mode: '{{ var_download_save_mode }}'
+
+- name: extract binary files of flannel
+  unarchive:
+    copy: no
+    src: "{{ var_download_file_flannel }}"
+    dest: "{{ var_download_save_dir_flannel }}" 
+    extra_opts: "{{ var_download_unarchive_extras_files_flannel }}"
+
+- name: download binary :etcd
+  get_url:
+    url:  '{{ var_download_url_etcd }}'
+    dest: '{{ var_download_file_etcd }}'
+    mode: '{{ var_download_save_mode }}'
+
+- name: extract binary files of etcd
+  unarchive:
+    copy: no
+    src: "{{ var_download_file_etcd }}"
+    dest: "{{ var_download_save_dir_etcd }}" 
+    extra_opts: "{{ var_download_unarchive_extras_files_etcd }}"
+
+- name: create output docker binary dir
+  synchronize:
+    src: "{{ var_download_tmp_dir_etcd }}/"
+    dest: "{{ var_download_save_dir_etcd }}" 
+
+- name: download binary :cni
+  get_url:
+    url:  '{{ var_download_url_cni }}'
+    dest: '{{ var_download_file_cni }}'
+    mode: '{{ var_download_save_mode }}'
+
+- name: extract binary files of cni
+  unarchive:
+    copy: no
+    src: "{{ var_download_file_cni }}"
+    dest: "{{ var_download_save_dir_cni }}" 
+
+- name: download binary :docker
+  get_url:
+    url:  '{{ var_download_url_docker }}'
+    dest: '{{ var_download_file_docker }}'
+    mode: '{{ var_download_save_mode }}'
+
+- name: extract binary files of docker
+  unarchive:
+    copy: no
+    src: "{{ var_download_file_docker }}"
+    dest: "{{ var_download_save_dir_docker }}" 
+
+# change docker directory name because of docker file in directory
+- name: copy docker/dockertmp/ from docker/docker/
+  copy:
+    src: "{{ var_download_tmp_dir_docker }}/"
+    dest: "{{ var_download_tmp_dir_docker }}tmp/"
+
+# delete docker/docker directory
+- name : delete docker/docker directory for moving action
+  file:
+    path: "{{ var_download_tmp_dir_docker }}/"
+    state: absent
+
+- name: create output docker binary dir
+  synchronize:
+    src: "{{ var_download_tmp_dir_docker }}tmp/"
+    dest: "{{ var_download_save_dir_docker }}" 
+
+- name: delete useless temp files
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ var_download_tmp_dir_k8s_server }}"
+    - "{{ var_download_save_dir_flannel }}/README.md"
+    - "{{ var_download_tmp_dir_docker }}"
+    - "{{ var_download_tmp_dir_docker }}tmp"
+    - "{{ var_download_tmp_dir_etcd }}"
+    - "{{ var_download_file_cni }}"
+    - "{{ var_download_file_docker }}"
+    - "{{ var_download_file_etcd }}"
+    - "{{ var_download_file_flannel }}"
+    - "{{ var_download_tmp_file_k8s }}"
