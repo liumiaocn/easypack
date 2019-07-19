@@ -1,2 +1,24 @@
 ---
 # tasks file for prepare
+
+## install kubectl
+- name: install kubectl
+  copy:
+    src: "{{ var_file_kubectl }}"
+    dest: "{{ var_binary_file_dir_local }}"
+    mode: "{{ var_binary_file_mode }}"
+  tags: 
+    - "install"
+
+## install cffssl tools
+- name: install cfssl tools
+  copy:
+    src: "{{ item }}"
+    dest: "{{ var_binary_file_dir_local }}"
+    mode: "{{ var_binary_file_mode }}"
+  with_items:
+    - "{{ var_file_cfssl }}"
+    - "{{ var_file_cfssljson }}"
+    - "{{ var_file_cfsslcertinfo }}" 
+  tags: 
+    - "install"

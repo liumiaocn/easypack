@@ -1,0 +1,15 @@
+---
+var_install_base_dir: /tmp/binary
+var_binary_file_mode: '0755'
+var_binary_file_dir_local: "/usr/local/bin"
+
+## kubectl
+var_install_dir_k8s: "{{var_install_base_dir}}/kubernetes"
+var_file_kubectl: "{{var_install_dir_k8s}}/kubectl"
+
+## cfssl
+var_install_dir_cfssl: "{{var_install_base_dir}}/cfssl"
+var_file_cfssl: "{{var_install_dir_cfssl}}/cfssl"
+var_file_cfssljson: "{{var_install_dir_cfssl}}/cfssljson"
+var_file_cfsslcertinfo: "{{var_install_dir_cfssl}}/cfssl-certinfo"
+...

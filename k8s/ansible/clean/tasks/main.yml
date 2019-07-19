@@ -1,0 +1,15 @@
+---
+# tasks file for clean
+
+## clean files
+- name: clean files kubectl & cfssltools
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ var_binary_file_dir_local }}/kubectl"
+    - "{{ var_binary_file_dir_local }}/cfssl"
+    - "{{ var_binary_file_dir_local }}/cfssljson"
+    - "{{ var_binary_file_dir_local }}/cfssl-certinfo"
+  tags:
+    - "clean"

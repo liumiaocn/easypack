@@ -1,8 +1,8 @@
 ---
 - hosts: localhost
-  vars_files:
-    - "../../common_vars.yml"
   remote_user: root
   gather_facts: no
+  vars_files:
+    - "../../common_vars.yml"
   roles:
-    - role: prepare
+    - clean
