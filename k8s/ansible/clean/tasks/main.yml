@@ -35,3 +35,15 @@
       - "{{ var_ssl_ca_dir }}"
       - "{{ var_ssl_k8s_dir }}"
       - "{{ var_ssl_etcd_dir }}"
+
+- name: delete dirs of etcd
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ var_etcd_conf }}"
+    - "{{ var_etcd_service }}"
+    - "{{ var_src_etcd }}/etcd"
+    - "{{ var_src_etcd }}/etcdctl"
+    - "{{ var_etcd_conf_dir }}"
+    - "{{ var_etcd_data_dir }}"

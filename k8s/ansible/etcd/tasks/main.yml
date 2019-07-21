@@ -1,2 +1,37 @@
 ---
 # tasks file for etcd
+
+- name: create dirs for etcd
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ var_etcd_data_dir }}"
+
+- name: create etcd service file
+  template:
+    src: "{{ var_template_etcd_service }}"
+    dest: "{{ var_etcd_service }}"
+
+- name: copy etcd and etcdctl to install dir
+  copy:
+    src: "{{ item }}"
+    dest: "{{ var_etcd_dir_bin }}"
+    mode: "{{ var_default_bin_mode }}"
+  with_items:
+    - "{{ var_src_etcd }}/etcd"
+    - "{{ var_src_etcd }}/etcdctl"
+   
+- name: systemctl enable etcd service
+  shell: "systemctl enable etcd"
+
+- name: start etcd service
+  shell: "systemctl daemon-reload \
+          && systemctl restart etcd" 
+
+- name: confirm etcd service state
+  shell: "systemctl status etcd.service|grep Active"
+  register: ret_etcd_status
+  until: '"running" in ret_etcd_status.stdout'
+  retries: "{{ var_retry_max }}"
+  delay: "{{ var_delay_cnt }}" 

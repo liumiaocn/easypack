@@ -13,11 +13,16 @@ var_default_install_bin: /usr/local/bin
 var_default_bin_mode: '0755'
 var_src_k8s_sysctl: sysctl-kubernetes.conf.j2
 var_dest_k8s_sysctl: /etc/sysctl.d/sysctl-kubernetes.conf
+var_retry_max: 3
+var_delay_cnt: 3
 #######END  : SETTING: BASIC#########
 
 #######BEGIN: SETTING: ETCD##########
 var_etcd_dir_bin: "{{var_default_install_bin}}"
-var_etcd_conf: "/etc/etcd/etcd.conf"
+var_etcd_conf_dir: "/etc/etcd"
+var_template_etcd_conf: etcd.conf.j2
+var_template_etcd_service: etcd.service.j2
+var_etcd_conf: "{{ var_etcd_conf_dir }}/etcd.conf"
 var_etcd_service: "/usr/lib/systemd/system/etcd.service"
 var_etcd_data_dir: "/var/lib/etcd/"
 var_etcd_client_port: 2379
