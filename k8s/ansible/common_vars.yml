@@ -1,15 +1,206 @@
 ---
-var_install_base_dir: /tmp/binary
-var_binary_file_mode: '0755'
-var_binary_file_dir_local: "/usr/local/bin"
+#######BEGIN: SETTING: BASIC#########
+var_all_in_one_hostip: 192.168.163.131
+var_src_binary: /tmp/binary
+var_src_k8s: "{{var_src_binary}}/kubernetes"
+var_src_cfssl: "{{var_src_binary}}/cfssl"
+var_src_etcd:  "{{var_src_binary}}/etcd"
+var_src_flannel: "{{var_src_binary}}/flannel"
+var_src_docker: "{{var_src_binary}}/docker"
+var_csr_auto_approve_interval: 3
+var_default_sleep_interval: 3
+var_default_install_bin: /usr/local/bin
+var_default_bin_mode: '0755'
+var_src_k8s_sysctl: sysctl-kubernetes.conf.j2
+var_dest_k8s_sysctl: /etc/sysctl.d/sysctl-kubernetes.conf
+#######END  : SETTING: BASIC#########
 
-## kubectl
-var_install_dir_k8s: "{{var_install_base_dir}}/kubernetes"
-var_file_kubectl: "{{var_install_dir_k8s}}/kubectl"
+#######BEGIN: SETTING: ETCD##########
+var_etcd_dir_bin: "{{var_default_install_bin}}"
+var_etcd_conf: "/etc/etcd/etcd.conf"
+var_etcd_service: "/usr/lib/systemd/system/etcd.service"
+var_etcd_data_dir: "/var/lib/etcd/"
+var_etcd_client_port: 2379
+var_etcd_peer_port: 2380
+var_etcd_names: "etcd-01"
+var_etcd_hosts: "192.168.163.131"
+var_etcd_localhost_client: "http://127.0.0.1:{{var_etcd_client_port}}"
+var_etcd_state_new: "new"
+var_etcd_state_existing: "existing"
+var_etcd_initial_cluster_token: "etcd-cluster"
+var_etcd_initial_cluster_state: "{{var_etcd_state_new}}"
+#######END  : SETTING: ETCD##########
 
-## cfssl
-var_install_dir_cfssl: "{{var_install_base_dir}}/cfssl"
-var_file_cfssl: "{{var_install_dir_cfssl}}/cfssl"
-var_file_cfssljson: "{{var_install_dir_cfssl}}/cfssljson"
-var_file_cfsslcertinfo: "{{var_install_dir_cfssl}}/cfssl-certinfo"
+#######BEGIN: SETTING: APISERVER#####
+var_kube_dir_bin: "{{var_default_install_bin}}"
+var_kube_dir_etc: "/etc/k8s"
+var_kube_api_conf: "apiserver.conf"
+var_kube_api_service: "/usr/lib/systemd/system/kube-apiserver.service"
+var_kube_api_token: token.csv
+var_kube_opt_logtostderr: false
+var_kube_opt_log_level: 2
+var_kube_opt_log_dir: /var/log/kubernetes
+var_kube_opt_api_ssl_port: 6443
+var_kube_opt_allow_privilege: true
+var_k8s_cluster_service_ip: 10.254.0.1
+var_kube_opt_cluster_ip_range: 10.254.0.0/16
+var_kube_opt_cluster_port_range: 30000-50000
+var_kube_opt_auth_mode: "RBAC,Node"
+var_kube_adm_plugins: "NamespaceLifecycle,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota,NodeRestriction"
+var_kube_master_addr: 127.0.0.1:8080
+var_kube_master_ip: 192.168.163.131
+var_kube_master_https: "https://{{var_kube_master_ip}}:{{var_kube_opt_api_ssl_port}}"
+#######END  : SETTING: APISERVER#####
+
+#######BEGIN: SETTING: SCHEDULER#####
+var_kube_sch_etc: kube-scheduler.conf
+var_kube_sch_service: /usr/lib/systemd/system/kube-scheduler.service
+var_kube_sch_opt_config: "kube-scheduler.yaml"
+#######END  : SETTING: SCHEDULER#####
+
+#######BEGIN: SETTING: CONTROLLER####
+var_kube_cm_etc: controller-manager.conf
+var_kube_cm_service: /usr/lib/systemd/system/kube-controller-manager.service
+var_kube_opt_leader_elect: true
+var_kube_opt_cluster_name: kubernetes
+var_kube_opt_localhost: 127.0.0.1
+var_kube_opt_cm_secure_port: 10252
+#######END  : SETTING: CONTROLLER####
+
+#######BEGIN: SETTING: FLANNEL#######
+var_flannel_dir_bin: "{{var_default_install_bin}}"
+var_flannel_dir_etc: /etc/flannel
+var_flannel_dir_run: /run/flannel
+var_flannel_etc: flannel.conf
+var_flannel_service: /usr/lib/systemd/system/flanneld.service
+var_flannel_opt_iface: "enp0s3"
+var_flannel_etcd_network_prefix: /coreos.com/network
+var_flannel_ip_range: "172.200.0.0/16"
+#######END  : SETTING: FLANNEL#######
+
+#######BEGIN: SETTING: SSL###########
+var_ssl_ca_dir: /etc/ssl/ca
+var_ssl_k8s_dir: /etc/ssl/k8s
+var_ssl_etcd_dir: /etc/ssl/etcd
+var_ssl_flannel_dir: /etc/ssl/flannel
+var_ssl_default_expiry: 87600h
+var_ssl_profile_etcd: etcd
+var_ssl_profile_etcd_expiry: 87600h
+var_ssl_profile_k8s: kubernetes
+var_ssl_profile_k8s_expiry: 87600h
+var_ssl_cn: "kubernetes"
+var_ssl_admin_cn: "admin"
+var_ssl_key_algo: rsa
+var_ssl_key_size: 2048
+var_ssl_names_c: CN
+var_ssl_names_l: DaLian
+var_ssl_names_st: LiaoNing
+var_ssl_names_o: K8S
+var_ssl_names_o_k8scm: K8S
+var_ssl_names_o_k8sch: K8S
+var_ssl_names_o_master: "system:masters"
+var_ssl_names_ou: System
+var_template_ca_config: ca-config.json.j2
+var_template_ca_csr: ca-csr.json.j2
+var_template_etcd_csr: etcd-csr.json.j2
+var_template_k8s_csr: k8s-csr.json.j2
+var_template_k8scm_csr: k8s-cm-csr.json.j2
+var_template_k8sch_csr: k8s-sch-csr.json.j2
+var_template_admin_csr: admin-csr.json.j2
+var_ssl_file_ca_pem: "ca.pem"
+var_ssl_file_ca_key: "ca-key.pem"
+var_ssl_file_ca_config: "ca-config.json"
+var_ssl_file_ca_csr: "ca-csr.json"
+var_ssl_file_k8s_csr: "k8s-csr.json"
+var_ssl_file_k8scm_csr: "k8s-cm-csr.json"
+var_ssl_file_k8sch_csr: "k8s-sch-csr.json"
+var_ssl_file_admin_csr: "admin-csr.json"
+var_ssl_file_etcd_csr: "etcd-csr.json"
+var_ssl_flannel_csr: flanneld-csr.json
+var_ssl_proxy_csr: kubeproxy-csr.json
+var_ssl_etcd_csr_cn: "etcd"
+var_ssl_k8s_csr_cn: "kubernetes"
+var_ssl_k8scm_csr_cn: "system:kube-controller-manager"
+var_ssl_k8sch_csr_cn: "system:kube-scheduler"
+var_ssl_proxy_csr_cn: "system:kube-proxy"
+var_ssl_flannel_csr_cn: flanneld
+var_ssl_etcd_cert_prefix: "cert-etcd"
+var_ssl_k8s_cert_prefix: cert-k8s
+var_ssl_k8scm_cert_prefix: cert-k8scm
+var_ssl_k8sch_cert_prefix: cert-k8sch
+var_ssl_flannel_cert_prefix: flanneld
+var_ssl_proxy_cert_prefix: cert-kubeproxy
+var_ssl_admin_cert_prefix: "kubeadmin"
+var_ssl_csr_hosts_srv: "10.254.0.1"
+#######END  : SETTING: SSL###########
+
+#######BEGIN: SETTING: DOCKER########
+var_docker_dir_bin: "{{var_default_install_bin}}"
+var_docker_dir_etc: /etc/docker
+var_docker_flannel_conf: /run/flannel/docker
+var_docker_etc: docker.conf
+var_docker_service: /usr/lib/systemd/system/docker.service
+var_docker_registry_mirror: "https://hub-mirror.c.163.com"
+var_docker_opt_log_max_size: "1g"
+#######END  : SETTING: DOCKER########
+
+#######BEGIN: SETTING: KUBECONFIG####
+var_kubeconfig_default: "~/.kube/config"
+var_kubeconfig_cluster: kubernetes
+var_kubeconfig_embed_certs: true
+var_kubeconfig_bootstrap: "bootstrap.kubeconfig"
+var_kubeconfig_kubeproxy: "kube-proxy.kubeconfig"
+var_kubeconfig_kube_scheduler: "kube-scheduler.kubeconfig"
+var_kubeconfig_kube_controller_manager: "kube-controller-manager.kubeconfig"
+var_kubeconfig_kubectl: "kubectl.kubeconfig"
+var_kubeconfig_client_kubelet: "kubelet-bootstrap"
+var_kubeconfig_client_kubeproxy: "kube-proxy"
+var_kubeconfig_client_kubectl: "admin"
+var_kubeconfig_client_kube_scheduler: "system:kube-scheduler"
+var_kubeconfig_client_kube_controller_manager: "system:kube-controller-manager"
+var_kubeconfig_context_default: default
+var_kubeconfig_role_bootstraper: "system:node-bootstrapper"
+var_rbac_kubeletapi_role_binding: "kube-apiserver:kubelet-apis"
+var_rbac_kubelet_role_apiadmin: "system:kubelet-api-admin"
+#######END  : SETTING: KUBECONFIG####
+
+#######BEGIN: SETTING: KUBELET#######
+var_kube_kubelet_etc: kubelet.conf
+var_kube_kubelet_service: /usr/lib/systemd/system/kubelet.service
+var_kubelet_dir_working: /var/lib/kubelet
+var_kube_node_hostname: 192.168.163.131
+var_kubelet_opt_config: kubelet-config.yaml
+var_kube_ot_pause: "gcr.io/google_containers/pause-amd64:3.1"
+var_kubelet_opt_event_qps: 0
+var_kubelet_opt_kpi_qps: 1000
+var_kubelet_opt_api_brust: 2000
+var_kubelet_opt_reg_qps: 0
+var_kubelet_opt_img_pull_deadline: 30m
+var_kubelet_kubeconfig: "kubelet.kubeconfig"
+var_kubelet_config_opt_anonymous: false
+var_kubelet_config_opt_webhook: true
+var_kubelet_config_opt_mode: Webhook
+var_kubelet_config_opt_maxpods: 2000
+var_kubelet_config_opt_serialize_img_pull: false
+var_kubelet_config_opt_hairpin: "promiscuous-bridge"
+var_kubelet_config_opt_cgroup_dgriver: "cgroupfs"
+var_kubelet_config_opt_request_tmo: 15m
+var_kubelet_config_opt_tls_bootstrap: true
+var_kubelet_config_opt_rotate: true
+var_kubelet_config_opt_readonly_port: 0
+var_kubelet_config_opt_port: 10250
+var_kubelet_config_opt_cluster_dns: "10.254.0.2"
+var_kubelet_config_opt_cluster_domain: "cluster.local"
+var_kubelet_opt_fail_swap_on: false
+#######END  : SETTING: KUBELET#######
+
+#######BEGIN: SETTING: KUBEPROXY#####
+var_kube_proxy_etc: kube-proxy.conf
+var_kube_proxy_dir_working: /var/lib/k8s/kube-proxy
+var_kube_proxy_service: /usr/lib/systemd/system/kube-proxy.service
+var_kube_proxy_proxy_config: "kube-proxy-config.yaml"
+var_kube_proxy_config_port_health: 10256
+var_kube_proxy_config_port_metrics: 10249
+var_kube_proxy_config_mode: ipvs
+#######END  : SETTING: KUBEPROXY#####
 ...

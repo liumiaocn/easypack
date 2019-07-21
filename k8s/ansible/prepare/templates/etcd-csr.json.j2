@@ -1,0 +1,18 @@
+{
+    "CN": "{{ var_ssl_etcd_csr_cn }}",
+    "hosts": [
+    "127.0.0.1",
+    "{{ var_all_in_one_hostip }}"
+    ],
+    "key": {
+        "algo": "{{ var_ssl_key_algo }}",
+        "size": {{ var_ssl_key_size }}
+    },
+    "names": [
+        {
+            "C": "{{ var_ssl_names_c }}",
+            "L": "{{ var_ssl_names_l }}",
+            "ST": "{{ var_ssl_names_st }}"
+        }
+    ]
+}

@@ -1,0 +1,27 @@
+{
+  "signing": {
+    "default": {
+      "expiry": "{{ var_ssl_default_expiry }}"
+    },
+    "profiles": {
+      "{{ var_ssl_profile_etcd }}": {
+         "expiry": "{{ var_ssl_profile_etcd_expiry }}",
+         "usages": [
+            "signing",
+            "key encipherment",
+            "server auth",
+            "client auth"
+        ]
+      },
+      "{{ var_ssl_profile_k8s }}": {
+         "expiry": "{{ var_ssl_profile_k8s_expiry }}",
+         "usages": [
+            "signing",
+            "key encipherment",
+            "server auth",
+            "client auth"
+        ]
+      }
+    }
+  }
+}

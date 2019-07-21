@@ -1,0 +1,27 @@
+{
+    "CN": "{{ var_ssl_k8s_csr_cn }}",
+    "hosts": [
+      "{{ var_ssl_csr_hosts_srv }}",
+      "127.0.0.1",
+      "{{ var_all_in_one_hostip }}",
+      "{{ var_k8s_cluster_service_ip }}",
+      "kubernetes",
+      "kubernetes.default",
+      "kubernetes.default.svc",
+      "kubernetes.default.svc.cluster",
+      "kubernetes.default.svc.cluster.local"
+    ],
+    "key": {
+        "algo": "{{ var_ssl_key_algo }}",
+        "size": {{ var_ssl_key_size }}
+    },
+    "names": [
+        {
+            "C": "{{ var_ssl_names_c }}",
+            "L": "{{ var_ssl_names_l }}",
+            "ST": "{{ var_ssl_names_st }}",
+            "O": "{{ var_ssl_names_o }}",
+            "OU": "{{ var_ssl_names_ou }}"
+        }
+    ]
+}

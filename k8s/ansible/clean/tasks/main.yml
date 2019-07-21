@@ -7,9 +7,31 @@
     path: "{{ item }}"
     state: absent
   with_items:
-    - "{{ var_binary_file_dir_local }}/kubectl"
-    - "{{ var_binary_file_dir_local }}/cfssl"
-    - "{{ var_binary_file_dir_local }}/cfssljson"
-    - "{{ var_binary_file_dir_local }}/cfssl-certinfo"
+    - "{{ var_default_install_bin }}/kubectl"
+    - "{{ var_default_install_bin }}/cfssl"
+    - "{{ var_default_install_bin }}/cfssljson"
+    - "{{ var_default_install_bin }}/cfssl-certinfo"
   tags:
     - "clean"
+
+- name: clean files kubernetes sysctl file
+  file:
+    path: "{{ var_dest_k8s_sysctl }}"
+    state: absent
+
+- name: delete dirs for certifications
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+      - "{{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_config }}"
+      - "{{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_csr }}"
+      - "{{ var_ssl_etcd_dir }}/{{ var_ssl_file_etcd_csr }}"
+      - "{{ var_ssl_k8s_dir }}/{{ var_ssl_file_k8s_csr }}"
+      - "{{ var_ssl_k8s_dir }}/{{ var_ssl_file_k8sch_csr }}"
+      - "{{ var_ssl_k8s_dir }}/{{ var_ssl_file_k8scm_csr }}"
+      - "{{ var_ssl_k8s_dir }}/{{ var_ssl_file_admin_csr }}"
+      - "{{ var_kubeconfig_default }}"
+      - "{{ var_ssl_ca_dir }}"
+      - "{{ var_ssl_k8s_dir }}"
+      - "{{ var_ssl_etcd_dir }}"

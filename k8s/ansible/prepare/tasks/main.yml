@@ -4,9 +4,9 @@
 ## install kubectl
 - name: install kubectl
   copy:
-    src: "{{ var_file_kubectl }}"
-    dest: "{{ var_binary_file_dir_local }}"
-    mode: "{{ var_binary_file_mode }}"
+    src: "{{ var_src_k8s }}/kubectl"
+    dest: "{{ var_default_install_bin }}"
+    mode: "{{ var_default_bin_mode }}"
   tags: 
     - "install"
 
@@ -14,11 +14,157 @@
 - name: install cfssl tools
   copy:
     src: "{{ item }}"
-    dest: "{{ var_binary_file_dir_local }}"
-    mode: "{{ var_binary_file_mode }}"
+    dest: "{{ var_default_install_bin }}"
+    mode: "{{ var_default_bin_mode }}"
   with_items:
-    - "{{ var_file_cfssl }}"
-    - "{{ var_file_cfssljson }}"
-    - "{{ var_file_cfsslcertinfo }}" 
+    - "{{ var_src_cfssl }}/cfssl"
+    - "{{ var_src_cfssl }}/cfssljson"
+    - "{{ var_src_cfssl }}/cfssl-certinfo"
   tags: 
     - "install"
+
+## firewall setting
+- name: firwall setting
+  shell: "systemctl stop firewalld \
+          && systemctl disable firewalld \
+          && iptables -F \
+          && iptables -X \
+          && iptables -F -t nat \
+          && iptables -X -t nat  \
+          && iptables -P FORWARD ACCEPT \
+          && setenforce 0 \
+          && sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config"
+
+## modprobe br_netfilter
+- name: modprobe br_netfilter
+  raw: "modprobe br_netfilter" 
+  ignore_errors: true  
+
+## create sysctl parameter files
+- name: create kubernetes sysctl file
+  template:
+    src: "{{ var_src_k8s_sysctl }}"
+    dest: "{{ var_dest_k8s_sysctl }}" 
+
+- name: apply sysctl setting
+  shell: "sysctl -p {{ var_dest_k8s_sysctl }}"
+  ignore_errors: true  
+
+## create directories
+- name: create dirs for certifications
+  file: 
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ var_ssl_ca_dir }}"
+    - "{{ var_ssl_k8s_dir }}"
+    - "{{ var_ssl_etcd_dir }}"
+
+## create ca config for etc and k8s profile
+- name: create ca config for etcd and k8s profile
+  template:
+    src: "{{ var_template_ca_config }}"
+    dest: "{{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_config }}" 
+
+- name: create csr file for ca
+  template:
+    src: "{{ var_template_ca_csr }}"
+    dest: "{{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_csr }}" 
+
+- name: create csr file for etcd
+  template:
+    src: "{{ var_template_etcd_csr }}"
+    dest: "{{ var_ssl_etcd_dir }}/{{ var_ssl_file_etcd_csr }}" 
+
+- name: create csr file for k8s
+  template:
+    src: "{{ var_template_k8s_csr }}"
+    dest: "{{ var_ssl_k8s_dir }}/{{ var_ssl_file_k8s_csr }}" 
+
+- name: create csr file for k8s controller manager
+  template:
+    src: "{{ var_template_k8scm_csr }}"
+    dest: "{{ var_ssl_k8s_dir }}/{{ var_ssl_file_k8scm_csr }}" 
+
+- name: create csr file for k8s scheduler
+  template:
+    src: "{{ var_template_k8sch_csr }}"
+    dest: "{{ var_ssl_k8s_dir }}/{{ var_ssl_file_k8sch_csr }}" 
+
+- name: create csr file for k8s admin
+  template:
+    src: "{{ var_template_admin_csr }}"
+    dest: "{{ var_ssl_k8s_dir }}/{{ var_ssl_file_admin_csr }}" 
+
+- name: create ca certificate
+  shell: "cd {{ var_ssl_ca_dir }}      \
+          && cfssl gencert -initca {{ var_ssl_file_ca_csr }} | cfssljson -bare ca - \
+          && cd {{ var_ssl_etcd_dir }} \
+          && cfssl gencert -ca={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_pem }} -ca-key={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_key }} -config={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_config }} -profile={{ var_ssl_profile_etcd }} {{ var_ssl_file_etcd_csr }} | cfssljson -bare {{ var_ssl_etcd_cert_prefix }}"
+
+- name: create kubernetes certificate
+  shell: "cd {{ var_ssl_k8s_dir }}   \
+          && cfssl gencert -ca={{ var_ssl_ca_dir }}/{{  var_ssl_file_ca_pem }}  -ca-key={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_key }} -config={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_config }} -profile={{ var_ssl_profile_k8s }} {{ var_ssl_file_k8s_csr }}  cfssljson -bare {{ var_ssl_k8s_cert_prefix }}                         \
+          && cfssl gencert -ca={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_pem }}  -ca-key={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_key }} -config={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_config }} -profile={{ var_ssl_profile_k8s }} {{ var_ssl_file_k8scm_csr }} | cfssljson -bare {{ var_ssl_k8scm_cert_prefix }}                     \
+          && cfssl gencert -ca={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_pem }}  -ca-key={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_key }} -config={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_config }} -profile={{ var_ssl_profile_k8s }} {{ var_ssl_file_k8sch_csr }} | cfssljson -bare {{ var_ssl_k8sch_cert_prefix }}                     \ 
+          && cfssl gencert -ca={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_pem }} -ca-key={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_key }} -config={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_config }} -profile={{ var_ssl_profile_k8s }} {{ var_ssl_file_admin_csr }} | cfssljson -bare {{ var_ssl_admin_cert_prefix }}"
+
+
+- name: create cluster kubeconfig file for controller manager
+  shell: "cd {{ var_ssl_k8s_dir }}   \
+          && kubectl config set-cluster {{ var_kubeconfig_cluster }} \
+              --certificate-authority={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_pem }} \
+              --embed-certs={{ var_kubeconfig_embed_certs }} \
+              --server={{ var_kube_master_https }} \
+              --kubeconfig={{ var_kubeconfig_kube_controller_manager }}   \
+          && kubectl config set-credentials {{ var_kubeconfig_client_kube_controller_manager }} \
+              --client-certificate={{ var_ssl_k8s_dir }}/{{ var_ssl_k8scm_cert_prefix }}.pem \
+              --client-key={{ var_ssl_k8s_dir }}/{{ var_ssl_k8scm_cert_prefix }}-key.pem \
+              --embed-certs={{ var_kubeconfig_embed_certs }} \
+              --kubeconfig={{ var_kubeconfig_kube_controller_manager }}   \
+          && kubectl config set-context {{ var_kubeconfig_client_kube_controller_manager }} \
+              --cluster={{ var_kubeconfig_cluster }} \
+              --user={{ var_kubeconfig_client_kube_controller_manager }} \
+              --kubeconfig={{ var_kubeconfig_kube_controller_manager }}   \
+          && kubectl config use-context {{ var_kubeconfig_client_kube_controller_manager }} --kubeconfig={{ var_kubeconfig_kube_controller_manager }}"
+
+- name: create cluster kubeconfig file for scheduler
+  shell: "cd {{ var_ssl_k8s_dir }}   \
+          && kubectl config set-cluster {{ var_kubeconfig_cluster }} \
+              --certificate-authority={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_pem }} \
+              --embed-certs={{ var_kubeconfig_embed_certs }} \
+              --server={{ var_kube_master_https }} \
+              --kubeconfig={{ var_kubeconfig_kube_scheduler }}   \
+          && kubectl config set-credentials {{ var_kubeconfig_client_kube_scheduler }} \
+              --client-certificate={{ var_ssl_k8s_dir }}/{{ var_ssl_k8scm_cert_prefix }}.pem \
+              --client-key={{ var_ssl_k8s_dir }}/{{ var_ssl_k8scm_cert_prefix }}-key.pem \
+              --embed-certs={{ var_kubeconfig_embed_certs }} \
+              --kubeconfig={{ var_kubeconfig_kube_scheduler }}   \
+          && kubectl config set-context {{ var_kubeconfig_client_kube_scheduler }} \
+              --cluster={{ var_kubeconfig_cluster }} \
+              --user={{ var_kubeconfig_client_kube_scheduler }} \
+              --kubeconfig={{ var_kubeconfig_kube_scheduler }}   \
+          && kubectl config use-context {{ var_kubeconfig_client_kube_scheduler }} --kubeconfig={{ var_kubeconfig_kube_scheduler }}"
+
+- name: create cluster kubeconfig file for kubectl
+  shell: "cd {{ var_ssl_ca_dir }} \
+          && kubectl config set-cluster {{ var_kubeconfig_cluster }} \
+              --certificate-authority={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_pem }} \
+              --embed-certs={{ var_kubeconfig_embed_certs }} \
+              --server={{ var_kube_master_https }} \
+              --kubeconfig={{ var_kubeconfig_kubectl }}   \
+          && kubectl config set-credentials {{ var_kubeconfig_client_kubectl }} \
+              --client-certificate={{ var_ssl_k8s_dir }}/{{ var_ssl_k8scm_cert_prefix }}.pem \
+              --client-key={{ var_ssl_k8s_dir }}/{{ var_ssl_k8scm_cert_prefix }}-key.pem \
+              --embed-certs={{ var_kubeconfig_embed_certs }} \
+              --kubeconfig={{ var_kubeconfig_kubectl }}   \
+          && kubectl config set-context {{ var_kubeconfig_client_kubectl }} \
+              --cluster={{ var_kubeconfig_cluster }} \
+              --user={{ var_kubeconfig_client_kubectl }} \
+              --kubeconfig={{ var_kubeconfig_kubectl }}   \
+          && kubectl config use-context {{ var_kubeconfig_client_kubectl }} --kubeconfig={{ var_kubeconfig_kubectl }}"
+
+- name: copy kubectl config
+  copy:
+    src: "{{ var_ssl_ca_dir }}/{{ var_kubeconfig_kubectl }}"
+    dest: "{{ var_kubeconfig_default }}"
