@@ -129,7 +129,6 @@
   with_items:
     - "{{ var_download_tmp_dir_k8s_server }}"
     - "{{ var_download_save_dir_flannel }}/README.md"
-    - "{{ var_download_tmp_dir_docker }}"
     - "{{ var_download_tmp_dir_docker }}tmp"
     - "{{ var_download_tmp_dir_etcd }}"
     - "{{ var_download_file_cni }}"
