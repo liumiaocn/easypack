@@ -1,0 +1,74 @@
+---
+# tasks file for master
+
+- name: create dirs for kubernetes master
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ var_kube_dir_bin }}"
+    - "{{ var_kube_opt_log_dir }}"
+    - "{{ var_kube_dir_etc }}"
+
+- name: copy kube-apiserver shceduler and manager to install dir
+  copy:
+    src: "{{ item }}"
+    dest: "{{ var_kube_dir_bin }}"
+    mode: "{{ var_default_bin_mode }}"
+  with_items:
+    - "{{ var_src_k8s }}/kube-apiserver"
+    - "{{ var_src_k8s }}/kube-scheduler"
+    - "{{ var_src_k8s }}/kube-controller-manager"
+  
+- name: create token file for apiserver
+  copy:
+    # 32 bit random string: head -c 16 /dev/urandom | od -An -t x | tr -d ' '
+    content: '00fdeedfa65384fe4dca538a54a0e8a1 ,kubelet-bootstrap,10001,system:kubelet-bootstrap'
+    dest: "{{ var_kube_dir_etc }}/{{ var_kube_api_token }}"
+
+- name: create apiserver service file
+  template:
+    src: "{{ var_template_api_service }}"
+    dest: "{{ var_kube_api_service }}"
+
+- name: create master scheduler service file
+  template:
+    src: "{{ var_template_sch_service }}"
+    dest: "{{ var_kube_sch_service }}"
+
+- name: create master controller manager service file
+  template:
+    src: "{{ var_template_scm_service }}"
+    dest: "{{ var_kube_scm_service }}"
+
+- name: systemctl enable kube master service
+  shell: "systemctl enable kube-apiserver \
+          && systemctl enable kube-controller-manager \
+          && systemctl enable kube-scheduler"
+
+- name: start kube master service
+  shell: "systemctl daemon-reload \
+          && systemctl restart kube-apiserver \
+          && systemctl restart kube-controller-manager \
+          && systemctl restart kube-scheduler" 
+
+- name: confirm apiserver service state
+  shell: "systemctl status kube-apiserver.service|grep Active"
+  register: ret_apiserver_status
+  until: '"running" in ret_apiserver_status.stdout'
+  retries: "{{ var_retry_max }}"
+  delay: "{{ var_delay_cnt }}"
+
+- name: confirm controller manager service state
+  shell: "systemctl status kube-controller-manager.service|grep Active"
+  register: ret_k8scm_status
+  until: '"running" in ret_k8scm_status.stdout'
+  retries: "{{ var_retry_max }}"
+  delay: "{{ var_delay_cnt }}"
+
+- name: confirm scheduler service state
+  shell: "systemctl status kube-scheduler.service|grep Active"
+  register: ret_k8sch_status
+  until: '"running" in ret_k8sch_status.stdout'
+  retries: "{{ var_retry_max }}"
+  delay: "{{ var_delay_cnt }}"

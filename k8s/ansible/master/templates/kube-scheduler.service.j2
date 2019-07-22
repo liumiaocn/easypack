@@ -1,0 +1,14 @@
+[Unit]
+Description=Kubernetes Scheduler
+Documentation=https://github.com/kubernetes/kubernetes
+
+[Service]
+ExecStart={{ var_kube_dir_bin }}/kube-scheduler \
+  --logtostderr={{ var_kube_opt_logtostderr }} \
+  --v={{ var_kube_opt_log_level }} \
+  --log-dir={{ var_kube_opt_log_dir }} \
+  --kubeconfig={{ var_ssl_k8s_dir }}/{{ var_kubeconfig_kube_scheduler }}
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

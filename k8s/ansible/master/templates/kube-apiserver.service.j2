@@ -1,0 +1,39 @@
+[Unit]
+Description=Kubernetes API Server
+Documentation=https://github.com/kubernetes/kubernetes
+After=etcd.service
+Wants=etcd.service
+
+[Service]
+ExecStart={{ var_kube_dir_bin }}/kube-apiserver \
+  --logtostderr={{ var_kube_opt_logtostderr }} \
+  --v={{ var_kube_opt_log_level }} \
+  --log-dir={{ var_kube_opt_log_dir }} \
+  --etcd-servers=https://{{ var_all_in_one_hostip }}:{{ var_etcd_client_port }} \
+  --authorization-mode={{ var_kube_opt_auth_mode }} \
+  --enable-admission-plugins={{ var_kube_adm_plugins }} \
+  --anonymous-auth=false \
+  --bind-address={{ var_all_in_one_hostip }} \
+  --kubelet-https=true \
+  --insecure-port=0 \
+  --runtime-config=api/all=true \
+  --advertise-address={{ var_all_in_one_hostip }} \
+  --allow-privileged={{ var_kube_opt_allow_privilege }} \
+  --service-cluster-ip-range={{ var_kube_opt_cluster_ip_range }} \
+  --service-node-port-range={{ var_kube_opt_cluster_port_range }} \
+  --enable-bootstrap-token-auth \
+  --token-auth-file={{ var_kube_dir_etc }}/{{ var_kube_api_token }} \
+  --tls-cert-file={{ var_ssl_k8s_dir }}/{{ var_ssl_k8s_cert_prefix }}.pem  \
+  --tls-private-key-file={{ var_ssl_k8s_dir }}/{{ var_ssl_k8s_cert_prefix }}-key.pem \
+  --client-ca-file={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_pem }} \
+  --service-account-key-file={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_key }} \
+  --kubelet-certificate-authority={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_pem }} \
+  --kubelet-client-certificate={{ var_ssl_k8s_dir }}/{{ var_ssl_k8s_cert_prefix }}.pem  \
+  --kubelet-client-key={{ var_ssl_k8s_dir }}/{{ var_ssl_k8s_cert_prefix }}-key.pem \
+  --etcd-cafile={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_pem }} \
+  --etcd-certfile={{ var_ssl_etcd_dir }}/{{ var_ssl_etcd_cert_prefix }}.pem \
+  --etcd-keyfile=/{{ var_ssl_etcd_dir }}/{{ var_ssl_etcd_cert_prefix }}-key.pem"
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

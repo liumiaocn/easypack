@@ -1,6 +1,11 @@
 ---
 # tasks file for clean
 
+## stop service
+- name: stop etcd service
+  shell: "systemctl stop etcd"
+  ignore_errors: true
+
 ## clean files
 - name: clean files kubectl & cfssltools
   file:
@@ -8,6 +13,9 @@
     state: absent
   with_items:
     - "{{ var_default_install_bin }}/kubectl"
+    - "{{ var_default_install_bin }}/kube-apiserver"
+    - "{{ var_default_install_bin }}/kube-controller-manager"
+    - "{{ var_default_install_bin }}/kube-scheduler"
     - "{{ var_default_install_bin }}/cfssl"
     - "{{ var_default_install_bin }}/cfssljson"
     - "{{ var_default_install_bin }}/cfssl-certinfo"
@@ -43,7 +51,15 @@
   with_items:
     - "{{ var_etcd_conf }}"
     - "{{ var_etcd_service }}"
-    - "{{ var_src_etcd }}/etcd"
-    - "{{ var_src_etcd }}/etcdctl"
+    - "{{ var_default_install_bin }}/etcd"
+    - "{{ var_default_install_bin }}/etcdctl"
     - "{{ var_etcd_conf_dir }}"
     - "{{ var_etcd_data_dir }}"
+
+- name: delete dirs of kubernetes master
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ var_kube_opt_log_dir }}"
+    - "{{ var_kube_dir_etc }}"

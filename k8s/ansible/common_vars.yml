@@ -40,6 +40,7 @@ var_etcd_initial_cluster_state: "{{var_etcd_state_new}}"
 var_kube_dir_bin: "{{var_default_install_bin}}"
 var_kube_dir_etc: "/etc/k8s"
 var_kube_api_conf: "apiserver.conf"
+var_template_api_service: kube-apiserver.service.j2
 var_kube_api_service: "/usr/lib/systemd/system/kube-apiserver.service"
 var_kube_api_token: token.csv
 var_kube_opt_logtostderr: false
@@ -58,14 +59,16 @@ var_kube_master_https: "https://{{var_kube_master_ip}}:{{var_kube_opt_api_ssl_po
 #######END  : SETTING: APISERVER#####
 
 #######BEGIN: SETTING: SCHEDULER#####
+var_template_sch_service: kube-scheduler.service.j2
 var_kube_sch_etc: kube-scheduler.conf
 var_kube_sch_service: /usr/lib/systemd/system/kube-scheduler.service
 var_kube_sch_opt_config: "kube-scheduler.yaml"
 #######END  : SETTING: SCHEDULER#####
 
 #######BEGIN: SETTING: CONTROLLER####
+var_template_scm_service: kube-controller-manager.service.j2
 var_kube_cm_etc: controller-manager.conf
-var_kube_cm_service: /usr/lib/systemd/system/kube-controller-manager.service
+var_kube_scm_service: /usr/lib/systemd/system/kube-controller-manager.service
 var_kube_opt_leader_elect: true
 var_kube_opt_cluster_name: kubernetes
 var_kube_opt_localhost: 127.0.0.1

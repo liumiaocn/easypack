@@ -1,0 +1,29 @@
+[Unit]
+Description=Kubernetes Controller Manager
+Documentation=https://github.com/kubernetes/kubernetes
+
+[Service]
+ExecStart={{ var_kube_dir_bin }}/kube-controller-manager \
+  --logtostderr={{ var_kube_opt_logtostderr }} \
+  --v={{ var_kube_opt_log_level }} \
+  --log-dir={{ var_kube_opt_log_dir }} \
+  --kubeconfig={{ var_ssl_k8s_dir }}/{{ var_kubeconfig_kube_controller_manager }} \
+  --authentication-kubeconfig={{ var_ssl_k8s_dir }}/{{ var_kubeconfig_kube_controller_manager }} \
+  --authorization-kubeconfig={{ var_ssl_k8s_dir }}/{{ var_kubeconfig_kube_controller_manager }} \
+  --leader-elect={{ var_kube_opt_leader_elect }} \
+  --service-cluster-ip-range={{ var_kube_opt_cluster_ip_range }} \
+  --cluster-name={{ var_kube_opt_cluster_name }} \
+  --cluster-signing-cert-file={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_pem }} \
+  --cluster-signing-key-file={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_key }}  \
+  --root-ca-file={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_pem }} \
+  --service-account-private-key-file={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_key }} \
+  --controllers=*,bootstrapsigner,tokencleaner \
+  --horizontal-pod-autoscaler-use-rest-clients=true \
+  --horizontal-pod-autoscaler-sync-period=10s \
+  --tls-cert-file={{ var_ssl_k8s_dir }}/{{ var_ssl_k8scm_cert_prefix }}.pem \
+  --tls-private-key-file={{ var_ssl_k8s_dir }}/{{ var_ssl_k8scm_cert_prefix }}-key.pem \
+  --use-service-account-credentials=true
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

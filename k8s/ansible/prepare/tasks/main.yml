@@ -104,7 +104,7 @@
 
 - name: create kubernetes certificate
   shell: "cd {{ var_ssl_k8s_dir }}   \
-          && cfssl gencert -ca={{ var_ssl_ca_dir }}/{{  var_ssl_file_ca_pem }}  -ca-key={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_key }} -config={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_config }} -profile={{ var_ssl_profile_k8s }} {{ var_ssl_file_k8s_csr }}  cfssljson -bare {{ var_ssl_k8s_cert_prefix }}                         \
+          && cfssl gencert -ca={{ var_ssl_ca_dir }}/{{  var_ssl_file_ca_pem }}  -ca-key={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_key }} -config={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_config }} -profile={{ var_ssl_profile_k8s }} {{ var_ssl_file_k8s_csr }}  | cfssljson -bare {{ var_ssl_k8s_cert_prefix }}                         \
           && cfssl gencert -ca={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_pem }}  -ca-key={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_key }} -config={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_config }} -profile={{ var_ssl_profile_k8s }} {{ var_ssl_file_k8scm_csr }} | cfssljson -bare {{ var_ssl_k8scm_cert_prefix }}                     \
           && cfssl gencert -ca={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_pem }}  -ca-key={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_key }} -config={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_config }} -profile={{ var_ssl_profile_k8s }} {{ var_ssl_file_k8sch_csr }} | cfssljson -bare {{ var_ssl_k8sch_cert_prefix }}                     \ 
           && cfssl gencert -ca={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_pem }} -ca-key={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_key }} -config={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_config }} -profile={{ var_ssl_profile_k8s }} {{ var_ssl_file_admin_csr }} | cfssljson -bare {{ var_ssl_admin_cert_prefix }}"
