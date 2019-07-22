@@ -149,6 +149,7 @@ var_docker_dir_bin: "{{var_default_install_bin}}"
 var_docker_dir_etc: /etc/docker
 var_docker_flannel_conf: /run/flannel/docker
 var_docker_etc: docker.conf
+var_template_docker_service: docker.service.j2
 var_docker_service: /usr/lib/systemd/system/docker.service
 var_docker_registry_mirror: "https://hub-mirror.c.163.com"
 var_docker_opt_log_max_size: "1g"

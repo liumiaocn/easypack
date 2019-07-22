@@ -1,2 +1,42 @@
 ---
 # tasks file for docker
+
+- name: create dirs for docker
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ var_docker_dir_bin }}"
+
+- name: copy docker to install dir
+  copy:
+    src: "{{ item }}"
+    dest: "{{ var_docker_dir_bin }}"
+    mode: "{{ var_default_bin_mode }}"
+  with_items:
+    - "{{ var_src_docker }}/dockerd"
+    - "{{ var_src_docker }}/containerd"
+    - "{{ var_src_docker }}/containerd-shim"
+    - "{{ var_src_docker }}/ctr"
+    - "{{ var_src_docker }}/docker-init"
+    - "{{ var_src_docker }}/docker-proxy"
+    - "{{ var_src_docker }}/runc"
+
+- name: create docker service file
+  template:
+    src: "{{ var_template_docker_service }}"
+    dest: "{{ var_docker_service }}"
+
+- name: systemctl enable docker service
+  shell: "systemctl enable docker"
+
+- name: start docker service
+  shell: "systemctl daemon-reload \
+          && systemctl restart docker"
+
+- name: confirm docer service state
+  shell: "systemctl status docker.service|grep Active"
+  register: ret_docker_status
+  until: '"running" in ret_docker_status.stdout'
+  retries: "{{ var_retry_max }}"
+  delay: "{{ var_delay_cnt }}"

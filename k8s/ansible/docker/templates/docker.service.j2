@@ -1,0 +1,23 @@
+[Unit]
+Description=Docker Application Container Engine
+Documentation=http://docs.docker.io
+
+[Service]
+EnvironmentFile=-{{ var_docker_flannel_conf }}
+ExecStart={{ var_docker_dir_bin }}/dockerd $DOCKER_NETWORK_OPTIONS \
+  --registry-mirror={{ var_docker_registry_mirror }} \
+  -H tcp://0.0.0.0:4243 \
+  -H unix:///var/run/docker.sock \
+  --selinux-enabled=false \
+  --log-opt max-size={{ var_docker_opt_log_max_size }}"
+ExecReload=/bin/kill -s HUP \$MAINPID
+Restart=on-failure
+RestartSec=5
+LimitNOFILE=infinity
+LimitNPROC=infinity
+LimitCORE=infinity
+Delegate=yes
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
