@@ -1,0 +1,65 @@
+---
+# tasks file for flannel
+
+- name: create dirs for flannel
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ var_flannel_dir_bin }}"
+    - "{{ var_flannel_dir_run }}"
+    - "{{ var_ssl_flannel_dir }}"
+
+- name: copy flannel to install dir
+  copy:
+    src: "{{ item }}"
+    dest: "{{ var_kube_dir_bin }}"
+    mode: "{{ var_default_bin_mode }}"
+  with_items:
+    - "{{ var_src_flannel }}/flanneld"
+    - "{{ var_src_flannel }}/mk-docker-opts.sh"
+
+- name: create flannel csr file
+  template:
+    src: "{{ var_template_flannel_csr }}"
+    dest: "{{ var_ssl_flannel_dir }}/{{ var_ssl_flannel_csr }}"
+
+- name: create flannel certificate files
+  shell: "cd {{ var_ssl_flannel_dir }} \
+          && cfssl gencert -ca={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_pem }} \
+             -ca-key={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_key }} \
+             -config={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_config }} \
+             -profile={{ var_ssl_profile_k8s }} {{ var_ssl_flannel_csr }} | cfssljson -bare {{ var_ssl_flannel_cert_prefix }}"
+
+- name: create flannel netowrk script
+  template:
+    src: "set-flannel-network.sh.j2"
+    dest: "/tmp/set-flannel-network-tmp.sh"
+    mode: '0750'
+
+- name: set network prefix in etcd
+  shell: /tmp/set-flannel-network-tmp.sh
+
+- name: delete temp script
+  file:
+    path: "/tmp/set-flannel-network-tmp.sh"
+    state: absent
+
+- name: create flannel service file
+  template:
+    src: "{{ var_template_flannel_service }}"
+    dest: "{{ var_flannel_service }}"
+
+- name: systemctl enable flannel service
+  shell: "systemctl enable flanneld"
+
+- name: start flannel service
+  shell: "systemctl daemon-reload \
+          && systemctl restart flanneld"
+
+- name: confirm flannel service state
+  shell: "systemctl status flanneld.service|grep Active"
+  register: ret_flannel_status
+  until: '"running" in ret_flannel_status.stdout'
+  retries: "{{ var_retry_max }}"
+  delay: "{{ var_delay_cnt }}"

@@ -1,0 +1,27 @@
+[Unit]
+Description=Flanneld Service
+Documentation=https://github.com/coreos/flannel
+After=network.target
+After=network-online.target
+Wants=network-online.target
+After=etcd.service
+Before=docker.service
+
+[Service]
+ExecStart={{ var_flannel_dir_bin }}/flanneld \
+  -etcd-cafile={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_pem }} \
+  -etcd-certfile={{ var_ssl_flannel_dir }}/{{ var_ssl_flannel_cert_prefix }}.pem \
+  -etcd-keyfile={{ var_ssl_flannel_dir }}/{{ var_ssl_flannel_cert_prefix }}-key.pem \
+  -etcd-endpoints=https://{{ var_all_in_one_hostip }}:{{ var_etcd_client_port }} \
+  -etcd-prefix={{ var_flannel_etcd_network_prefix }} \
+  -iface={{ var_flannel_opt_iface }} \
+  -ip-masq
+
+ExecStartPost={{ var_flannel_dir_bin }}/mk-docker-opts.sh -k DOCKER_NETWORK_OPTIONS -d {{ var_flannel_dir_run }}/docker
+Restart=always
+RestartSec=5
+StartLimitInterval=0
+
+[Install]
+WantedBy=multi-user.target
+RequiredBy=docker.service

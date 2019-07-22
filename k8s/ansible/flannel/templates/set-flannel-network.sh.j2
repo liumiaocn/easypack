@@ -1,0 +1,8 @@
+#!/bin/sh
+
+ETCDCTL_API=2 etcdctl \
+  --endpoints=https://{{ var_all_in_one_hostip }}:{{ var_etcd_client_port }} \
+  --ca-file={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_pem }} \
+  --cert-file={{ var_ssl_flannel_dir }}/{{ var_ssl_flannel_cert_prefix }}.pem \
+  --key-file={{ var_ssl_flannel_dir }}/{{ var_ssl_flannel_cert_prefix }}-key.pem \
+  set {{ var_flannel_etcd_network_prefix }}/config '{"Network":"'{{ var_kube_opt_cluster_ip_range }}'", "SubnetLen": 21, "Backend": {"Type": "vxlan"}}'

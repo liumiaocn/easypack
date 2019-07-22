@@ -76,6 +76,8 @@ var_kube_opt_cm_secure_port: 10252
 #######END  : SETTING: CONTROLLER####
 
 #######BEGIN: SETTING: FLANNEL#######
+var_template_flannel_service: flanneld.service.j2
+var_template_flannel_csr: flanneld-csr.json.j2
 var_flannel_dir_bin: "{{var_default_install_bin}}"
 var_flannel_dir_etc: /etc/flannel
 var_flannel_dir_run: /run/flannel
