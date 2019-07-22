@@ -1,9 +1,16 @@
 ---
 # tasks file for clean
 
-## stop service
+## stop etcd service
 - name: stop etcd service
   shell: "systemctl stop etcd"
+  ignore_errors: true
+
+## stop kubernetes master service
+- name: stop master service
+  shell: "systemctl stop kube-scheduler \
+          && systemctl stop kube-controller-manager \
+          && systemctl stop kube-apiserver"
   ignore_errors: true
 
 ## clean files
@@ -61,5 +68,8 @@
     path: "{{ item }}"
     state: absent
   with_items:
+    - "{{ var_kube_api_service }}"
+    - "{{ var_kube_sch_service }}"
+    - "{{ var_kube_scm_service }}"
     - "{{ var_kube_opt_log_dir }}"
     - "{{ var_kube_dir_etc }}"
