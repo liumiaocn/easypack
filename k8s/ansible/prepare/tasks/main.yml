@@ -154,8 +154,8 @@
               --server={{ var_kube_master_https }} \
               --kubeconfig={{ var_kubeconfig_kubectl }}   \
           && kubectl config set-credentials {{ var_kubeconfig_client_kubectl }} \
-              --client-certificate={{ var_ssl_k8s_dir }}/{{ var_ssl_k8scm_cert_prefix }}.pem \
-              --client-key={{ var_ssl_k8s_dir }}/{{ var_ssl_k8scm_cert_prefix }}-key.pem \
+              --client-certificate={{ var_ssl_k8s_dir }}/{{ var_ssl_admin_cert_prefix }}.pem \
+              --client-key={{ var_ssl_k8s_dir }}/{{ var_ssl_admin_cert_prefix }}-key.pem \
               --embed-certs={{ var_kubeconfig_embed_certs }} \
               --kubeconfig={{ var_kubeconfig_kubectl }}   \
           && kubectl config set-context {{ var_kubeconfig_client_kubectl }} \
