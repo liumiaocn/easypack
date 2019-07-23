@@ -95,7 +95,7 @@
 
 - name: systemctl enable kubelet and kube-proxy service
   shell: "systemctl enable kubelet \
-          systemctl enable kube-proxy"
+          && systemctl enable kube-proxy"
 
 - name: start kubelet and kube-proxy service
   shell: "systemctl daemon-reload \

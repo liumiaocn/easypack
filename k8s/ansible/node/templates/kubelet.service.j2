@@ -6,7 +6,7 @@ Requires=docker.service
 
 [Service]
 WorkingDirectory={{ var_kubelet_dir_working }}
-ExecStart=[{ var_kube_dir_bin }}/kubelet \
+ExecStart={{ var_kube_dir_bin }}/kubelet \
   --logtostderr={{ var_kube_opt_logtostderr }} \
   --v={{ var_kube_opt_log_level }} \
   --log-dir={{ var_kube_opt_log_dir }} \

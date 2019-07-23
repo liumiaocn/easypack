@@ -25,7 +25,7 @@
 - name: create token file for apiserver
   copy:
     # 32 bit random string: head -c 16 /dev/urandom | od -An -t x | tr -d ' '
-    content: '00fdeedfa65384fe4dca538a54a0e8a1,kubelet-bootstrap,10001,"system:kubelet-bootstrap"\n'
+    content: '00fdeedfa65384fe4dca538a54a0e8a1,kubelet-bootstrap,10001,"system:kubelet-bootstrap"'
     dest: "{{ var_kube_dir_etc }}/{{ var_kube_api_token }}"
   tags: "api"
 
@@ -63,10 +63,6 @@
   retries: "{{ var_retry_max }}"
   delay: "{{ var_delay_cnt }}"
 
-- name: create clusterrolebind
-  shell: "kubectl create clusterrolebinding {{ var_rbac_kubeletapi_role_binding }} \
-          --clusterrole={{ var_rbac_kubelet_role_apiadmin }} --user {{ var_kubeconfig_cluster }}"
-
 - name: confirm controller manager service state
   shell: "systemctl status kube-controller-manager.service|grep Active"
   register: ret_k8scm_status
@@ -81,7 +77,7 @@
   retries: "{{ var_retry_max }}"
   delay: "{{ var_delay_cnt }}"
 
-- name: create clusterrolebinding
-  shell: "kubectl create clusterrolebinding kube-apiserver:kubelet-apis --clusterrole=system:kubelet-api-admin --user kubernetes"
-  tags: "api"
+- name: create clusterrolebind
+  shell: "sleep 5 && kubectl create clusterrolebinding {{ var_rbac_kubeletapi_role_binding }} \
+          --clusterrole={{ var_rbac_kubelet_role_apiadmin }} --user {{ var_kubeconfig_cluster }}"
 
