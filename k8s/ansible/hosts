@@ -1,4 +1,7 @@
 # kubernetes : all-node
+[all-in-one]
+localhost
+
 [all]
 localhost
 

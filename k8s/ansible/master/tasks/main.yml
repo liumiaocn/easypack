@@ -78,6 +78,6 @@
   delay: "{{ var_delay_cnt }}"
 
 - name: create clusterrolebind
-  shell: "sleep 5 && kubectl create clusterrolebinding {{ var_rbac_kubeletapi_role_binding }} \
+  shell: "sleep {{ var_sleep_internal }} && kubectl create clusterrolebinding {{ var_rbac_kubeletapi_role_binding }} \
           --clusterrole={{ var_rbac_kubelet_role_apiadmin }} --user {{ var_kubeconfig_cluster }}"
 

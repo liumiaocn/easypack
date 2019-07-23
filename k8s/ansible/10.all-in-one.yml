@@ -1,0 +1,14 @@
+---
+- hosts: all-in-one
+  vars_files:
+    - "common_vars.yml"
+  gather_facts: no
+  roles:
+    - role: clean
+    - role: prepare
+    - role: etcd
+    - role: master
+    - role: flannel
+    - role: docker
+    - role: node
+...

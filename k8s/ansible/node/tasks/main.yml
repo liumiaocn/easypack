@@ -115,3 +115,18 @@
   until: '"running" in ret_kubeproxy_status.stdout'
   retries: "{{ var_retry_max }}"
   delay: "{{ var_delay_cnt }}"
+
+- name: wait for kubelet csr requestor
+  shell: "kubectl get csr | grep kubelet-bootstrap |grep Pending"
+  register: csr_status
+  until: '"Pending" in csr_status.stdout'
+  retries: "{{ var_retry_max }}"
+  delay: "{{ var_delay_cnt }}"
+
+- name: auto approve kubelet csr requestor
+  shell: "csr_name=`kubectl get csr | grep kubelet-bootstrap |grep Pending|grep -v grep |head -n1 |awk '{print $1}'` \
+          && kubectl certificate approve ${csr_name}"
+  register: approve_status
+  until: '"approved" in approve_status.stdout'
+  retries: "{{ var_retry_max }}"
+  delay: "{{ var_delay_cnt }}"
