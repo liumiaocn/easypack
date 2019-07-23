@@ -1,0 +1,25 @@
+kind: KubeletConfiguration
+apiVersion: kubelet.config.k8s.io/v1beta1
+authentication:
+  anonymous:
+    enabled: {{ var_kubelet_config_opt_anonymous }}
+  webhook:
+    enabled: {{ var_kubelet_config_opt_webhook }}
+  x509:
+    clientCAFile: "{{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_pem }}"
+authorization:
+  mode: {{ var_kubelet_config_opt_mode }}
+clusterDomain: "{{ var_kubelet_config_opt_cluster_domain }}"
+clusterDNS:
+  - "{{ var_kubelet_config_opt_cluster_dns }}"
+podCIDR: "{{ var_kube_opt_cluster_ip_range }}"
+maxPods: {{ var_kubelet_config_opt_maxpods }}
+serializeImagePulls: {{ var_kubelet_config_opt_serialize_img_pull }}
+hairpinMode: {{ var_kubelet_config_opt_hairpin }}
+cgroupDriver: {{ var_kubelet_config_opt_cgroup_driver }}
+runtimeRequestTimeout: "{{ var_kubelet_config_opt_request_tmo }}"
+rotateCertificates: {{ var_kubelet_config_opt_rotate_cert }}
+serverTLSBootstrap: {{ var_kubelet_config_opt_tls_bootstrap }}
+readOnlyPort: {{ var_kubelet_config_opt_readonly_port }}
+port: {{ var_kubelet_config_opt_port }}
+address: "{{ var_kube_node_hostname }}"

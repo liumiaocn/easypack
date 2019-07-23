@@ -1,0 +1,10 @@
+kind: KubeProxyConfiguration
+apiVersion: kubeproxy.config.k8s.io/v1alpha1
+clientConnection:
+  kubeconfig: "{{ var_ssl_k8s_dir }}/{{ var_kubeconfig_kubeproxy }}"
+bindAddress: {{ var_kube_node_hostname }}
+clusterCIDR: {{ var_kube_opt_cluster_ip_range }}
+healthzBindAddress: {{ var_kube_node_hostname }}:{{ var_kube_proxy_config_port_health }}
+hostnameOverride: {{ var_kube_node_hostname }}
+metricsBindAddress: {{ var_kube_node_hostname }}:{{ var_kube_proxy_config_port_metrics }}
+mode: "{{ var_kube_proxy_config_mode }}"

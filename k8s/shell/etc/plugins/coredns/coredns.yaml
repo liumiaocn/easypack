@@ -64,7 +64,7 @@ data:
     .:53 {
         errors
         health
-        kubernetes __PILLAR__DNS__DOMAIN__ in-addr.arpa ip6.arpa {
+        kubernetes cluster.local in-addr.arpa ip6.arpa {
             pods insecure
             upstream
             fallthrough in-addr.arpa ip6.arpa
@@ -177,7 +177,7 @@ metadata:
 spec:
   selector:
     k8s-app: kube-dns
-  clusterIP: __PILLAR__DNS__SERVER__
+  clusterIP: 10.254.0.2
   ports:
   - name: dns
     port: 53

@@ -127,6 +127,7 @@ var_ssl_file_k8sch_csr: "k8s-sch-csr.json"
 var_ssl_file_admin_csr: "admin-csr.json"
 var_ssl_file_etcd_csr: "etcd-csr.json"
 var_ssl_flannel_csr: flanneld-csr.json
+var_template_proxy_csr: kubeproxy-csr.json.j2
 var_ssl_proxy_csr: kubeproxy-csr.json
 var_ssl_etcd_csr_cn: "etcd"
 var_ssl_k8s_csr_cn: "kubernetes"
@@ -170,18 +171,20 @@ var_kubeconfig_client_kubectl: "admin"
 var_kubeconfig_client_kube_scheduler: "system:kube-scheduler"
 var_kubeconfig_client_kube_controller_manager: "system:kube-controller-manager"
 var_kubeconfig_context_default: default
-var_kubeconfig_role_bootstraper: "system:node-bootstrapper"
+var_kubeconfig_role_bootstrapper: "system:node-bootstrapper"
 var_rbac_kubeletapi_role_binding: "kube-apiserver:kubelet-apis"
 var_rbac_kubelet_role_apiadmin: "system:kubelet-api-admin"
 #######END  : SETTING: KUBECONFIG####
 
 #######BEGIN: SETTING: KUBELET#######
-var_kube_kubelet_etc: kubelet.conf
-var_kube_kubelet_service: /usr/lib/systemd/system/kubelet.service
+var_bootstrap_token: 00fdeedfa65384fe4dca538a54a0e8a1
+var_template_kubelet_service: kubelet.service.j2
+var_kubelet_service: /usr/lib/systemd/system/kubelet.service
 var_kubelet_dir_working: /var/lib/kubelet
 var_kube_node_hostname: 192.168.163.131
+var_template_kubelet_config: kubelet-config.yaml.j2
 var_kubelet_opt_config: kubelet-config.yaml
-var_kube_ot_pause: "gcr.io/google_containers/pause-amd64:3.1"
+var_kube_opt_pause: "gcr.io/google_containers/pause-amd64:3.1"
 var_kubelet_opt_event_qps: 0
 var_kubelet_opt_kpi_qps: 1000
 var_kubelet_opt_api_brust: 2000
@@ -194,10 +197,10 @@ var_kubelet_config_opt_mode: Webhook
 var_kubelet_config_opt_maxpods: 2000
 var_kubelet_config_opt_serialize_img_pull: false
 var_kubelet_config_opt_hairpin: "promiscuous-bridge"
-var_kubelet_config_opt_cgroup_dgriver: "cgroupfs"
+var_kubelet_config_opt_cgroup_driver: "cgroupfs"
 var_kubelet_config_opt_request_tmo: 15m
 var_kubelet_config_opt_tls_bootstrap: true
-var_kubelet_config_opt_rotate: true
+var_kubelet_config_opt_rotate_cert: true
 var_kubelet_config_opt_readonly_port: 0
 var_kubelet_config_opt_port: 10250
 var_kubelet_config_opt_cluster_dns: "10.254.0.2"
@@ -206,10 +209,11 @@ var_kubelet_opt_fail_swap_on: false
 #######END  : SETTING: KUBELET#######
 
 #######BEGIN: SETTING: KUBEPROXY#####
-var_kube_proxy_etc: kube-proxy.conf
+var_template_kubeproxy_service: kube-proxy.service.j2
 var_kube_proxy_dir_working: /var/lib/k8s/kube-proxy
-var_kube_proxy_service: /usr/lib/systemd/system/kube-proxy.service
-var_kube_proxy_proxy_config: "kube-proxy-config.yaml"
+var_kubeproxy_service: /usr/lib/systemd/system/kube-proxy.service
+var_template_kubeproxy_config: kube-proxy-config.yaml.j2
+var_kubeproxy_opt_config: "kube-proxy-config.yaml"
 var_kube_proxy_config_port_health: 10256
 var_kube_proxy_config_port_metrics: 10249
 var_kube_proxy_config_mode: ipvs

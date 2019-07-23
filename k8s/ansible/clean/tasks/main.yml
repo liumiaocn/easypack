@@ -13,6 +13,14 @@
           && systemctl stop kube-apiserver"
   ignore_errors: true
 
+## stop kubernetes node service
+- name: stop node service
+  shell: "systemctl stop kube-proxy    \
+          && systemctl stop  kubelet   \
+          && systemctl stop  docker    \
+          && systemctl stop  flannel "
+  ignore_errors: true
+
 ## clean files
 - name: clean files kubectl & cfssltools
   file:
@@ -23,6 +31,9 @@
     - "{{ var_default_install_bin }}/kube-apiserver"
     - "{{ var_default_install_bin }}/kube-controller-manager"
     - "{{ var_default_install_bin }}/kube-scheduler"
+    - "{{ var_default_install_bin }}/kube-proxy"
+    - "{{ var_default_install_bin }}/kubelet"
+    - "{{ var_default_install_bin }}/flanneld"
     - "{{ var_default_install_bin }}/cfssl"
     - "{{ var_default_install_bin }}/cfssljson"
     - "{{ var_default_install_bin }}/cfssl-certinfo"
@@ -71,5 +82,10 @@
     - "{{ var_kube_api_service }}"
     - "{{ var_kube_sch_service }}"
     - "{{ var_kube_scm_service }}"
+    - "{{ var_flannel_service }}"
+    - "{{ var_kubelet_service }}"
+    - "{{ var_kubeproxy_service }}"
+    - "{{ var_docker_service }}"
     - "{{ var_kube_opt_log_dir }}"
     - "{{ var_kube_dir_etc }}"
+    - "{{ var_docker_flannel_conf }}"

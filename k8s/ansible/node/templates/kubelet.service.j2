@@ -1,0 +1,31 @@
+[Unit]
+Description=Kubernetes Kubelet Service
+Documentation=https://github.com/GoogleCloudPlatform/kubernetes
+After=docker.service
+Requires=docker.service
+
+[Service]
+WorkingDirectory={{ var_kubelet_dir_working }}
+ExecStart=[{ var_kube_dir_bin }}/kubelet \
+  --logtostderr={{ var_kube_opt_logtostderr }} \
+  --v={{ var_kube_opt_log_level }} \
+  --log-dir={{ var_kube_opt_log_dir }} \
+  --root-dir={{ var_kubelet_dir_working }} \
+  --cert-dir={{ var_ssl_k8s_dir }} \
+  --fail-swap-on={{ var_kubelet_opt_fail_swap_on }} \
+  --hostname-override={{ var_kube_node_hostname }} \
+  --bootstrap-kubeconfig={{ var_ssl_k8s_dir }}/{{ var_kubeconfig_bootstrap }} \
+  --kubeconfig={{ var_kube_dir_etc }}/{{ var_kubelet_kubeconfig }} \
+  --config={{ var_kube_dir_etc }}/{{ var_kubelet_opt_config }} \
+  --pod-infra-container-image={{ var_kube_opt_pause }} \
+  --event-qps={{ var_kubelet_opt_event_qps }} \
+  --kube-api-qps={{ var_kubelet_opt_kpi_qps }} \
+  --kube-api-burst={{ var_kubelet_opt_api_brust }} \
+  --registry-qps={{ var_kubelet_opt_reg_qps }} \
+  --image-pull-progress-deadline={{ var_kubelet_opt_img_pull_deadline }}
+Restart=always
+RestartSec=5
+StartLimitInterval=0
+
+[Install]
+WantedBy=multi-user.target

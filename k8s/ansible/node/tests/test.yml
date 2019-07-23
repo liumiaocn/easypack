@@ -1,0 +1,8 @@
+---
+- hosts: localhost
+  remote_user: root
+  gather_facts: no
+  vars_files:
+    - "../../common_vars.yml"
+  roles:
+    - node
