@@ -106,8 +106,8 @@ var_ssl_names_c: CN
 var_ssl_names_l: DaLian
 var_ssl_names_st: LiaoNing
 var_ssl_names_o: K8S
-var_ssl_names_o_k8scm: K8S
-var_ssl_names_o_k8sch: K8S
+var_ssl_names_o_k8scm: ""
+var_ssl_names_o_k8sch: ""
 var_ssl_names_o_master: "system:masters"
 var_ssl_names_ou: System
 var_template_ca_config: ca-config.json.j2

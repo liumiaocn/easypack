@@ -9,6 +9,7 @@
     - "{{ var_kube_dir_bin }}"
     - "{{ var_kube_opt_log_dir }}"
     - "{{ var_kube_dir_etc }}"
+  tags: "api"
 
 - name: copy kube-apiserver shceduler and manager to install dir
   copy:
@@ -19,17 +20,20 @@
     - "{{ var_src_k8s }}/kube-apiserver"
     - "{{ var_src_k8s }}/kube-scheduler"
     - "{{ var_src_k8s }}/kube-controller-manager"
+  tags: "api"
   
 - name: create token file for apiserver
   copy:
     # 32 bit random string: head -c 16 /dev/urandom | od -An -t x | tr -d ' '
-    content: '00fdeedfa65384fe4dca538a54a0e8a1 ,kubelet-bootstrap,10001,system:kubelet-bootstrap'
+    content: '00fdeedfa65384fe4dca538a54a0e8a1,kubelet-bootstrap,10001,"system:kubelet-bootstrap"\n'
     dest: "{{ var_kube_dir_etc }}/{{ var_kube_api_token }}"
+  tags: "api"
 
 - name: create apiserver service file
   template:
     src: "{{ var_template_api_service }}"
     dest: "{{ var_kube_api_service }}"
+  tags: "api"
 
 - name: create master scheduler service file
   template:
@@ -59,6 +63,10 @@
   retries: "{{ var_retry_max }}"
   delay: "{{ var_delay_cnt }}"
 
+- name: create clusterrolebind
+  shell: "kubectl create clusterrolebinding {{ var_rbac_kubeletapi_role_binding }} \
+          --clusterrole={{ var_rbac_kubelet_role_apiadmin }} --user {{ var_kubeconfig_cluster }}"
+
 - name: confirm controller manager service state
   shell: "systemctl status kube-controller-manager.service|grep Active"
   register: ret_k8scm_status
@@ -72,3 +80,8 @@
   until: '"running" in ret_k8sch_status.stdout'
   retries: "{{ var_retry_max }}"
   delay: "{{ var_delay_cnt }}"
+
+- name: create clusterrolebinding
+  shell: "kubectl create clusterrolebinding kube-apiserver:kubelet-apis --clusterrole=system:kubelet-api-admin --user kubernetes"
+  tags: "api"
+

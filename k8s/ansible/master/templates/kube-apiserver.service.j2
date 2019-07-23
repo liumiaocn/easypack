@@ -6,7 +6,7 @@ Wants=etcd.service
 
 [Service]
 ExecStart={{ var_kube_dir_bin }}/kube-apiserver \
-  --logtostderr={{ var_kube_opt_logtostderr }} \
+  --logtostderr=false \
   --v={{ var_kube_opt_log_level }} \
   --log-dir={{ var_kube_opt_log_dir }} \
   --etcd-servers=https://{{ var_all_in_one_hostip }}:{{ var_etcd_client_port }} \
@@ -18,7 +18,7 @@ ExecStart={{ var_kube_dir_bin }}/kube-apiserver \
   --insecure-port=0 \
   --runtime-config=api/all=true \
   --advertise-address={{ var_all_in_one_hostip }} \
-  --allow-privileged={{ var_kube_opt_allow_privilege }} \
+  --allow-privileged=true \
   --service-cluster-ip-range={{ var_kube_opt_cluster_ip_range }} \
   --service-node-port-range={{ var_kube_opt_cluster_port_range }} \
   --enable-bootstrap-token-auth \
