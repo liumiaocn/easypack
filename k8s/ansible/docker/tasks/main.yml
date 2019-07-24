@@ -18,6 +18,7 @@
     - "{{ var_src_docker }}/containerd"
     - "{{ var_src_docker }}/containerd-shim"
     - "{{ var_src_docker }}/ctr"
+    - "{{ var_src_docker }}/docker"
     - "{{ var_src_docker }}/docker-init"
     - "{{ var_src_docker }}/docker-proxy"
     - "{{ var_src_docker }}/runc"
