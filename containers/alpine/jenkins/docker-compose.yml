@@ -11,6 +11,7 @@ services:
       - JENKINS_ADMIN_ID=root
       - JENKINS_ADMIN_PW=liumiaocn
       - JENKINS_MODE=master
+      - JAVA_OPTS=-Djenkins.install.runSetupWizard=false
     volumes:
       - ./data/:/data/jenkins
       - /var/run/docker.sock:/var/run/docker.sock
