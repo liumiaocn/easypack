@@ -1,0 +1,10 @@
+version: '2'
+
+services:
+  # Logstash service
+  logstash:
+    image: logstash:7.3.0
+    network_mode: "host"
+    volumes:
+      - ./logstash.yml:/usr/share/logstash/config/logstash.yml
+    restart: "no"

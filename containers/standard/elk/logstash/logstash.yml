@@ -1,0 +1,2 @@
+http.host: 0.0.0.0
+xpack.monitoring.elasticsearch.hosts: http://192.168.163.131:9200
