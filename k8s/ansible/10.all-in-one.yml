@@ -11,4 +11,5 @@
     - role: flannel
     - role: docker
     - role: node
+    - role: coredns
 ...
