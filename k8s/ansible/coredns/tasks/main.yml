@@ -1,2 +1,29 @@
 ---
 # tasks file for coredns
+
+- name: create dirs for dns
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ var_coredns_dir_etc }}"
+
+- name: create coredns yaml service file
+  template:
+    src: "{{ var_template_coredns_yaml }}"
+    dest: "{{ var_coredns_dir_etc }}/{{ var_template_coredns_yaml }}"
+
+- name: load coredns image
+  shell: "docker load -i {{ var_src_coredns }}"
+
+- name: delete & create kubectl service
+  shell: "cd {{ var_coredns_dir_etc }} \
+          && kubectl delete -f .       \
+          || kubectl create -f ."
+
+- name: confirm coredns service state
+  shell: "kubectl get all -n kube-system |egrep -e 'dns|NAME'"
+  register: ret_coredns_status
+  until: '"Running" in ret_coredns_status.stdout'
+  retries: "{{ var_retry_max }}"
+  delay: "{{ var_delay_cnt }}"

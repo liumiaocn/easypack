@@ -9,7 +9,7 @@ ExecStart={{ var_docker_dir_bin }}/dockerd $DOCKER_NETWORK_OPTIONS \
   -H tcp://0.0.0.0:4243 \
   -H unix:///var/run/docker.sock \
   --selinux-enabled=false \
-  --log-opt max-size={{ var_docker_opt_log_max_size }}"
+  --log-opt max-size={{ var_docker_opt_log_max_size }}
 ExecReload=/bin/kill -s HUP \$MAINPID
 Restart=on-failure
 RestartSec=5

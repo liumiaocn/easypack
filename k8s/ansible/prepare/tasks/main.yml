@@ -31,11 +31,16 @@
           && iptables -X \
           && iptables -F -t nat \
           && iptables -X -t nat  \
-          && iptables -P FORWARD ACCEPT \
-          && setenforce 0 \
-          && sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config"
+          && iptables -P FORWARD ACCEPT"
   tags:
     - "init" 
+
+## set selinux to disabled
+- name: selinux setting
+  lineinfile:
+      path: /tmp/config
+      regexp: '^SELINUX='
+      line: SELINUX=disabled
 
 ## modprobe br_netfilter
 - name: modprobe br_netfilter
@@ -166,8 +171,8 @@
               --server={{ var_kube_master_https }} \
               --kubeconfig={{ var_kubeconfig_kube_scheduler }}   \
           && kubectl config set-credentials {{ var_kubeconfig_client_kube_scheduler }} \
-              --client-certificate={{ var_ssl_k8s_dir }}/{{ var_ssl_k8scm_cert_prefix }}.pem \
-              --client-key={{ var_ssl_k8s_dir }}/{{ var_ssl_k8scm_cert_prefix }}-key.pem \
+              --client-certificate={{ var_ssl_k8s_dir }}/{{ var_ssl_k8sch_cert_prefix }}.pem \
+              --client-key={{ var_ssl_k8s_dir }}/{{ var_ssl_k8sch_cert_prefix }}-key.pem \
               --embed-certs={{ var_kubeconfig_embed_certs }} \
               --kubeconfig={{ var_kubeconfig_kube_scheduler }}   \
           && kubectl config set-context {{ var_kubeconfig_client_kube_scheduler }} \

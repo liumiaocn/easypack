@@ -16,7 +16,7 @@ var_default_install_bin: /usr/local/bin
 var_default_bin_mode: '0755'
 var_src_k8s_sysctl: sysctl-kubernetes.conf.j2
 var_dest_k8s_sysctl: /etc/sysctl.d/sysctl-kubernetes.conf
-var_retry_max: 3
+var_retry_max: 6
 var_delay_cnt: 3
 var_sleep_internal: 15
 #######END  : SETTING: BASIC#########
@@ -61,6 +61,13 @@ var_kube_master_addr: 127.0.0.1:8080
 var_kube_master_ip: "{{ var_all_in_one_hostip }}"
 var_kube_master_https: "https://{{var_kube_master_ip}}:{{var_kube_opt_api_ssl_port}}"
 #######END  : SETTING: APISERVER#####
+
+#######BEGIN: SETTING: COREDNS#####
+var_coredns_dir_etc: "{{var_kube_dir_etc}}/coredns"
+var_template_coredns_yaml: "coredns.yaml"
+var_coredns_dns_domain: "{{ var_kubelet_config_opt_cluster_domain }}"
+var_coredns_dns_server: "{{ var_kubelet_config_opt_cluster_dns }}"
+#######END  : SETTING: COREDNS#####
 
 #######BEGIN: SETTING: SCHEDULER#####
 var_template_sch_service: kube-scheduler.service.j2
