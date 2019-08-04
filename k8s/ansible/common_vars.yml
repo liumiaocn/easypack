@@ -69,6 +69,12 @@ var_coredns_dns_domain: "{{ var_kubelet_config_opt_cluster_domain }}"
 var_coredns_dns_server: "{{ var_kubelet_config_opt_cluster_dns }}"
 #######END  : SETTING: COREDNS#####
 
+#######BEGIN: SETTING: DASHBOARD#####
+var_dashboard_dir_etc: "{{var_kube_dir_etc}}/dashboard"
+var_template_dashboard_yaml: "kubernetes-dashboard.yaml"
+var_dashboard_node_port: 33307
+#######END  : SETTING: DASHBOARD#####
+
 #######BEGIN: SETTING: SCHEDULER#####
 var_template_sch_service: kube-scheduler.service.j2
 var_kube_sch_etc: kube-scheduler.conf

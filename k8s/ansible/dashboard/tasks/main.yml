@@ -1,2 +1,43 @@
 ---
 # tasks file for dashboard
+
+- name: create dirs for dashboard
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ var_dashboard_dir_etc }}"
+
+- name: create dashboard yaml service file
+  template:
+    src: "{{ var_template_dashboard_yaml }}"
+    dest: "{{ var_dashboard_dir_etc }}/{{ var_template_dashboard_yaml }}"
+
+- name: load dashboard image
+  shell: "docker load -i {{ var_src_dashboard }}"
+
+- name: delete & create kubectl service
+  shell: "cd {{ var_dashboard_dir_etc }} \
+          && kubectl delete -f .       \
+          || kubectl create -f ."
+
+- name: confirm dashboard service state
+  shell: "kubectl get all -n kube-system |egrep -e 'dashboard|NAME'"
+  register: ret_dashboard_status
+  until: '"Running" in ret_dashboard_status.stdout'
+  retries: "{{ var_retry_max }}"
+  delay: "{{ var_delay_cnt }}"
+
+- name: delete dashboard service account
+  shell: kubectl delete serviceaccount dashboard-admin -n kube-system
+  ignore_errors: true
+
+- name: create dashboard service account
+  shell: kubectl create serviceaccount dashboard-admin -n kube-system
+
+- name: delete clusterrolebinding for dashboard
+  shell: kubectl delete clusterrolebinding dashboard-admin
+  ignore_errors: true
+
+- name: create clusterrolebinding for dashboard
+  shell: kubectl create clusterrolebinding dashboard-admin --clusterrole=cluster-admin --serviceaccount=kube-system:dashboard-admin
