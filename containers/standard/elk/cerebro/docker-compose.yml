@@ -1,0 +1,9 @@
+version: '2'
+
+services:
+  # cerebro service
+  cerebro:
+    image: lmenezes/cerebro:0.8.4
+    ports:
+      - "9100:9000"
+    restart: "no"
