@@ -7,6 +7,9 @@ var_src_cfssl: "{{var_src_binary}}/cfssl"
 var_src_etcd:  "{{var_src_binary}}/etcd"
 var_src_flannel: "{{var_src_binary}}/flannel"
 var_src_docker: "{{var_src_binary}}/docker"
+var_src_pause: "{{var_src_binary}}/images/pause.tar"
+var_src_coredns:  "{{var_src_binary}}/images/coredns.tar"
+var_src_dashboard: "{{var_src_binary}}/images/dashboard.tar" 
 var_csr_auto_approve_interval: 3
 var_default_sleep_interval: 3
 var_default_install_bin: /usr/local/bin
