@@ -12,6 +12,9 @@
     - "{{ var_download_save_dir_etcd }}"
     - "{{ var_download_save_dir_cni }}"
     - "{{ var_download_save_dir_docker }}"
+    - "{{ var_download_save_dir_images }}"
+  tags:
+    - "images"
 
 # tasks file for download
 - name: download binary kubernetes
@@ -121,6 +124,24 @@
   synchronize:
     src: "{{ var_download_tmp_dir_docker }}tmp/"
     dest: "{{ var_download_save_dir_docker }}" 
+
+- name: download pause image
+  shell: docker pull {{ var_image_pause_full_name }} \
+         && docker save {{ var_image_pause_full_name }} > {{ var_download_save_dir_images }}/{{ var_download_save_pause }}
+  tags:
+    - "images"
+
+- name: download coredns image
+  shell: docker pull {{ var_image_coredns_full_name }} \
+         && docker save {{ var_image_coredns_full_name }} > {{ var_download_save_dir_images }}/{{ var_download_save_coredns }}
+  tags:
+    - "images"
+
+- name: download dashboard image
+  shell: docker pull {{ var_image_dashboard_full_name }} \
+         && docker save {{ var_image_dashboard_full_name }} > {{ var_download_save_dir_images }}/{{ var_download_save_dashboard }}
+  tags:
+    - "images"
 
 - name: delete useless temp files
   file:

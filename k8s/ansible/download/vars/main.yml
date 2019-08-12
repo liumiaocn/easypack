@@ -8,11 +8,23 @@ var_ver_etcd: v3.3.13
 var_ver_docker: 18.09.7
 var_ver_cni: v0.7.4
 var_ver_flannel: v0.11.0
+var_ver_pause: 3.1
+var_ver_coredns: 1.2.6
+var_ver_dashboard: v1.10.1
 
 # vars file for download
 var_download_base_dir: /tmp/binary
 var_download_save_mode: '0644'
 var_download_save_mode_bin: '0755'
+
+# var for images
+var_image_pause_full_name: "gcr.io/google_containers/pause-amd64:{{ var_ver_pause }}"
+var_image_coredns_full_name: "k8s.gcr.io/coredns:{{ var_ver_coredns }}"
+var_image_dashboard_full_name: "k8s.gcr.io/kubernetes-dashboard-amd64:{{ var_ver_dashboard }}"
+var_download_save_dir_images: "{{ var_download_base_dir }}/images"
+var_download_save_pause: pause.tar
+var_download_save_coredns: coredns.tar
+var_download_save_dashboard: dashboard.tar
 
 # vars for kubernetes
 var_download_url_k8s: "https://dl.k8s.io/{{var_ver_k8s}}/kubernetes-server-{{var_type_os}}-{{var_arch}}.tar.gz"
