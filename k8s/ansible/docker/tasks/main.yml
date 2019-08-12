@@ -41,3 +41,6 @@
   until: '"running" in ret_docker_status.stdout'
   retries: "{{ var_retry_max }}"
   delay: "{{ var_delay_cnt }}"
+
+- name: load pause image
+  shell: "docker load -i {{ var_src_pause }}"
