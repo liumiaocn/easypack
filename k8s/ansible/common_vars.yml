@@ -1,6 +1,6 @@
 ---
 #######BEGIN: SETTING: BASIC#########
-var_all_in_one_hostip: 192.168.163.131
+var_all_in_one_hostip: 192.168.163.132
 var_src_binary: /tmp/binary
 var_src_k8s: "{{var_src_binary}}/kubernetes"
 var_src_cfssl: "{{var_src_binary}}/cfssl"
