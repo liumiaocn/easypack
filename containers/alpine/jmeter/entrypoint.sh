@@ -1,0 +1,11 @@
+#!/bin/sh
+
+JMETER_OPTIONS=""
+if [ _"$ENV_JMETER_MODE" = _"MASTER" ]; then
+  JMETER_OPTIONS="${JMETER_OPTIONS} -R ${ENV_SLAVE_ADDR}"
+elif [ _"$ENV_JMETER_MODE" = _"SLAVE" ]; then
+  JMETER_OPTIONS="${JMETER_OPTIONS} -Djava.rmi.server.hostname=${ENV_SERVER_HOSTNAME}"
+  JMETER_OPTIONS="${JMETER_OPTIONS} -Dserver_port=${ENV_SERVER_PORT}"
+fi
+
+jmeter "${JMETER_OPTIONS}" $@
