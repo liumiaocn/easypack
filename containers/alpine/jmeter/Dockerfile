@@ -43,8 +43,8 @@ RUN apk update                                       \
 ###############################################################################
 #Prepare Setting
 ###############################################################################
-COPY    entrypoint.sh /
+#COPY    entrypoint.sh /
 WORKDIR	${HOME_JMETER}/bin
 
-ENTRYPOINT ["/entrypoint.sh"]
+# ENTRYPOINT ["/entrypoint.sh"]
 
