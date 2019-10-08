@@ -26,6 +26,8 @@ ENV DOWNLOAD_URL_JMETER  https://archive.apache.org/dist/jmeter/binaries/${FILEN
 ENV DOWNLOAD_DIR_LOCAL   /tmp/download
 ENV PATH                 $PATH:${HOME_JMETER}/bin
 
+COPY    entrypoint.sh /
+
 ###############################################################################
 #Install && Setting
 ###############################################################################
@@ -42,7 +44,6 @@ RUN apk update                                       \
 ###############################################################################
 #Prepare Setting
 ###############################################################################
-COPY    entrypoint.sh /
 WORKDIR	${HOME_JMETER}/bin
 
 ENTRYPOINT ["/entrypoint.sh"]
