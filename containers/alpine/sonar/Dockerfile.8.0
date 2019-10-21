@@ -61,5 +61,5 @@ VOLUME "$SONARQUBE_HOME/data"
 #SETTING
 ###############################################################################
 WORKDIR $SONARQUBE_HOME
-COPY run.${SOFTWARE}.${SONAR_VERSION}.sh $SONARQUBE_HOME/bin/run.sh
+COPY run.sh $SONARQUBE_HOME/bin/run.sh
 ENTRYPOINT ["./bin/run.sh"]
