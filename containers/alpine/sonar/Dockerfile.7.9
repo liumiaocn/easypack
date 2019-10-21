@@ -30,7 +30,7 @@ EXPOSE 9000
 ###############################################################################
 #USER
 ###############################################################################
-RUN addgroup -S sonarqube && adduser -S -G sonarqube sonarqube
+RUN groupadd -r sonarqube && useradd -r -g sonarqube sonarqube
 
 ###############################################################################
 #DOWNLOAD & PREPARE
