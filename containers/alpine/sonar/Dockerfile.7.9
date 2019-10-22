@@ -1,10 +1,10 @@
 ###############################################################################
 #
-#IMAGE:   Sonarqube(Alpine)
+#IMAGE:   Sonarqube(JRE-SLIM)
 #VERSION: 7.9
 #
 ###############################################################################
-FROM openjdk:8-alpine
+FROM openjdk:11-jre-slim
 
 ###############################################################################
 #MAINTAINER
@@ -28,29 +28,27 @@ ENV SONAR_VERSION=7.9 \
 EXPOSE 9000
 
 ###############################################################################
-#USER
-###############################################################################
-RUN addgroup -S sonarqube && adduser -S -G sonarqube sonarqube
-
-###############################################################################
 #DOWNLOAD & PREPARE
 ###############################################################################
 RUN set -x \
-    && apk add --no-cache gnupg unzip \
-    && apk add --no-cache libressl wget \
-    && apk add --no-cache su-exec \
-    && apk add --no-cache bash \
+    && apt-get update && apt-get install -y curl gnupg2 unzip \
+    && for server in $(shuf -e ha.pool.sks-keyservers.net hkp://p80.pool.sks-keyservers.net:80 \
+                            keyserver.ubuntu.com hkp://keyserver.ubuntu.com:80 pgp.mit.edu) ; do \
+        gpg --batch --keyserver "$server" --recv-keys F1182E81C792928921DBCAB4CFCA4A29D26468DE && break || : ; \
+        done \
+    && groupadd -r sonarqube && useradd -r -g sonarqube sonarqube \
     && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys F1182E81C792928921DBCAB4CFCA4A29D26468DE \
     && mkdir -p /opt \
     && cd /opt \
-    && wget -O sonarqube.zip --no-verbose https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-$SONAR_VERSION.zip \
-    && wget -O sonarqube.zip.asc --no-verbose https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-$SONAR_VERSION.zip.asc \
+    && curl -o sonarqube.zip -fSL https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-$SONAR_VERSION.zip \
+    && curl -o sonarqube.zip.asc -fSL https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-$SONAR_VERSION.zip.asc \
     && gpg --batch --verify sonarqube.zip.asc sonarqube.zip \
     && unzip sonarqube.zip \
     && mv sonarqube-$SONAR_VERSION sonarqube \
     && chown -R sonarqube:sonarqube sonarqube \
     && rm sonarqube.zip* \
-    && rm -rf $SONARQUBE_HOME/bin/*
+    && rm -rf $SONARQUBE_HOME/bin/* \
+    && rm -rf /var/lib/apt/lists/*
 
 ###############################################################################
 #VOLUME
@@ -62,4 +60,6 @@ VOLUME "$SONARQUBE_HOME/data"
 ###############################################################################
 WORKDIR $SONARQUBE_HOME
 COPY run.sh $SONARQUBE_HOME/bin/run.sh
+
+USER sonarqube
 ENTRYPOINT ["./bin/run.sh"]
