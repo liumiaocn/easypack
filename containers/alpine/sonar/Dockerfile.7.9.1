@@ -1,10 +1,10 @@
 ###############################################################################
 #
-#IMAGE:   Sonarqube(Alpine)
+#IMAGE:   Sonarqube(JRE-SLIM)
 #VERSION: 7.9.1
 #
 ###############################################################################
-FROM openjdk:12-alpine
+FROM FROM openjdk:11-jre-slim
 
 ###############################################################################
 #MAINTAINER
@@ -36,10 +36,12 @@ RUN addgroup -S sonarqube && adduser -S -G sonarqube sonarqube
 #DOWNLOAD & PREPARE
 ###############################################################################
 RUN set -x \
-    && apk add --no-cache gnupg unzip \
-    && apk add --no-cache libressl wget \
-    && apk add --no-cache su-exec \
-    && apk add --no-cache bash \
+    && apt-get update && apt-get install -y curl gnupg2 unzip \
+    && for server in $(shuf -e ha.pool.sks-keyservers.net hkp://p80.pool.sks-keyservers.net:80 \
+                            keyserver.ubuntu.com hkp://keyserver.ubuntu.com:80 pgp.mit.edu) ; do \
+        gpg --batch --keyserver "$server" --recv-keys F1182E81C792928921DBCAB4CFCA4A29D26468DE && break || : ; \
+        done \
+    && RUN groupadd -r sonarqube && useradd -r -g sonarqube sonarqube \
     && gpg --keyserver ha.pool.sks-keyservers.net --recv-keys F1182E81C792928921DBCAB4CFCA4A29D26468DE \
     && mkdir -p /opt \
     && cd /opt \
@@ -50,7 +52,8 @@ RUN set -x \
     && mv sonarqube-$SONAR_VERSION sonarqube \
     && chown -R sonarqube:sonarqube sonarqube \
     && rm sonarqube.zip* \
-    && rm -rf $SONARQUBE_HOME/bin/*
+    && rm -rf $SONARQUBE_HOME/bin/* \
+    && rm -rf /var/lib/apt/lists/*
 
 ###############################################################################
 #VOLUME
