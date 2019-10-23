@@ -1,0 +1,36 @@
+version: '2'
+
+services:
+  # database service: postgres
+  postgres:
+    image: postgres:12-alpine
+    networks:
+      - sonarnet
+    volumes:
+      - ./postgres/postgresql/:/var/lib/postgresql
+      - ./postgres/data/:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=sonar
+      - POSTGRES_PASSWORD=sonar
+    restart: "no"
+
+    
+  # Security service: sonarqube
+  sonarqube:
+    image: liumiaocn/sonarqube:7.9.1
+    ports:
+      - "9000:9000"
+    networks:
+      - sonarnet
+    volumes:
+      - ./sonar/data/:/opt/sonarqube/data
+      - ./sonar/log/:/opt/sonarqube/log
+      - ./sonar/extensions/:/opt/sonarqube/extensions
+      - ./sonar/conf/:/opt/sonarqube/conf
+    environment:
+      - sonar.jdbc.url=jdbc:postgresql://postgres:5432/sonar
+    restart: "no"
+
+networks:
+  sonarnet:
+    driver: bridge

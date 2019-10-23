@@ -17,7 +17,7 @@ services:
     
   # Security service: sonarqube
   sonarqube:
-    image: liumiaocn/sonarqube:7.9.1
+    image: liumiaocn/sonarqube:6.7.1
     ports:
       - "9000:9000"
     volumes:
