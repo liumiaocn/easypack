@@ -2,7 +2,6 @@
 # 让Linux下没有难装的流行开源软件
 # Make popular OSS easily installed in linux
 
-# Why easypack
 ## tensorflow入门实战
 > 为什么放到这里: 顺便. 详细如下教程：
 * 详细：https://blog.csdn.net/liumiaocn/article/details/82851824
