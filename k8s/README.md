@@ -4,6 +4,7 @@
 
 ![这里写图片描述](http://img.blog.csdn.net/20161017215750901)
 
+# 脚本方式安装Kubernetes（单机版）
 |序号|内容|链接
 --|--|--
 1|Kubernetes安装系列之事前准备|https://liumiaocn.blog.csdn.net/article/details/88163677
@@ -30,5 +31,28 @@
 20|Kubernetes安装系列之coredns安装|https://liumiaocn.blog.csdn.net/article/details/88979064
 21|Kubernetes安装系列之Kubelet指标获取方式|https://liumiaocn.blog.csdn.net/article/details/88965862
 22|Kubernetes安装系列之heapster安装|https://liumiaocn.blog.csdn.net/article/details/88979793
-23|Kubernetes安装系列之prometheus安装|TBD
-24|TBD|TBD
+注： 后续将会仅支持Ansible方式
+
+# Ansible方式安装Kubernetes
+|序号|内容|链接
+--|--|--
+1|Kubernetes安装系列之事前准备|https://liumiaocn.blog.csdn.net/article/details/96421940
+2|Kubernetes安装系列之chrony时间同步服务创建|TBD
+3|Kubernetes安装系列之证书创建|https://liumiaocn.blog.csdn.net/article/details/97676486
+4|Kubernetes安装系列之ETCD安装|https://liumiaocn.blog.csdn.net/article/details/97682433
+5|Kubernetes安装系列之Docker安装与设定|https://liumiaocn.blog.csdn.net/article/details/97735761
+6|Kubernetes安装系列之Master-Apiserver安装|https://liumiaocn.blog.csdn.net/article/details/97684723
+7|Kubernetes安装系列之Master-controller-manager安装|https://liumiaocn.blog.csdn.net/article/details/97686172
+8|Kubernetes安装系列之Master-scheduler安装|https://liumiaocn.blog.csdn.net/article/details/97687397
+9|Kubernetes安装系列之证书与kubeconfig设定|https://liumiaocn.blog.csdn.net/article/details/97681902
+10|Kubernetes安装系列之Node-Kubelet安装|https://liumiaocn.blog.csdn.net/article/details/97736845
+11|Kubernetes安装系列之Node-Kube-proxy安装|https://liumiaocn.blog.csdn.net/article/details/97736275
+12|Kubernetes安装系列之csr加入确认|https://liumiaocn.blog.csdn.net/article/details/97737496
+13|Kubernetes安装系列之网络组件-Flannel安装设定|https://liumiaocn.blog.csdn.net/article/details/97733777
+14|快速安装kubernetes：单机版|https://liumiaocn.blog.csdn.net/article/details/97738663
+||快速安装kubernetes：一主多从版本|TBD
+||快速安装kubernetes：多主多从版本|TBD
+15|Kubernetes安装系列之Dashboard安装|https://blog.csdn.net/liumiaocn/article/details/99474894
+16|Kubernetes安装系列之coredns安装|https://liumiaocn.blog.csdn.net/article/details/99462238
+17|Kubernetes安装系列之prometheus安装|TBD
+18|TBD|TBD
