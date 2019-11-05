@@ -31,6 +31,7 @@
 20|Kubernetes安装系列之coredns安装|https://liumiaocn.blog.csdn.net/article/details/88979064
 21|Kubernetes安装系列之Kubelet指标获取方式|https://liumiaocn.blog.csdn.net/article/details/88965862
 22|Kubernetes安装系列之heapster安装|https://liumiaocn.blog.csdn.net/article/details/88979793
+
 注： 后续将会仅支持Ansible方式
 
 # Ansible方式安装Kubernetes
