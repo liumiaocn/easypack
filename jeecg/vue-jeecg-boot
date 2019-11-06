@@ -1,0 +1,143 @@
+#!/bin/sh
+
+PROJECT_NAME="jeecg-boot"
+PROJECT_URL="https://github.com/zhangdaiscott/${PROJECT_NAME}.git"
+DIR_CURRENT=`pwd`
+LOGFILE_DIR="${DIR_CURRENT}"
+LOGFILE_SRPINGBOOT="${LOGFILE_DIR}/springboot-log.log"
+LOGFILE_WEB="${LOGFILE_DIR}/web-vue-log.log"
+MODE_FORCE="ON"
+MYSQL_USER="root"
+MYSQL_USER_PASSWORD="root"
+REDIS_HOSTNAME="127.0.0.1"
+REDIS_PORT="6379"
+
+usage(){
+  echo
+  echo "Usage: $0 ACTION TYPE"
+  echo "          ACTION: download|build|prepare|start|stop|restart|all"
+  echo "          TYPE:   boot|vue|all"
+  echo
+}
+
+err_handle(){
+	if [ $? -ne 0 ]; then
+	   echo "$*"
+	   exit 1
+	 fi
+}
+
+ACTION=$1
+TYPE=$2
+
+if [ $# -ne 2 ]; then
+  usage
+  exit 1
+fi
+
+
+if [ _"$ACTION" = _"download" ]; then
+  which git
+  err_handle "please make sure git installed"
+
+  if [ _"$TYPE" = _"boot" -o _"$TYPE" = _"vue" -o _"$TYPE" = _"all" ]; then
+    echo "## Step 1: git clone $PROJECT_URL"
+    git clone $PROJECT_URL
+    err_handle "git clone failed"
+    echo “## Step 1: completed”
+    echo
+  fi
+
+elif [ _"$ACTION" = _"prepare" ]; then
+  if [ _"$TYPE" = _"boot" -o _"$TYPE" = _"vue" -o _"$TYPE" = _"all" ]; then
+    echo "## Step 1: Prepare Database"
+    cd ${PROJECT_NAME}/jeecg-boot/
+    mysql -u${MYSQL_USER} -p${MYSQL_USER_PASSWORD} --force 2>&1 >>${LOGFILE_SRPINGBOOT} <<EOF
+      drop database \`jeecg-boot\`;
+      create database \`jeecg-boot\` charset utf8mb4;
+      use jeecg-boot;
+      source db/jeecg-boot-mysql5.7-20191018.sql;
+      show tables;
+EOF
+    echo "## Step 1: Restart Redis"
+    redis-cli shutdown >>${LOGFILE_SRPINGBOOT} 2>&1
+    $(redis-server >>${LOGFILE_SRPINGBOOT} 2>&1) &
+    
+    cd ${DIR_CURRENT}
+    echo "## Step 1: completed"
+    echo
+  fi
+elif [ _"$ACTION" = _"build" ]; then
+  
+  if [ _"$TYPE" = _"boot" -o _"$TYPE" = _"all" ]; then
+    echo "## Step 2: Build Springboot Apps"
+    echo "## begin build jeecg-boot by using : mvn clean package"
+    cd ${PROJECT_NAME}/jeecg-boot/
+    which mvn
+    err_handle "please make sure mvn installed"
+    mvn clean package 2>&1 >>${LOGFILE_SRPINGBOOT}
+
+    echo "   please check build log file : $LOGFILE_SRPINGBOOT"
+    ls $LOGFILE_SRPINGBOOT
+    echo "   build target"
+    ls */target/*.jar
+
+    cd ${DIR_CURRENT}
+    echo “## Step 2: completed”
+    echo
+  fi
+
+  if [ _"$TYPE" = _"vue" -o _"$TYPE" = _"all" ]; then
+    echo "## Step 3: Build Vue Apps"
+    echo "## begin get dependencies by using : npm install"
+    cd ${PROJECT_NAME}/ant-design-vue-jeecg/
+    which npm
+    err_handle "please make sure npm installed"
+
+    yarn install 2>&1 >>$LOGFILE_WEB
+    echo "   please check build log file : $LOGFILE_WEB"
+    ls $LOGFILE_WEB
+
+    cd ${DIR_CURRENT}
+    echo “## Step 3: completed”
+    echo
+  fi
+elif [ _"$ACTION" = _"start" ]; then
+  
+  if [ _"$TYPE" = _"boot" -o _"$TYPE" = _"all" ]; then
+    echo "## Step 4: Start Springboot Apps"
+    ps -ef |grep 'jeecg-boot-module-system-2.1.1.jar' |grep -v grep |awk '{printf("kill -kill %s\n", $2)}' |sort |uniq
+
+    cd ${PROJECT_NAME}/jeecg-boot/
+    $(java -jar jeecg-boot-module-system/target/jeecg-boot-module-system-2.1.1.jar 2>&1 >>${LOGFILE_SRPINGBOOT}) &
+
+    cd ${DIR_CURRENT}
+    echo “## Step 4: completed”
+    echo
+  fi
+
+  if [ _"$TYPE" = _"vue" -o _"$TYPE" = _"all" ]; then
+    echo "## Step 5: Start Vue Apps"
+    echo "## begin start vue process by using : npm run serve"
+    ps -ef |grep 'vue-cli-service serve' |grep -v grep |awk '{printf("kill -kill %s\n", $2)}' |sort |uniq |sh
+
+    cd ${PROJECT_NAME}/ant-design-vue-jeecg/
+    $(npm run serve 2>&1 >>${LOGFILE_WEB}) &
+
+    cd ${DIR_CURRENT}
+    echo “## Step 5: completed”
+    echo
+  fi
+elif [ _"$ACTION" = _"deploy" ]; then
+  :
+elif [ _"$ACTION" = _"all" ]; then
+  rm ${LOGFILE_WEB} ${LOGFILE_SRPINGBOOT} 
+  sh $0 download all
+  sh $0 prepare  all
+  sh $0 build    all
+  sh $0 start    all
+  sh $0 deploy   all
+else
+  usage
+  exit 1
+fi
