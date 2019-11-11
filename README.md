@@ -23,13 +23,50 @@
 </table>
 
 # DevOps主流工具
-## Jenkins: CDF
+## 持续集成：Jenkins: CDF
 <table border="0">
     <tr>
         <td><a href="https://liumiaocn.blog.csdn.net/article/category/8598907">00-使用介绍</a></td>
-        <td><a href="containers/alpine/jenkins">01-相关代码</a></td>
+        <td><a href="https://blog.csdn.net/liumiaocn/column/info/27057">01-持续集成实践</a></td>
+        <td><a href="containers/alpine/jenkins">02-相关代码</a></td>
     </tr>
 </table>
+
+
+## 版本管理：Gitlab
+<table border="0">
+    <tr>
+        <td><a href="https://blog.csdn.net/liumiaocn/article/details/82286778">00-使用介绍</a></td>
+        <td><a href="containers/standard/gitlab">02-相关代码</a></td>
+    </tr>
+</table>
+
+## 代码质量：SonarQube
+<table border="0">
+    <tr>
+        <td><a href="https://liumiaocn.blog.csdn.net/article/category/8559161">00-使用介绍</a></td>
+        <td><a href="containers/standard/gitlab">02-相关代码</a></td>
+    </tr>
+</table>
+
+## 需求与缺陷管理：Redmine
+<table border="0">
+    <tr>
+        <td><a href="https://liumiaocn.blog.csdn.net/article/details/83951987">00-使用介绍</a></td>
+        <td><a href="containers/standard/gitlab">02-相关代码</a></td>
+    </tr>
+</table>
+
+## 容器化管理：Rancher
+<table border="0">
+    <tr>
+        <td><a href="containers/standard/rancher">00-使用介绍</a></td>
+        <td><a href="containers/standard/rancher">02-相关代码</a></td>
+    </tr>
+</table>
+
+## 流行开源工具容器实践：Rancher
+
 
 # 其他工具
 ## tensorflow入门实战
@@ -40,21 +77,19 @@
     </tr>
 </table>
 
+## 开源数据库：MySQL
+<table border="0">
+    <tr>
+        <td><a href="https://liumiaocn.blog.csdn.net/article/details/88406119">00-使用介绍</a></td>
+        <td><a href="containers/standard/mysql">02-相关代码</a></td>
+    </tr>
+</table>
 
+## 开源数据库：MariaDB
+<table border="0">
+    <tr>
+        <td><a href="https://liumiaocn.blog.csdn.net/article/details/88406119">00-使用介绍</a></td>
+        <td><a href="containers/alpine/maria">02-相关代码</a></td>
+    </tr>
+</table>
 
-## 流行开源工具容器实践：Jenkins
-![这里写图片描述](http://img.blog.csdn.net/20170222072632935?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbGl1bWlhb2Nu/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
-
-https://github.com/liumiaocn/easypack/tree/master/containers/alpine/jenkins
-## 流行开源工具容器实践：Redmine
-https://github.com/liumiaocn/easypack/tree/master/containers/alpine/redmine
-## 流行开源工具容器实践：MySQL
-https://github.com/liumiaocn/easypack/tree/master/containers/standard/mysql
-## 流行开源工具容器实践：MariaDB
-https://github.com/liumiaocn/easypack/tree/master/containers/alpine/maria
-## 流行开源工具容器实践：GitLab
-https://github.com/liumiaocn/easypack/tree/master/containers/standard/gitlab
-## 流行开源工具容器实践：Sonarqube
-https://github.com/liumiaocn/easypack/tree/master/containers/alpine/sonar
-## 流行开源工具容器实践：Rancher
-https://github.com/liumiaocn/easypack/tree/master/containers/standard/rancher
