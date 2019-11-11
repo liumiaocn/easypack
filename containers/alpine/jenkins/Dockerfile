@@ -1,7 +1,7 @@
 ###############################################################################
 #
 #IMAGE:   Jenkins(Alpine)
-#VERSION: 2.176.1
+#VERSION: 2.190.2
 #BASE:    Jenkins LTS Version
 #INTEGRATION:
 #         Jenkins Slave: 3.28
