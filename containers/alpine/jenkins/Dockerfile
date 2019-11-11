@@ -71,6 +71,7 @@ RUN  apk add --no-cache git openssh-client curl unzip bash ttf-dejavu coreutils 
   && mv docker/docker /usr/local/bin/docker          \
   && chmod a+x /usr/local/bin/docker                 \
   && rm -rf docker                                   \
+  && rm docker.tgz                                   \
   && echo "################ kubectl client "         \          
   && curl -sSL -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v$KUBECTL_VER/bin/linux/amd64/kubectl \
   && chmod a+x /usr/local/bin/kubectl \
@@ -89,7 +90,7 @@ RUN  apk add --no-cache git openssh-client curl unzip bash ttf-dejavu coreutils 
   && mv apache-maven-$MAVEN_VER $MAVEN_HOME          \
   && rm apache-maven-$MAVEN_VER-bin.tar.gz           \
   && echo "################ sonar-scanner  "         \          
-  && curl -L -o sonar-scanner-$SONAR_SCANNER_VER.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/${SONAR_SCANNER_VER}-linux.zip           \
+  && curl -L -o sonar-scanner-$SONAR_SCANNER_VER.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VER}.zip           \
   && unzip sonar-scanner-$SONAR_SCANNER_VER.zip   >/dev/null 2>&1   \
   && mv sonar-scanner-cli-$SONAR_SCANNER_VER sonar-scanner-$SONAR_SCANNER_VER     \
   && mv sonar-scanner-$SONAR_SCANNER_VER $SONAR_HOME \
