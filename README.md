@@ -23,6 +23,13 @@
 </table>
 
 # DevOps主流工具
+## Jenkins: CDF
+<table border="0">
+    <tr>
+        <td><a href="https://liumiaocn.blog.csdn.net/article/category/8598907">00-使用介绍</a></td>
+        <td><a href="containers/alpine/jenkins">01-相关代码</a></td>
+    </tr>
+</table>
 
 # 其他工具
 ## tensorflow入门实战
@@ -34,14 +41,6 @@
 </table>
 
 
-## 快速安装MESOS
-![这里写图片描述](http://img.blog.csdn.net/20170113065226244?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbGl1bWlhb2Nu/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
-
-https://github.com/liumiaocn/easypack/tree/master/mesos
-
-## 便捷安装Kubernetes
-![这里写图片描述](http://img.blog.csdn.net/20161110063435109)
-https://github.com/liumiaocn/easypack/tree/master/k8s
 
 ## 流行开源工具容器实践：Jenkins
 ![这里写图片描述](http://img.blog.csdn.net/20170222072632935?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbGl1bWlhb2Nu/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
