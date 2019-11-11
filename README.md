@@ -4,11 +4,10 @@
 ## Kubernetes
 <table border="0">
     <tr>
-        <td><a href="https://blog.csdn.net/liumiaocn/column/info/12761">0-Kubernetes基础知识</a></td>
-        <td><a href="k8s/README.md">01-脚本方式快速安装Kubernetes介绍文档</a></td>
-        <td><a href="k8s/shell">01-安装Kubernetes：脚本</a></td>
-        <td><a href="k8s/README.md">02-Ansible方式快速安装Kubernetes介绍</a></td>
-        <td><a href="k8s/ansible">02-Ansible方式快速安装Kubernetes</a></td>
+        <td><a href="https://blog.csdn.net/liumiaocn/column/info/12761">00-基础知识</a></td>
+        <td><a href="k8s/README.md">01-介绍文档</a></td>
+        <td><a href="k8s/shell">02-脚本部署</a></td>
+        <td><a href="k8s/ansible">03-Ansible部署</a></td>
     </tr>
 </table>
 
