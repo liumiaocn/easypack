@@ -11,10 +11,28 @@
     </tr>
 </table>
 
+## MESOS
+<table border="0">
+    <tr>
+        <td><a href="https://blog.csdn.net/liumiaocn/article/details/54285586">00-简介</a></td>
+        <td><a href="https://blog.csdn.net/liumiaocn/article/details/54310217">01-Zookeeper简介</a></td>
+        <td><a href="https://blog.csdn.net/liumiaocn/article/details/54339732">02-Marathon简介</a></td>
+        <td><a href="https://blog.csdn.net/liumiaocn/article/details/54405044">03-环境搭建</a></td>
+        <td><a href="mesos">04-相关代码</a></td>
+    </tr>
+</table>
+
+# DevOps主流工具
+
+# 其他工具
 ## tensorflow入门实战
-> 为什么放到这里: 顺便. 详细如下教程：
-* 详细：https://blog.csdn.net/liumiaocn/article/details/82851824
-* 代码：https://github.com/liumiaocn/easypack/tree/master/machinelearning/tensorflow
+<table border="0">
+    <tr>
+        <td><a href="https://blog.csdn.net/liumiaocn/article/details/82851824">00-使用介绍</a></td>
+        <td><a href="machinelearning/tensorflow">01-相关内容</a></td>
+    </tr>
+</table>
+
 
 ## 快速安装MESOS
 ![这里写图片描述](http://img.blog.csdn.net/20170113065226244?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvbGl1bWlhb2Nu/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
