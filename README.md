@@ -5,9 +5,9 @@
 <table border="0">
     <tr>
         <td><a href="https://blog.csdn.net/liumiaocn/column/info/12761">00-基础知识</a></td>
-        <td><a href="k8s/README.md">01-介绍文档</a></td>
-        <td><a href="k8s/shell">02-脚本部署</a></td>
-        <td><a href="k8s/ansible">03-Ansible部署</a></td>
+        <td><a href="k8s/README.md">01-使用说明文档</a></td>
+        <td><a href="k8s/shell">02-脚本部署方式</a></td>
+        <td><a href="k8s/ansible">03-Ansible部署方式</a></td>
     </tr>
 </table>
 
