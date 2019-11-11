@@ -6,7 +6,7 @@
 #INTEGRATION:
 #         Jenkins Slave: 3.28
 #         tini         : 0.18.0
-#         maven        : 3.6.0
+#         maven        : 3.6.2
 #         sonar-scanner: 3.2.0.1227
 #         kubectl      : 1.10.12
 #         docker       : 18.09.0
@@ -35,7 +35,7 @@ ARG JENKINS_SHA=8bbc6e2043e7bd102f751aca94b51652e1e792ec0a11377d52c9d9ed484f0e8c
 ARG JENKINS_URL=http://mirrors.jenkins.io/war-stable/${JENKINS_VERSION}/jenkins.war
 ARG COPY_REFERENCE_FILE_LOG=$JENKINS_HOME/copy_reference_file.log
 ARG MAVEN_HOME="/usr/local/share/maven"
-ARG MAVEN_VER="3.6.0"
+ARG MAVEN_VER="3.6.2"
 ARG SONAR_HOME="/usr/local/share/sonar"
 ARG SONAR_SCANNER_VER="3.2.0.1227"
 ARG KUBECTL_VER="1.10.12"
