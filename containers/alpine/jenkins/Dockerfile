@@ -83,7 +83,7 @@ RUN  apk add --no-cache git openssh-client curl unzip bash ttf-dejavu coreutils 
   && echo "${JENKINS_SHA}  /usr/share/jenkins/jenkins.war" | sha256sum -c - \
   && echo "################ jenkins slave"           \          
   && curl -L -o /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${JENKINS_SLAVE_VER}/remoting-${JENKINS_SLAVE_VER}.jar  \
-  && echo "\n################ maven         "        \          
+  && echo "################ maven         "        \          
   && curl -L -o apache-maven-$MAVEN_VER-bin.tar.gz http://apache.mirror.cdnetworks.com/maven/maven-3/$MAVEN_VER/binaries/apache-maven-$MAVEN_VER-bin.tar.gz \
   && tar xf apache-maven-$MAVEN_VER-bin.tar.gz       \
   && mv apache-maven-$MAVEN_VER $MAVEN_HOME          \
