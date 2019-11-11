@@ -1,6 +1,4 @@
-# easypack
-# 让Linux下没有难装的流行开源软件
-# Make popular OSS easily installed in linux
+![easypack](pics/easypack-logo.png)
 
 ## tensorflow入门实战
 > 为什么放到这里: 顺便. 详细如下教程：
