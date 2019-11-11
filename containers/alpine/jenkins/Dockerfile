@@ -92,7 +92,6 @@ RUN  apk add --no-cache git openssh-client curl unzip bash ttf-dejavu coreutils 
   && echo "################ sonar-scanner  "         \          
   && curl -L -o sonar-scanner-$SONAR_SCANNER_VER.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VER}.zip           \
   && unzip sonar-scanner-$SONAR_SCANNER_VER.zip   >/dev/null 2>&1   \
-  && mv sonar-scanner-cli-$SONAR_SCANNER_VER sonar-scanner-$SONAR_SCANNER_VER     \
   && mv sonar-scanner-$SONAR_SCANNER_VER $SONAR_HOME \
   && rm sonar-scanner-$SONAR_SCANNER_VER.zip         \
   && echo "################ robot framework"         \          
