@@ -110,6 +110,7 @@ RUN  apk add --no-cache git openssh-client curl unzip bash ttf-dejavu coreutils 
 ###############################################################################
 COPY init.groovy /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy
 COPY init_login.groovy /usr/share/jenkins/ref/init.groovy.d/set-user-security.groovy
+COPY init_csrf_disable.groovy /usr/share/jenkins/ref/init.groovy.d/init_csrf_disable.groovy
 COPY jenkins-support /usr/local/bin/jenkins-support
 COPY jenkins.sh /usr/local/bin/jenkins.sh
 COPY install-plugins.sh /usr/local/bin/install-plugins.sh
