@@ -18,7 +18,7 @@ FROM centos:centos7.7.1908
 ###############################################################################
 #MAINTAINER
 ###############################################################################
-MAINTAINER zz <zz@outlook.com>
+MAINTAINER LiuMiao <liumiaocn@outlook.com>
 
 ###############################################################################
 #ARG Setting
@@ -35,7 +35,7 @@ ARG JENKINS_SHA=a8af991f9085ff7f12baa2c9978554b2a18e5c4ed84327224d30e269e8f4a50e
 ARG JENKINS_URL=http://mirrors.jenkins.io/war-stable/${JENKINS_VERSION}/jenkins.war
 ARG COPY_REFERENCE_FILE_LOG=$JENKINS_HOME/copy_reference_file.log
 ARG MAVEN_HOME="/usr/local/share/maven"
-ARG MAVEN_VER="3.6.0"
+ARG MAVEN_VER="3.6.2"
 ARG SONAR_HOME="/usr/local/share/sonar"
 ARG SONAR_SCANNER_VER="3.2.0.1227"
 ARG KUBECTL_VER="1.10.12"
@@ -48,7 +48,7 @@ ENV JENKINS_HOME ${JENKINS_HOME}
 ENV JENKINS_MODE ${JENKINS_MODE}
 ENV JENKINS_SLAVE_AGENT_PORT ${agent_port}
 ENV JENKINS_ADMIN_ID=${JENKINS_ADMIN_ID:-root}
-ENV JENKINS_ADMIN_PW=${JENKINS_ADMIN_PW:-abcd1234}
+ENV JENKINS_ADMIN_PW=${JENKINS_ADMIN_PW:-hello123}
 ENV JENKINS_MASTER_URL=${JENKINS_MASTER_URL}
 ENV JENKINS_SLAVE_NAME=${JENKINS_SLAVE_NAME}
 ENV JENKINS_SLAVE_SECRET=${JENKINS_SLAVE_SECRET}
@@ -65,25 +65,37 @@ RUN  yum -y install java-1.8.0-openjdk git openssh-client bash ttf-dejavu coreut
   && echo "mkdir -p ${JENKINS_HOME}" \
   && mkdir -p ${JENKINS_HOME} \
   && mkdir -p /usr/share/jenkins/ref/init.groovy.d  \
-  && echo "################ docker client "         \ 
+  && echo "################ docker client "         \          
+  && curl -L -o docker.tgz https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKER_VERSION}.tgz \
+  && tar xf docker.tgz                               \
+  && mv docker/docker /usr/local/bin/docker          \
   && chmod a+x /usr/local/bin/docker                 \
   && rm -rf docker                                   \
-  && echo "################ kubectl client "         \     
+  && rm docker.tgz                                   \
+  && echo "################ kubectl client "         \          
+  && curl -sSL -o /usr/local/bin/kubectl https://storage.googleapis.com/kubernetes-release/release/v$KUBECTL_VER/bin/linux/amd64/kubectl \
   && chmod a+x /usr/local/bin/kubectl \
   && echo "################ tini           "         \          
   && curl -fsSL https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini-static-amd64 -o /bin/tini \
   && chmod +x /bin/tini \
   && echo "$TINI_SHA  /bin/tini" | sha256sum -c -    \
-  && echo "################ jenkins master"          \ 
+  && echo "################ jenkins master"          \          
+  && curl -fsSL ${JENKINS_URL} -o /usr/share/jenkins/jenkins.war \
   && echo "${JENKINS_SHA}  /usr/share/jenkins/jenkins.war" | sha256sum -c - \
-  && echo "################ jenkins slave"           \  
-  && echo "\n################ maven         "        \ 
+  && echo "################ jenkins slave"           \          
+  && curl -L -o /usr/share/jenkins/slave.jar https://repo.jenkins-ci.org/public/org/jenkins-ci/main/remoting/${JENKINS_SLAVE_VER}/remoting-${JENKINS_SLAVE_VER}.jar  \
+  && echo "################ maven         "        \          
+  && curl -L -o apache-maven-$MAVEN_VER-bin.tar.gz http://apache.mirror.cdnetworks.com/maven/maven-3/$MAVEN_VER/binaries/apache-maven-$MAVEN_VER-bin.tar.gz \
+  && tar xf apache-maven-$MAVEN_VER-bin.tar.gz       \
+  && mv apache-maven-$MAVEN_VER $MAVEN_HOME          \
+  && rm apache-maven-$MAVEN_VER-bin.tar.gz           \
   && echo "################ sonar-scanner  "         \          
-  && curl -L -o sonar-scanner-$SONAR_SCANNER_VER.zip https://github.com/SonarSource/sonar-scanner-cli/archive/$SONAR_SCANNER_VER.zip           \
+  && curl -L -o sonar-scanner-$SONAR_SCANNER_VER.zip https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-${SONAR_SCANNER_VER}.zip           \
   && unzip sonar-scanner-$SONAR_SCANNER_VER.zip   >/dev/null 2>&1   \
-  && mv sonar-scanner-cli-$SONAR_SCANNER_VER sonar-scanner-$SONAR_SCANNER_VER     \
   && mv sonar-scanner-$SONAR_SCANNER_VER $SONAR_HOME \
   && rm sonar-scanner-$SONAR_SCANNER_VER.zip         \
+  && echo "################ robot framework"         \          
+  && pip install --upgrade pip; pip install --no-cache-dir robotframework robotframework-selenium2library\
   && ln -s /usr/local/share/maven/bin/mvn /usr/local/bin/mvn \
   && ln -s /usr/local/share/sonar/bin/sonar-scanner /usr/local/bin/sonar-scanner \
   && mkdir -p /data/jenkins  \
@@ -98,6 +110,7 @@ RUN  yum -y install java-1.8.0-openjdk git openssh-client bash ttf-dejavu coreut
 ###############################################################################
 COPY init.groovy /usr/share/jenkins/ref/init.groovy.d/tcp-slave-agent-port.groovy
 COPY init_login.groovy /usr/share/jenkins/ref/init.groovy.d/set-user-security.groovy
+COPY init_csrf_disable.groovy /usr/share/jenkins/ref/init.groovy.d/init_csrf_disable.groovy
 COPY jenkins-support /usr/local/bin/jenkins-support
 COPY jenkins.sh /usr/local/bin/jenkins.sh
 COPY install-plugins.sh /usr/local/bin/install-plugins.sh
@@ -105,6 +118,7 @@ COPY install-plugins.sh /usr/local/bin/install-plugins.sh
 ###############################################################################
 #Install plugins
 ###############################################################################
+#RUN /usr/local/bin/install-plugins.sh gitlab-plugin sonar redmine docker-build-step ansible build-pipeline-plugin buildgraph-view workflow-aggregator pipeline-maven pipeline-utility-steps ssh-slaves
 RUN /usr/local/bin/install-plugins.sh gitlab-plugin ansible sonar redmine docker-build-step docker-workflow blueocean
 
 ###############################################################################
