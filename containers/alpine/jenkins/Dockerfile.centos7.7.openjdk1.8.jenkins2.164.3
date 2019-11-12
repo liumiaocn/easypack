@@ -61,7 +61,8 @@ ENV COPY_REFERENCE_FILE_LOG $JENKINS_HOME/copy_reference_file.log
 ###############################################################################
 #Install && Setting
 ###############################################################################
-RUN  yum -y install java-1.8.0-openjdk git openssh-client bash ttf-dejavu coreutils py-pip ansible subversion \
+RUN  yum -y install epel-release && yum-config-manager --enable epel \
+  && yum -y install java-1.8.0-openjdk git openssh-client python-pip ansible subversion unzip \
   && echo "mkdir -p ${JENKINS_HOME}" \
   && mkdir -p ${JENKINS_HOME} \
   && mkdir -p /usr/share/jenkins/ref/init.groovy.d  \
@@ -95,7 +96,8 @@ RUN  yum -y install java-1.8.0-openjdk git openssh-client bash ttf-dejavu coreut
   && mv sonar-scanner-$SONAR_SCANNER_VER $SONAR_HOME \
   && rm sonar-scanner-$SONAR_SCANNER_VER.zip         \
   && echo "################ robot framework"         \          
-  && pip install --upgrade pip; pip install --no-cache-dir robotframework robotframework-selenium2library\
+  && pip install --upgrade pip \
+  && pip install --no-cache-dir robotframework robotframework-selenium2library\
   && ln -s /usr/local/share/maven/bin/mvn /usr/local/bin/mvn \
   && ln -s /usr/local/share/sonar/bin/sonar-scanner /usr/local/bin/sonar-scanner \
   && mkdir -p /data/jenkins  \
