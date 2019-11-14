@@ -45,6 +45,17 @@
     </tr>
 </table>
 
+## 镜像仓库
+<table border="0">
+    <tr>
+        <td><a href="https://blog.csdn.net/liumiaocn/column/info/26478">00-镜像仓库介绍</a></td>
+        <td><a href="https://blog.csdn.net/liumiaocn/article/details/81805063">01-Harbor搭建</a></td>
+        <td><a href="https://blog.csdn.net/liumiaocn/article/details/81813693">02-Https方式</a></td>
+        <td><a href="https://blog.csdn.net/liumiaocn/article/details/81813705">03-REST API使用</a></td>
+        <td><a href="https://blog.csdn.net/liumiaocn/article/details/81813707">04-集成Clair</a></td>
+    </tr>
+</table>
+
 ## 代码质量：SonarQube
 <table border="0">
     <tr>
@@ -68,8 +79,6 @@
         <td><a href="containers/standard/rancher">02-相关代码</a></td>
     </tr>
 </table>
-
-## 流行开源工具容器实践：Rancher
 
 
 # 其他工具
