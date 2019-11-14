@@ -51,8 +51,10 @@
         <td><a href="https://blog.csdn.net/liumiaocn/column/info/26478">00-镜像仓库介绍</a></td>
         <td><a href="https://blog.csdn.net/liumiaocn/article/details/81805063">01-Harbor搭建</a></td>
         <td><a href="https://blog.csdn.net/liumiaocn/article/details/81813693">02-Https方式</a></td>
-        <td><a href="https://blog.csdn.net/liumiaocn/article/details/81813705">03-REST API使用</a></td>
-        <td><a href="https://blog.csdn.net/liumiaocn/article/details/81813707">04-集成Clair</a></td>
+        <td><a href="https://blog.csdn.net/liumiaocn/article/details/86515962">03-Https连接方式</a></td>
+        <td><a href="https://blog.csdn.net/liumiaocn/article/details/81813705">04-REST API使用</a></td>
+        <td><a href="https://blog.csdn.net/liumiaocn/article/details/81813707">05-集成Clair</a></td>
+        
     </tr>
 </table>
 
