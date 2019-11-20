@@ -18,9 +18,11 @@ MAINTAINER LiuMiao <liumiaocn@outlook.com>
 ###############################################################################
 #Install
 ###############################################################################
-RUN apk update \
+RUN set -ex -o pipefail                 \
+    && apk update                       \
     && apk add --no-cache apache2-utils \
-    && rm -rf /var/cache/apk/*
+    && rm -rf /var/cache/apk/*          \
+    && ab -V |grep -V
 
 ###############################################################################
 #Setting
