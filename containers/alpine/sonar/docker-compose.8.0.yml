@@ -1,0 +1,29 @@
+version: '2'
+
+services:
+  # database service: postgres
+  postgres:
+    image: postgres:12-alpine
+    volumes:
+      - ./postgres/postgresql/:/var/lib/postgresql
+      - ./postgres/data/:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=sonar
+      - POSTGRES_PASSWORD=sonar
+    restart: "no"
+
+  # Security service: sonarqube for postgresql
+  sonarqube:
+    image: liumiaocn/sonarqube:8.0
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./sonarpostgres/data/:/opt/sonarqube/data
+      - ./sonarpostgres/log/:/opt/sonarqube/log
+      - ./sonarpostgres/extensions/:/opt/sonarqube/extensions
+      - ./sonarpostgres/conf/:/opt/sonarqube/conf
+    environment:
+      - SONARQUBE_JDBC_USERNAME=sonar
+      - SONARQUBE_JDBC_PASSWORD=sonar
+      - SONARQUBE_JDBC_URL=jdbc:postgresql://postgres:5432/sonar
+    restart: "no"
