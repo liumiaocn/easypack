@@ -83,7 +83,6 @@ service_action() {
   do
     echo "## Host: ${HOST}"
     ssh ${HOST} ${COMMAND_STRING}
-    echo
   done
 }
 
@@ -140,20 +139,43 @@ if [ _"$ACTION" = _"stop" -o _"$ACTION" = _"STOP" ]; then
 elif [ _"$ACTION" = _"start" -o _"$ACTION" = _"START" ]; then
   if [ _"server" = _"${TYPE}" ]; then
     COMMAND_STRING="systemctl start ${SYSTEMD_SERVICE_NAME_SERVER}"
-  elif [ _"agent" = _"${TYPE}" ; then
+    service_action ${TYPE}
+    COMMAND_STRING="iptables -F"
+    service_action ${TYPE}
+    echo "## ACTION:[${ACTION}] ends   ..."
+    exit
+  elif [ _"agent" = _"${TYPE}" ]; then
     COMMAND_STRING="systemctl start ${SYSTEMD_SERVICE_NAME_AGENT}"
+  elif [ _"all" = _"${TYPE}" ]; then
+    sh $0 ${ACTION} server
+    sh $0 ${ACTION} agent
   fi
 elif [ _"$ACTION" = _"restart" -o _"$ACTION" = _"RESTART" ]; then
   if [ _"server" = _"${TYPE}" ]; then
     COMMAND_STRING="systemctl restart ${SYSTEMD_SERVICE_NAME_SERVER}"
-  elif [ _"agent" = _"${TYPE}" ; then
+    service_action ${TYPE}
+    COMMAND_STRING="iptables -F"
+    service_action ${TYPE}
+    echo "## ACTION:[${ACTION}] ends   ..."
+    exit
+  elif [ _"agent" = _"${TYPE}" ]; then
     COMMAND_STRING="systemctl restart ${SYSTEMD_SERVICE_NAME_AGENT}"
+  elif [ _"all" = _"${TYPE}" ]; then
+    sh $0 ${ACTION} server
+    sh $0 ${ACTION} agent
   fi
 elif [ _"$ACTION" = _"status" -o _"$ACTION" = _"STATUS" ]; then
   if [ _"server" = _"${TYPE}" ]; then
     COMMAND_STRING="systemctl status ${SYSTEMD_SERVICE_NAME_SERVER} |egrep '\.service|Active:|\-\-| ACTION: '"
-  elif [ _"agent" = _"${TYPE}" ; then
+  elif [ _"agent" = _"${TYPE}" ]; then
     COMMAND_STRING="systemctl status ${SYSTEMD_SERVICE_NAME_AGENT} |egrep '\.service|Active:|\-\-| ACTION: '"
+  elif [ _"all" = _"${TYPE}" ]; then
+    COMMAND_STRING="systemctl status ${SYSTEMD_SERVICE_NAME_SERVER} |egrep '\.service|Active:|\-\-| ACTION: '"
+    service_action ${TYPE}
+    COMMAND_STRING="systemctl status ${SYSTEMD_SERVICE_NAME_AGENT} |egrep '\.service|Active:|\-\-| ACTION: '"
+    service_action ${TYPE}
+    echo "## ACTION:[${ACTION}] ends   ..."
+    echo
   fi
 elif [ _"$ACTION" = _"download" -o _"$ACTION" = _"DOWNLOAD" ]; then
   echo "  download begins, it will take serveral minutes, pls be patient... "
@@ -183,7 +205,7 @@ elif [ _"$ACTION" = _"install" -o _"$ACTION" = _"INSTALL" ]; then
 elif [ _"$ACTION" = _"uninstall" -o _"$ACTION" = _"UNINSTALL" ]; then
   if [ _"server" = _"${TYPE}" ]; then
     COMMAND_STRING="${UNINSTALL_SCRIPT_K3S_SERVER}"
-  elif [ _"agent" = _"${TYPE}" ; then
+  elif [ _"agent" = _"${TYPE}" ]; then
     COMMAND_STRING="${UNINSTALL_SCRIPT_K3S_AGENT}"
   fi
 else
