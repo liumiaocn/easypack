@@ -150,6 +150,7 @@ elif [ _"$ACTION" = _"start" -o _"$ACTION" = _"START" ]; then
     sh $0 ${ACTION} server
     echo
     sh $0 ${ACTION} agent
+    echo "## ACTION:[${ACTION}] [${TYPE}] ends   ..."
     exit
   fi
 elif [ _"$ACTION" = _"restart" -o _"$ACTION" = _"RESTART" ]; then
@@ -166,6 +167,7 @@ elif [ _"$ACTION" = _"restart" -o _"$ACTION" = _"RESTART" ]; then
     sh $0 ${ACTION} server
     echo
     sh $0 ${ACTION} agent
+    echo "## ACTION:[${ACTION}] [${TYPE}] ends   ..."
     exit
   fi
 elif [ _"$ACTION" = _"status" -o _"$ACTION" = _"STATUS" ]; then
@@ -177,6 +179,7 @@ elif [ _"$ACTION" = _"status" -o _"$ACTION" = _"STATUS" ]; then
     sh $0 ${ACTION} server
     echo
     sh $0 ${ACTION} agent
+    echo "## ACTION:[${ACTION}] [${TYPE}] ends   ..."
     exit
   fi
 elif [ _"$ACTION" = _"download" -o _"$ACTION" = _"DOWNLOAD" ]; then
@@ -209,6 +212,12 @@ elif [ _"$ACTION" = _"uninstall" -o _"$ACTION" = _"UNINSTALL" ]; then
     COMMAND_STRING="${UNINSTALL_SCRIPT_K3S_SERVER}"
   elif [ _"agent" = _"${TYPE}" ]; then
     COMMAND_STRING="${UNINSTALL_SCRIPT_K3S_AGENT}"
+  elif [ _"all" = _"${TYPE}" ]; then
+    sh $0 ${ACTION} server
+    echo
+    sh $0 ${ACTION} agent
+    echo "## ACTION:[${ACTION}] [${TYPE}] ends   ..."
+    exit
   fi
 else
   usage
