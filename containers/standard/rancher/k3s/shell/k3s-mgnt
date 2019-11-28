@@ -83,6 +83,7 @@ service_action() {
   do
     echo "## Host: ${HOST}"
     ssh ${HOST} ${COMMAND_STRING}
+    echo
   done
 }
 
@@ -112,7 +113,7 @@ service_install() {
     scp ${INSTALL_SCRIPT_K3S} ${HOST}:${TMP_INSTALL_SCRIPT}
     if [ _"server" = _"${PARAM_TYPE}" -o _"all" = _"${PARAM_TYPE}" ]; then
       echo "   k3s server installation and setting begins ..."
-      ssh ${HOST} "sh ${TMP_INSTALL_SCRIPT}"
+      ssh ${HOST} "export INSTALL_K3S_SKIP_DOWNLOAD=${INSTALL_K3S_SKIP_DOWNLOAD} && sh ${TMP_INSTALL_SCRIPT}"
       ssh ${HOST} rm ${TMP_INSTALL_SCRIPT}
       ssh ${HOST} iptables -F
     fi
@@ -129,8 +130,8 @@ service_install() {
       ssh ${HOST} "export K3S_URL=${K3S_URL} && export K3S_TOKEN=${K3S_TOKEN} && sh ${TMP_INSTALL_SCRIPT} agent"
       ssh ${HOST} rm ${TMP_INSTALL_SCRIPT}
     fi
+    echo
   done
-  echo "## ACTION:[${ACTION}] ends   ..."
 }
 
 echo "## ACTION:[${ACTION}] begins ..."
