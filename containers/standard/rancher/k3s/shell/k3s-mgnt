@@ -2,7 +2,7 @@
 
 usage(){
   echo "Usage: $0 ACTION TYPE"
-  echo "       ACTION:start|stop|restart|status|download|install|uninstall|keygen|sshcopyid"
+  echo "       ACTION:start|stop|restart|status|download|install|uninstall|sshkeygen|sshcopyid|sshcheck"
   echo "       TYPE:server|agent|all"
   echo ""
 }
@@ -16,6 +16,7 @@ ACTION=$1
 TYPE=$2
 
 INSTALL_SCRIPT_K3S=install.sh
+TMP_INSTALL_SCRIPT=/tmp/install.sh.$$
 UNINSTALL_SCRIPT_K3S_SERVER="k3s-uninstall.sh"
 UNINSTALL_SCRIPT_K3S_AGENT="k3s-agent-uninstall.sh"
 PROCESS_KILL_K3S="k3s-killall.sh"
@@ -49,7 +50,6 @@ ssh_check() {
       echo "NG"
     fi
   done
-  echo "## ACTION:[${ACTION}] ends   ..."
 }
 
 ssh_config() {
@@ -104,7 +104,8 @@ service_install() {
       # ssh ${HOST} setenforce 0
       ssh ${HOST} sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config 
     else
-      ssh ${HOST} yum install policycoreutils-python -y >/dev/null 2&1
+      echo "   begin to install semanage"
+      ssh ${HOST} "yum install policycoreutils-python -y >/dev/null 2\&1"
       ssh ${HOST} which semanage
     fi
     echo "   copy install scripts to ${HOST}"
@@ -132,6 +133,7 @@ service_install() {
   echo "## ACTION:[${ACTION}] ends   ..."
 }
 
+echo "## ACTION:[${ACTION}] begins ..."
 if [ _"$ACTION" = _"stop" -o _"$ACTION" = _"STOP" ]; then
   COMMAND_STRING="${PROCESS_KILL_K3S}"
 elif [ _"$ACTION" = _"start" -o _"$ACTION" = _"START" ]; then
@@ -159,14 +161,23 @@ elif [ _"$ACTION" = _"download" -o _"$ACTION" = _"DOWNLOAD" ]; then
   echo "  download completed ..."
   ls -l ${INSTALL_K3S_BIN_DIR}/${BINARY_K3S_FILE}
   ${INSTALL_K3S_BIN_DIR}/${BINARY_K3S_FILE} --version
+  echo "## ACTION:[${ACTION}] ends   ..."
   exit 
 elif [ _"$ACTION" = _"sshkeygen" -o _"$ACTION" = _"SSHKEYGEN" ]; then
   ssh-keygen
+  echo "## ACTION:[${ACTION}] ends   ..."
   exit
 elif [ _"$ACTION" = _"sshcopyid" -o _"$ACTION" = _"SSHCOPYID" ]; then
   ssh_config all
+  echo "## ACTION:[${ACTION}] ends   ..."
+  exit
+elif [ _"$ACTION" = _"sshcheck" -o _"$ACTION" = _"SSHCHECK" ]; then
+  ssh_check all
+  echo "## ACTION:[${ACTION}] ends   ..."
+  exit
 elif [ _"$ACTION" = _"install" -o _"$ACTION" = _"INSTALL" ]; then
   service_install ${TYPE}
+  echo "## ACTION:[${ACTION}] ends   ..."
   exit 
 elif [ _"$ACTION" = _"uninstall" -o _"$ACTION" = _"UNINSTALL" ]; then
   if [ _"server" = _"${TYPE}" ]; then
@@ -180,3 +191,4 @@ else
 fi
 
 service_action ${TYPE}
+echo "## ACTION:[${ACTION}] ends   ..."
