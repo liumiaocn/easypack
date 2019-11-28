@@ -111,12 +111,12 @@ service_install() {
     if [ _"server" = _"${PARAM_TYPE}" -o _"all" = _"${PARAM_TYPE}" ]; then
       echo "   k3s server installation and setting begins ..."
       ssh ${HOST} "sh ${TMP_INSTALL_SCRIPT}"
-      export K3S_URL=https://${HOST}:6443
-      export K3S_TOKEN=`cat /var/lib/rancher/k3s/server/node-token`
       ssh ${HOST} rm ${TMP_INSTALL_SCRIPT}
       ssh ${HOST} iptables -F
     fi
     if [ _"agent" = _"${PARAM_TYPE}" -o _"all" = _"${PARAM_TYPE}" ]; then
+      export K3S_URL=https://${HOST_LIST_K3S_SERVER}:6443
+      export K3S_TOKEN=`ssh ${HOST_LIST_K3S_SERVER} cat /var/lib/rancher/k3s/server/node-token`
       echo "   copy k3s binary file to ${HOST}"
       scp  ${INSTALL_K3S_BIN_DIR}/${BINARY_K3S_FILE} ${HOST}:${INSTALL_K3S_BIN_DIR}/${BINARY_K3S_FILE}
       echo "   set  k3s binary file mode to 755"
