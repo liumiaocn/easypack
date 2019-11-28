@@ -17,20 +17,43 @@ INSTALL_SCRIPT_K3S=install.sh
 UNINSTALL_SCRIPT_K3S_SERVER="k3s-uninstall.sh"
 UNINSTALL_SCRIPT_K3S_AGENT="k3s-agent-uninstall.sh"
 PROCESS_KILL_K3S="k3s-killall.sh"
+BINARY_K3S_FILE=k3s
 SYSTEMD_SERVICE_NAME_SERVER=k3s
 SYSTEMD_SERVICE_NAME_AGENT=k3s-agent
+URL_BINARY_FILE_K3S="https://github.com/rancher/k3s/releases/download/v${INSTALL_K3S_VERSION}/${BINARY_K3S_FILE}"
 
 if [ $# -ne 2 ]; then
   usage
   exit 1
 fi
 
+ssh_config() {
+  PARAM_TYPE="$1"
+  if [ _"server" = _"${PARAM_TYPE}" -o _"all" = _"${PARAM_TYPE}" ]; then
+    HOST_LIST="${HOST_LIST_K3S_SERVER}"
+  fi
+
+  if [ _"agent" = _"${PARAM_TYPE}" -o _"all" = _"${PARAM_TYPE}" ]; then
+    HOST_LIST="${HOST_LIST} ${HOST_LIST_K3S_AGENT}"
+  else
+    return
+  fi
+
+  for HOST in ${HOST_LIST}
+  do
+    echo "## Host: ${HOST}"
+    ssh-copy-id -i ${HOST}
+  done
+}
+
 service_action() {
   PARAM_TYPE="$1"
   if [ _"server" = _"${PARAM_TYPE}" -o _"all" = _"${PARAM_TYPE}" ]; then
     HOST_LIST="${HOST_LIST_K3S_SERVER}"
-  elif [ _"agent" = _"${PARAM_TYPE}" -o _"all" = _"${PARAM_TYPE}" ]; then
-    HOST_LIST="${HOST_LIST_K3S_AGENT}"
+  fi
+
+  if [ _"agent" = _"${PARAM_TYPE}" -o _"all" = _"${PARAM_TYPE}" ]; then
+    HOST_LIST="${HOST_LIST} ${HOST_LIST_K3S_AGENT}"
   else
     return
   fi
@@ -43,8 +66,6 @@ service_action() {
 }
 
 service_install() {
-  BINARY_FILE_K3S="https://github.com/rancher/k3s/releases/download/v${INSTALL_K3S_VERSION}/${SYSTEMD_SERVICE_NAME_SERVER}"
-  curl -sfL ${BINARY_FILE_K3S} -o ${INSTALL_K3S_BIN_DIR}
 }
 
 if [ _"$ACTION" = _"stop" -o _"$ACTION" = _"STOP" ]; then
@@ -55,7 +76,6 @@ elif [ _"$ACTION" = _"start" -o _"$ACTION" = _"START" ]; then
   elif [ _"agent" = _"${TYPE}" ; then
     COMMAND_STRING="systemctl start ${SYSTEMD_SERVICE_NAME_AGENT}"
   fi
-  
 elif [ _"$ACTION" = _"restart" -o _"$ACTION" = _"RESTART" ]; then
   if [ _"server" = _"${TYPE}" ]; then
     COMMAND_STRING="systemctl restart ${SYSTEMD_SERVICE_NAME_SERVER}"
@@ -68,8 +88,18 @@ elif [ _"$ACTION" = _"status" -o _"$ACTION" = _"STATUS" ]; then
   elif [ _"agent" = _"${TYPE}" ; then
     COMMAND_STRING="systemctl status ${SYSTEMD_SERVICE_NAME_AGENT} |egrep '\.service|Active:|\-\-| ACTION: '"
   fi
+elif [ _"$ACTION" = _"download" -o _"$ACTION" = _"DOWNLOAD" ]; then
+  curl -sfL ${URL_BINARY_FILE_K3S} -o ${INSTALL_K3S_BIN_DIR}/${BINARY_K3S_FILE}
+  chmod 755 ${INSTALL_K3S_BIN_DIR}/${BINARY_K3S_FILE}
+  exit 
+elif [ _"$ACTION" = _"sshkeygen" -o _"$ACTION" = _"SSHKEYGEN" ]; then
+  ssh-keygen
+  exit
+elif [ _"$ACTION" = _"sshcopyid" -o _"$ACTION" = _"SSHCOPYID" ]; then
+  
 elif [ _"$ACTION" = _"install" -o _"$ACTION" = _"INSTALL" ]; then
-  service_action ${ACTION} ${TYPE}
+  service_install 
+  exit 
 elif [ _"$ACTION" = _"uninstall" -o _"$ACTION" = _"UNINSTALL" ]; then
   if [ _"server" = _"${TYPE}" ]; then
     COMMAND_STRING="${UNINSTALL_SCRIPT_K3S_SERVER}"
