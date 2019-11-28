@@ -133,7 +133,7 @@ service_install() {
   done
 }
 
-echo "## ACTION:[${ACTION}] begins ..."
+echo "## ACTION:[${ACTION}] [${TYPE}] begins ..."
 if [ _"$ACTION" = _"stop" -o _"$ACTION" = _"STOP" ]; then
   COMMAND_STRING="${PROCESS_KILL_K3S}"
 elif [ _"$ACTION" = _"start" -o _"$ACTION" = _"START" ]; then
@@ -142,13 +142,15 @@ elif [ _"$ACTION" = _"start" -o _"$ACTION" = _"START" ]; then
     service_action ${TYPE}
     COMMAND_STRING="iptables -F"
     service_action ${TYPE}
-    echo "## ACTION:[${ACTION}] ends   ..."
+    echo "## ACTION:[${ACTION}] [${TYPE}] ends   ..."
     exit
   elif [ _"agent" = _"${TYPE}" ]; then
     COMMAND_STRING="systemctl start ${SYSTEMD_SERVICE_NAME_AGENT}"
   elif [ _"all" = _"${TYPE}" ]; then
     sh $0 ${ACTION} server
+    echo
     sh $0 ${ACTION} agent
+    exit
   fi
 elif [ _"$ACTION" = _"restart" -o _"$ACTION" = _"RESTART" ]; then
   if [ _"server" = _"${TYPE}" ]; then
@@ -156,13 +158,15 @@ elif [ _"$ACTION" = _"restart" -o _"$ACTION" = _"RESTART" ]; then
     service_action ${TYPE}
     COMMAND_STRING="iptables -F"
     service_action ${TYPE}
-    echo "## ACTION:[${ACTION}] ends   ..."
+    echo "## ACTION:[${ACTION}] [${TYPE}] ends   ..."
     exit
   elif [ _"agent" = _"${TYPE}" ]; then
     COMMAND_STRING="systemctl restart ${SYSTEMD_SERVICE_NAME_AGENT}"
   elif [ _"all" = _"${TYPE}" ]; then
     sh $0 ${ACTION} server
+    echo
     sh $0 ${ACTION} agent
+    exit
   fi
 elif [ _"$ACTION" = _"status" -o _"$ACTION" = _"STATUS" ]; then
   if [ _"server" = _"${TYPE}" ]; then
@@ -170,12 +174,10 @@ elif [ _"$ACTION" = _"status" -o _"$ACTION" = _"STATUS" ]; then
   elif [ _"agent" = _"${TYPE}" ]; then
     COMMAND_STRING="systemctl status ${SYSTEMD_SERVICE_NAME_AGENT} |egrep '\.service|Active:|\-\-| ACTION: '"
   elif [ _"all" = _"${TYPE}" ]; then
-    COMMAND_STRING="systemctl status ${SYSTEMD_SERVICE_NAME_SERVER} |egrep '\.service|Active:|\-\-| ACTION: '"
-    service_action ${TYPE}
-    COMMAND_STRING="systemctl status ${SYSTEMD_SERVICE_NAME_AGENT} |egrep '\.service|Active:|\-\-| ACTION: '"
-    service_action ${TYPE}
-    echo "## ACTION:[${ACTION}] ends   ..."
+    sh $0 ${ACTION} server
     echo
+    sh $0 ${ACTION} agent
+    exit
   fi
 elif [ _"$ACTION" = _"download" -o _"$ACTION" = _"DOWNLOAD" ]; then
   echo "  download begins, it will take serveral minutes, pls be patient... "
@@ -184,23 +186,23 @@ elif [ _"$ACTION" = _"download" -o _"$ACTION" = _"DOWNLOAD" ]; then
   echo "  download completed ..."
   ls -l ${INSTALL_K3S_BIN_DIR}/${BINARY_K3S_FILE}
   ${INSTALL_K3S_BIN_DIR}/${BINARY_K3S_FILE} --version
-  echo "## ACTION:[${ACTION}] ends   ..."
+  echo "## ACTION:[${ACTION}] [${TYPE}] ends   ..."
   exit 
 elif [ _"$ACTION" = _"sshkeygen" -o _"$ACTION" = _"SSHKEYGEN" ]; then
-  ssh-keygen
-  echo "## ACTION:[${ACTION}] ends   ..."
+  ssh-keygen  
+  echo "## ACTION:[${ACTION}] [${TYPE}] ends   ..."
   exit
 elif [ _"$ACTION" = _"sshcopyid" -o _"$ACTION" = _"SSHCOPYID" ]; then
   ssh_config all
-  echo "## ACTION:[${ACTION}] ends   ..."
+  echo "## ACTION:[${ACTION}] [${TYPE}] ends   ..."
   exit
 elif [ _"$ACTION" = _"sshcheck" -o _"$ACTION" = _"SSHCHECK" ]; then
   ssh_check all
-  echo "## ACTION:[${ACTION}] ends   ..."
+  echo "## ACTION:[${ACTION}] [${TYPE}] ends   ..."
   exit
 elif [ _"$ACTION" = _"install" -o _"$ACTION" = _"INSTALL" ]; then
   service_install ${TYPE}
-  echo "## ACTION:[${ACTION}] ends   ..."
+  echo "## ACTION:[${ACTION}] [${TYPE}] ends   ..."
   exit 
 elif [ _"$ACTION" = _"uninstall" -o _"$ACTION" = _"UNINSTALL" ]; then
   if [ _"server" = _"${TYPE}" ]; then
@@ -214,4 +216,4 @@ else
 fi
 
 service_action ${TYPE}
-echo "## ACTION:[${ACTION}] ends   ..."
+echo "## ACTION:[${ACTION}] [${TYPE}] ends   ..."
