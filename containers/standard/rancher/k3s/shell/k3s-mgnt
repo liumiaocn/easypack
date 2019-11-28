@@ -10,6 +10,8 @@ usage(){
 # read env vars and common functions
 . ./install.cfg
 
+set ${ENV_RUN_MODE}
+
 ACTION=$1
 TYPE=$2
 
@@ -27,6 +29,29 @@ if [ $# -ne 2 ]; then
   exit 1
 fi
 
+ssh_check() {
+  PARAM_TYPE="$1"
+  if [ _"server" = _"${PARAM_TYPE}" -o _"all" = _"${PARAM_TYPE}" ]; then
+    HOST_LIST="${HOST_LIST_K3S_SERVER}"
+  fi
+
+  if [ _"agent" = _"${PARAM_TYPE}" -o _"all" = _"${PARAM_TYPE}" ]; then
+    HOST_LIST="${HOST_LIST} ${HOST_LIST_K3S_AGENT}"
+  fi
+
+  for HOST in ${HOST_LIST}
+  do
+    echo -n "## Host: ${HOST} :SSH CHECK :"
+    ssh ${HOST} hostname >/dev/null 2>&1
+    if [ $? -eq 0 ]; then
+      echo "OK"
+    else
+      echo "NG"
+    fi
+  done
+  echo "## ACTION:[${ACTION}] ends   ..."
+}
+
 ssh_config() {
   PARAM_TYPE="$1"
   if [ _"server" = _"${PARAM_TYPE}" -o _"all" = _"${PARAM_TYPE}" ]; then
@@ -35,8 +60,6 @@ ssh_config() {
 
   if [ _"agent" = _"${PARAM_TYPE}" -o _"all" = _"${PARAM_TYPE}" ]; then
     HOST_LIST="${HOST_LIST} ${HOST_LIST_K3S_AGENT}"
-  else
-    return
   fi
 
   for HOST in ${HOST_LIST}
@@ -54,8 +77,6 @@ service_action() {
 
   if [ _"agent" = _"${PARAM_TYPE}" -o _"all" = _"${PARAM_TYPE}" ]; then
     HOST_LIST="${HOST_LIST} ${HOST_LIST_K3S_AGENT}"
-  else
-    return
   fi
 
   for HOST in ${HOST_LIST}
@@ -66,6 +87,48 @@ service_action() {
 }
 
 service_install() {
+  PARAM_TYPE="$1"
+  if [ _"server" = _"${PARAM_TYPE}" -o _"all" = _"${PARAM_TYPE}" ]; then
+    HOST_LIST="${HOST_LIST_K3S_SERVER}"
+  fi
+
+  if [ _"agent" = _"${PARAM_TYPE}" -o _"all" = _"${PARAM_TYPE}" ]; then
+    HOST_LIST="${HOST_LIST} ${HOST_LIST_K3S_AGENT}"
+  fi
+
+  for HOST in ${HOST_LIST}
+  do
+    echo "## Host: ${HOST}"
+    if [ _"YES" = _"${ENV_SELINUX_DISABLED}" ]; then
+      echo "   disable selinux by default ..."
+      # ssh ${HOST} setenforce 0
+      ssh ${HOST} sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config 
+    else
+      ssh ${HOST} yum install policycoreutils-python -y
+    fi
+    echo "   copy install scripts to ${HOST}"
+    scp ${INSTALL_SCRIPT_K3S} ${HOST}:${TMP_INSTALL_SCRIPT}
+    if [ _"server" = _"${PARAM_TYPE}" -o _"all" = _"${PARAM_TYPE}" ]; then
+      echo "   k3s server installation and setting begins ..."
+      ssh ${HOST} "sh ${TMP_INSTALL_SCRIPT}"
+      export K3S_URL=https://${HOST}:6443
+      export K3S_TOKEN=`cat /var/lib/rancher/k3s/server/node-token`
+      ssh ${HOST} rm ${TMP_INSTALL_SCRIPT}
+      ssh ${HOST} iptables -F
+    fi
+    if [ _"agent" = _"${PARAM_TYPE}" -o _"all" = _"${PARAM_TYPE}" ]; then
+      echo "   copy k3s binary file to ${HOST}"
+      scp  ${INSTALL_K3S_BIN_DIR}/${BINARY_K3S_FILE} ${HOST}:${INSTALL_K3S_BIN_DIR}/${BINARY_K3S_FILE}
+      echo "   set  k3s binary file mode to 755"
+      ssh ${HOST} chmod 755 ${INSTALL_K3S_BIN_DIR}/${BINARY_K3S_FILE}
+      echo "   check k3s version"
+      ssh ${HOST} ${INSTALL_K3S_BIN_DIR}/${BINARY_K3S_FILE} --version
+      echo "   k3s agent installation and setting begins ..."
+      ssh ${HOST} "export K3S_URL=${K3S_URL} && export K3S_TOKEN=${K3S_TOKEN} && sh ${TMP_INSTALL_SCRIPT} agent"
+      ssh ${HOST} rm ${TMP_INSTALL_SCRIPT}
+    fi
+  done
+  echo "## ACTION:[${ACTION}] ends   ..."
 }
 
 if [ _"$ACTION" = _"stop" -o _"$ACTION" = _"STOP" ]; then
@@ -89,16 +152,20 @@ elif [ _"$ACTION" = _"status" -o _"$ACTION" = _"STATUS" ]; then
     COMMAND_STRING="systemctl status ${SYSTEMD_SERVICE_NAME_AGENT} |egrep '\.service|Active:|\-\-| ACTION: '"
   fi
 elif [ _"$ACTION" = _"download" -o _"$ACTION" = _"DOWNLOAD" ]; then
+  echo "  download begins, it will take serveral minutes, pls be patient... "
   curl -sfL ${URL_BINARY_FILE_K3S} -o ${INSTALL_K3S_BIN_DIR}/${BINARY_K3S_FILE}
   chmod 755 ${INSTALL_K3S_BIN_DIR}/${BINARY_K3S_FILE}
+  echo "  download completed ..."
+  ls -l ${INSTALL_K3S_BIN_DIR}/${BINARY_K3S_FILE}
+  ${INSTALL_K3S_BIN_DIR}/${BINARY_K3S_FILE} --version
   exit 
 elif [ _"$ACTION" = _"sshkeygen" -o _"$ACTION" = _"SSHKEYGEN" ]; then
   ssh-keygen
   exit
 elif [ _"$ACTION" = _"sshcopyid" -o _"$ACTION" = _"SSHCOPYID" ]; then
-  
+  ssh_config all
 elif [ _"$ACTION" = _"install" -o _"$ACTION" = _"INSTALL" ]; then
-  service_install 
+  service_install ${TYPE}
   exit 
 elif [ _"$ACTION" = _"uninstall" -o _"$ACTION" = _"UNINSTALL" ]; then
   if [ _"server" = _"${TYPE}" ]; then
