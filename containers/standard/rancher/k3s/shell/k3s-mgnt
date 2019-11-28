@@ -104,7 +104,8 @@ service_install() {
       # ssh ${HOST} setenforce 0
       ssh ${HOST} sed -i 's/^SELINUX=.*/SELINUX=disabled/' /etc/selinux/config 
     else
-      ssh ${HOST} yum install policycoreutils-python -y
+      ssh ${HOST} yum install policycoreutils-python -y >/dev/null 2&1
+      ssh ${HOST} which semanage
     fi
     echo "   copy install scripts to ${HOST}"
     scp ${INSTALL_SCRIPT_K3S} ${HOST}:${TMP_INSTALL_SCRIPT}
