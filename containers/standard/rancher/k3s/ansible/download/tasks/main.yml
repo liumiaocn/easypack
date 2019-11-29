@@ -13,3 +13,9 @@
     url:  '{{ var_download_url_k3s }}'
     dest: '{{ var_download_file_k3s }}'
     mode: '{{ var_download_save_mode }}'
+
+# copy install.sh script for offline install
+- name: copy install.sh script for offline install
+  template:
+    src: "{{ var_src_k3s_install_script }}"
+    dest: "{{ var_src_binary }}/{{ var_src_k3s_install_script }}"
