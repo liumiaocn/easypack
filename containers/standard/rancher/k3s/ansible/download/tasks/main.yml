@@ -1,0 +1,15 @@
+---
+# prepare download dir
+- name: create download file in advance
+  file: 
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ var_download_base_dir }}"
+
+# tasks file for download
+- name: download binary k3s
+  get_url:
+    url:  '{{ var_download_url_k3s }}'
+    dest: '{{ var_download_file_k3s }}'
+    mode: '{{ var_download_save_mode }}'
