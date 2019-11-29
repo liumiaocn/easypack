@@ -38,8 +38,8 @@
         <td><a href="https://liumiaocn.blog.csdn.net/article/category/8598907">00-Jenkins使用介绍</a></td>
         <td><a href="https://blog.csdn.net/liumiaocn/column/info/27057">01-持续集成实践</a></td>
         <td><a href="containers/alpine/jenkins">02-Jenkins</a></td>
-        <td><a href="https://blog.csdn.net/liumiaocn/article/details/84341611">03-构建工具Grale实践介绍</a></td>
-        <td><a href="containers/alpine/jenkins">04-构建工具Grale</a></td>
+        <td><a href="https://blog.csdn.net/liumiaocn/article/details/84341611">03-构建工具Gradle实践介绍</a></td>
+        <td><a href="containers/alpine/jenkins">04-构建工具Gradle</a></td>
     </tr>
 </table>
 
