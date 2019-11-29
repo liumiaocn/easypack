@@ -1,0 +1,16 @@
+---
+- hosts: '{{ var_k3s_server_hostname }}'
+  vars_files:
+    - "common_vars.yml"
+  gather_facts: no
+  roles:
+    - role: download
+    - role: master
+
+- hosts: k3s-node
+  vars_files:
+    - "common_vars.yml"
+  gather_facts: no
+  roles:
+    - role: node
+...

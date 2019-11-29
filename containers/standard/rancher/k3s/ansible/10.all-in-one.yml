@@ -1,0 +1,9 @@
+---
+- hosts: all-in-one
+  vars_files:
+    - "common_vars.yml"
+  gather_facts: no
+  roles:
+    - role: download
+    - role: master
+...

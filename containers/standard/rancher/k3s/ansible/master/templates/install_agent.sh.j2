@@ -1,0 +1,6 @@
+#!/bin/sh
+
+export K3S_URL=https://{{ var_k3s_server_hostname }}:{{ var_k3s_server_port }}
+export K3S_TOKEN=KEYWORD_REPLACE_K3S_TOKEN
+export INSTALL_K3S_SKIP_DOWNLOAD={{ var_flag_offline_install }}
+sh {{ var_k3s_dir_bin }}/{{ var_src_k3s_install_script }} agent

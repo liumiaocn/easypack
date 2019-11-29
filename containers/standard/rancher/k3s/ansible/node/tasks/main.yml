@@ -1,0 +1,37 @@
+---
+# tasks file for node
+
+- name: copy k3s and install.sh to install dir
+  copy:
+    src: "{{ item }}"
+    dest: "{{ var_k3s_dir_bin }}"
+    mode: "{{ var_default_bin_mode }}"
+  with_items:
+    - "{{ var_src_k3s }}"
+    - "{{ var_src_binary }}/{{ var_src_k3s_install_script }}"
+    - "{{ var_src_binary }}/{{ var_src_k3s_agent_install_script }}"
+
+- name: install semanage when selinux is enabled
+  yum:
+    name:
+      - policycoreutils-python
+    state: present
+  when: var_flag_selinux_enabled == true
+
+- name: install k3s service
+  shell: "sh {{ var_k3s_dir_bin }}/{{ var_src_k3s_agent_install_script }}"
+
+- name: confirm k3s agent service state
+  shell: "systemctl status k3s-agent.service|grep Active"
+  register: ret_k3sagent_status
+  until: '"running" in ret_k3sagent_status.stdout'
+  retries: "{{ var_retry_max }}"
+  delay: "{{ var_delay_cnt }}"
+
+- name: delete install scripts
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ var_k3s_dir_bin }}/{{ var_src_k3s_install_script }}"
+    - "{{ var_k3s_dir_bin }}/{{ var_src_k3s_agent_install_script }}"

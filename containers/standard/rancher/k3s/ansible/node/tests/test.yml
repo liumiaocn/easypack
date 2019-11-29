@@ -1,8 +1,8 @@
 ---
-- hosts: '{{ var_k3s_server_hostname }}'
+- hosts: k3s-node
   remote_user: root
   gather_facts: no
   vars_files:
     - "../../common_vars.yml"
   roles:
-    - master
+    - node

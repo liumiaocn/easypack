@@ -1,0 +1,13 @@
+# kubernetes : all-in-one
+[all-in-one]
+localhost
+
+# k3s: master
+[k3s-server]
+192.168.163.121
+
+# k3s: node
+[k3s-node]
+192.168.163.122
+192.168.163.123
+192.168.163.124

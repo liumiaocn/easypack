@@ -1,0 +1,38 @@
+---
+#######BEGIN: SETTING: DOWNLOAD######
+# version and basic var info
+var_type_os: linux
+var_arch: amd64
+var_ver_k3s: v1.0.0
+
+# vars file for download
+var_download_base_dir: /tmp/binary
+var_download_save_mode: '0644'
+var_download_save_mode_bin: '0755'
+
+# vars for k3s
+var_download_url_k3s: "https://github.com/rancher/k3s/releases/download/{{ var_ver_k3s }}/k3s"
+var_download_file_k3s: "{{var_download_base_dir}}/k3s"
+#######BEGIN: SETTING: DOWNLOAD######
+
+#######BEGIN: SETTING: BASIC#########
+var_k3s_server_hostname: 192.168.163.121
+var_k3s_server_port: 6443
+var_src_binary: "{{ var_download_base_dir }}"
+var_src_k3s: "{{var_src_binary}}/k3s"
+var_src_k3s_install_script: "install.sh"
+var_src_k3s_agent_install_script: "install_agent.sh"
+var_tmplate_k3s_agent_install_script: "install_agent.sh.j2"
+var_k3s_server_token: /var/lib/rancher/k3s/server/node-token
+var_default_sleep_interval: 3
+var_default_install_bin: /usr/local/bin
+var_default_bin_mode: '0755'
+var_retry_max: 6
+var_delay_cnt: 3
+var_sleep_internal: 15
+var_flag_selinux_enabled: 'true'
+var_flag_offline_install: 'true'
+var_k3s_dir_bin: /usr/local/bin
+#######END  : SETTING: BASIC#########
+
+...
