@@ -20,6 +20,7 @@ var_k3s_server_hostname: 192.168.163.121
 var_k3s_server_port: 6443
 var_src_binary: "{{ var_download_base_dir }}"
 var_src_k3s: "{{var_src_binary}}/k3s"
+var_src_pause_image_name: "pause-amd64-3.1.tar"
 var_src_k3s_install_script: "install.sh"
 var_src_k3s_agent_install_script: "install_agent.sh"
 var_tmplate_k3s_agent_install_script: "install_agent.sh.j2"

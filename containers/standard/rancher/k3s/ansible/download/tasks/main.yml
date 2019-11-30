@@ -19,3 +19,11 @@
   template:
     src: "{{ var_src_k3s_install_script }}"
     dest: "{{ var_src_binary }}/{{ var_src_k3s_install_script }}"
+
+- name: copy pause image tar.gz file for install
+  copy:
+    src: "{{ item }}"
+    dest: "{{ var_src_binary }}"
+    mode: "{{ var_download_save_mode }}"
+  with_items:
+    - "{{ var_src_pause_image_name }}.gz"
