@@ -13,6 +13,8 @@ var_download_save_mode_bin: '0755'
 # vars for k3s
 var_download_url_k3s: "https://github.com/rancher/k3s/releases/download/{{ var_ver_k3s }}/k3s"
 var_download_file_k3s: "{{var_download_base_dir}}/k3s"
+var_download_url_air_gap: "https://github.com/rancher/k3s/releases/download/{{ var_ver_k3s }}/{{ var_src_air_gap_image_name }}"
+var_download_file_air_gap: "{{ var_download_base_dir }}/{{ var_src_air_gap_image_name }}"
 #######BEGIN: SETTING: DOWNLOAD######
 
 #######BEGIN: SETTING: BASIC#########
@@ -20,6 +22,9 @@ var_k3s_server_hostname: 192.168.163.121
 var_k3s_server_port: 6443
 var_src_binary: "{{ var_download_base_dir }}"
 var_src_k3s: "{{var_src_binary}}/k3s"
+var_flag_air_gap_enabled: true
+var_src_air_gap_image_name: "k3s-airgap-images-amd64.tar"
+var_dst_air_gap_dir: "/var/lib/rancher/k3s/agent/images/"
 var_src_pause_image_name: "pause-amd64-3.1.tar"
 var_src_pause_tag_name: gcr.io/google_containers/pause-amd64:3.1
 var_dst_pause_tag_name: k8s.gcr.io/pause:3.1
@@ -33,7 +38,7 @@ var_default_bin_mode: '0755'
 var_retry_max: 6
 var_delay_cnt: 3
 var_sleep_internal: 15
-var_flag_selinux_enabled: 'true'
+var_flag_selinux_enabled: true
 var_flag_offline_install: 'true'
 var_k3s_dir_bin: /usr/local/bin
 #######END  : SETTING: BASIC#########

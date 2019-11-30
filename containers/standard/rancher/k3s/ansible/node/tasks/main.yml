@@ -1,6 +1,24 @@
 ---
 # tasks file for node
 
+## create directories
+- name: create dirs for the image file
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ var_dst_air_gap_dir }}"
+  when: var_flag_air_gap_enabled == true
+
+- name: copy air gap image files for load
+  copy:
+    src: "{{ item }}"
+    dest: "{{ var_dst_air_gap_dir }}"
+    mode: "{{ var_download_save_mode }}"
+  with_items:
+    - "{{ var_src_binary }}/{{ var_src_air_gap_image_name }}"
+  when: var_flag_air_gap_enabled == true
+
 - name: copy k3s and install.sh to install dir
   copy:
     src: "{{ item }}"
@@ -35,6 +53,7 @@
     mode: "{{ var_download_save_mode }}"
   with_items:
     - "{{ var_src_binary }}/{{ var_src_pause_image_name }}.gz"
+  when: var_flag_air_gap_enabled == false
 
 - name: delete pause image file 
   file:
@@ -42,12 +61,14 @@
     state: absent
   with_items:
     - "{{ var_k3s_dir_bin }}/{{ var_src_pause_image_name }}"
+  when: var_flag_air_gap_enabled == false
 
 - name: load pause image for k3s
   shell: "gunzip {{ var_k3s_dir_bin }}/{{ var_src_pause_image_name }}.gz; \
           ctr images import {{ var_k3s_dir_bin }}/{{ var_src_pause_image_name }}; \
           ctr image rm {{ var_dst_pause_tag_name }}; \
           ctr image tag {{ var_src_pause_tag_name }} {{ var_dst_pause_tag_name }}"
+  when: var_flag_air_gap_enabled == false
 
 - name: delete install scripts
   file:
@@ -56,3 +77,4 @@
   with_items:
     - "{{ var_k3s_dir_bin }}/{{ var_src_k3s_install_script }}"
     - "{{ var_k3s_dir_bin }}/{{ var_src_k3s_agent_install_script }}"
+    - "{{ var_src_binary }}/{{ var_src_pause_image_name }}.gz"

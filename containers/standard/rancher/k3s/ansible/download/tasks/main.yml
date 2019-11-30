@@ -14,6 +14,13 @@
     dest: '{{ var_download_file_k3s }}'
     mode: '{{ var_download_save_mode }}'
 
+- name: download images for offline install
+  get_url:
+    url:  '{{ var_download_url_air_gap }}'
+    dest: '{{ var_download_file_air_gap }}'
+    mode: '{{ var_download_save_mode }}'
+  when: var_flag_air_gap_enabled == true
+
 # copy install.sh script for offline install
 - name: copy install.sh script for offline install
   template:
@@ -27,3 +34,4 @@
     mode: "{{ var_download_save_mode }}"
   with_items:
     - "{{ var_src_pause_image_name }}.gz"
+  when: var_flag_air_gap_enabled == false

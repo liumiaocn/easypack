@@ -1,6 +1,24 @@
 ---
 # tasks file for master
 
+## create directories
+- name: create dirs for the image file
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ var_dst_air_gap_dir }}"
+  when: var_flag_air_gap_enabled == true
+
+- name: copy air gap image file to image directory
+  copy:
+    src: "{{ item }}"
+    dest: "{{ var_dst_air_gap_dir }}"
+    mode: "{{ var_default_bin_mode }}"
+  with_items:
+    - "{{ var_src_binary }}/{{ var_src_k3s_install_script }}"
+  when: var_flag_air_gap_enabled == true
+
 - name: copy k3s and install.sh to install dir
   copy:
     src: "{{ item }}"
@@ -9,6 +27,7 @@
   with_items:
     - "{{ var_src_k3s }}"
     - "{{ var_src_binary }}/{{ var_src_k3s_install_script }}"
+    - "{{ var_src_binary }}/{{ var_src_air_gap_image_name }}"
 
 - name: install semanage when selinux is enabled
   yum:
@@ -41,6 +60,7 @@
     mode: "{{ var_download_save_mode }}"
   with_items:
     - "{{ var_src_binary }}/{{ var_src_pause_image_name }}.gz"
+  when: var_flag_air_gap_enabled == false
 
 - name: delete pause image file 
   file:
@@ -48,12 +68,14 @@
     state: absent
   with_items:
     - "{{ var_k3s_dir_bin }}/{{ var_src_pause_image_name }}"
+  when: var_flag_air_gap_enabled == false
 
 - name: load pause image for k3s
   shell: "gunzip {{ var_k3s_dir_bin }}/{{ var_src_pause_image_name }}.gz; \
           ctr images import {{ var_k3s_dir_bin }}/{{ var_src_pause_image_name }}; \
           ctr image rm {{ var_dst_pause_tag_name }}; \
           ctr image tag {{ var_src_pause_tag_name }} {{ var_dst_pause_tag_name }}"
+  when: var_flag_air_gap_enabled == false
 
 - name: set token for agent script
   shell: "k3s_server_token=`cat {{ var_k3s_server_token }}` \
@@ -69,3 +91,4 @@
 
 - name: set taints node for master node 
   shell: "kubectl taint nodes --all node.cloudprovider.kubernetes.io/uninitialized-"
+  ignore_errors: true
