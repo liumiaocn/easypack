@@ -44,8 +44,8 @@
     - "{{ var_k3s_dir_bin }}/{{ var_src_pause_image_name }}"
 
 - name: load pause image for k3s
-  shell: "gunzip {{ var_src_binary }}/{{ var_src_pause_image_name }}.gz; \
-          ctr images import {{ var_src_binary }}/{{ var_src_pause_image_name }}; \
+  shell: "gunzip {{ var_k3s_dir_bin }}/{{ var_src_pause_image_name }}.gz; \
+          ctr images import {{ var_k3s_dir_bin }}/{{ var_src_pause_image_name }}; \
           ctr image rm {{ var_dst_pause_tag_name }}; \
           ctr image tag {{ var_src_pause_tag_name }} {{ var_dst_pause_tag_name }}"
 
