@@ -28,6 +28,27 @@
   retries: "{{ var_retry_max }}"
   delay: "{{ var_delay_cnt }}"
 
+- name: copy pause image files for load
+  copy:
+    src: "{{ item }}"
+    dest: "{{ var_k3s_dir_bin }}"
+    mode: "{{ var_download_save_mode }}"
+  with_items:
+    - "{{ var_src_binary }}/{{ var_src_pause_image_name }}.gz"
+
+- name: delete pause image file 
+  file:
+    path: "{{ item }}"
+    state: absent
+  with_items:
+    - "{{ var_k3s_dir_bin }}/{{ var_src_pause_image_name }}"
+
+- name: load pause image for k3s
+  shell: "gunzip {{ var_src_binary }}/{{ var_src_pause_image_name }}.gz; \
+          ctr images import {{ var_src_binary }}/{{ var_src_pause_image_name }}; \
+          ctr image rm {{ var_dst_pause_tag_name }}; \
+          ctr image tag {{ var_src_pause_tag_name }} {{ var_dst_pause_tag_name }}"
+
 - name: delete install scripts
   file:
     path: "{{ item }}"
