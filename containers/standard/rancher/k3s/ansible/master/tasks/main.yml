@@ -66,3 +66,6 @@
   with_items:
     - "{{ var_k3s_dir_bin }}/{{ var_src_k3s_install_script }}"
     - "{{ var_k3s_dir_bin }}/{{ var_src_pause_image_name }}"
+
+- name: set taints node for master node 
+  shell: "kubectl taint nodes --all node.cloudprovider.kubernetes.io/uninitialized-"
