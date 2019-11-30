@@ -16,7 +16,7 @@
     <tr>
         <td><a href="https://liumiaocn.blog.csdn.net/article/details/103268634">01-使用说明文档</a></td>
         <td><a href="containers/standard/rancher/k3s/shell">02-脚本部署方式</a></td>
-        <td><a href="containers/standard/rancher/k3s/shell">03-Ansible部署方式</a></td>
+        <td><a href="containers/standard/rancher/k3s/ansible">03-Ansible部署方式</a></td>
     </tr>
 </table>
 
