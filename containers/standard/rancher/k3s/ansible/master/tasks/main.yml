@@ -38,7 +38,7 @@
 
 - name: install k3s service
   shell: "export INSTALL_K3S_SKIP_DOWNLOAD={{ var_flag_offline_install }} \
-          && sh {{ var_k3s_dir_bin }}/{{ var_src_k3s_install_script }}    \
+          && sh {{ var_k3s_dir_bin }}/{{ var_src_k3s_install_script }} {{ var_k3s_install_option }}   \
           && iptables -F"
 
 - name: confirm k3s service state
