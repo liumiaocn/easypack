@@ -39,7 +39,7 @@ var_retry_max: 6
 var_delay_cnt: 3
 var_sleep_internal: 15
 var_flag_selinux_enabled: true
-var_flag_taint_node: false
+var_flag_taint_node: true
 var_flag_offline_install: 'true'
 var_k3s_dir_bin: /usr/local/bin
 #######END  : SETTING: BASIC#########
