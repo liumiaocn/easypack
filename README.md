@@ -31,12 +31,11 @@
     </tr>
 </table>
 
-## MESOS
+## Helm
 <table border="0">
     <tr>
         <td><a href="https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3">00-安装</a></td>
         <td><a href="https://blog.csdn.net/liumiaocn/category_9561027.html">01-使用介绍</a></td>
-        <td><a href="mesos">04-相关代码</a></td>
     </tr>
 </table>
 
