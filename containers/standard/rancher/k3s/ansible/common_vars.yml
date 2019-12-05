@@ -20,6 +20,7 @@ var_download_file_air_gap: "{{ var_download_base_dir }}/{{ var_src_air_gap_image
 #######BEGIN: SETTING: BASIC#########
 var_k3s_server_hostname: 192.168.163.121
 var_k3s_server_port: 6443
+var_k3s_server_udp_port: 8472
 var_src_binary: "{{ var_download_base_dir }}"
 var_src_k3s: "{{var_src_binary}}/k3s"
 var_flag_air_gap_enabled: true

@@ -39,7 +39,9 @@
 - name: install k3s service
   shell: "export INSTALL_K3S_SKIP_DOWNLOAD={{ var_flag_offline_install }} \
           && sh {{ var_k3s_dir_bin }}/{{ var_src_k3s_install_script }} {{ var_k3s_install_option }}   \
-          && iptables -F"
+          && firewall-cmd --add-port={{ var_k3s_server_port }}/tcp --zone=public --permanent \
+          && firewall-cmd --add-port={{ var_k3s_server_udp_port }}/udp --zone=public --permanent \
+          && firewall-cmd --reload"
 
 - name: confirm k3s service state
   shell: "systemctl status k3s.service|grep Active"
