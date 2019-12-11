@@ -13,7 +13,7 @@ MAINTAINER LiuMiao <liumiaocn@outlook.com>
 
 ARG ANT_VERSION=1.10.7
 ARG ANT_SHA=838ce70c7dbd2b53068ce17b169c0b3fbed5e0ab7be5c707f052418fb6a4a1620f2d4017ceca1379cd25edce3e46d70bb2b5de4e1c5c52e2e1275deec1228084
-ARG BASE_URL=http://mirrors.tuna.tsinghua.edu.cn/apache//ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz
+ARG BASE_URL=https://archive.apache.org/dist/ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz
 
 RUN apk update \
   && apk add --no-cache curl tar bash \
