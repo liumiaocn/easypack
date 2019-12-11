@@ -1,0 +1,31 @@
+###############################################################################
+# 
+#IMAGE:   ant
+#VERSION: 1.9.4
+#
+###############################################################################
+FROM openjdk:8-jdk-alpine
+
+###############################################################################
+#MAINTAINER
+###############################################################################
+MAINTAINER LiuMiao <liumiaocn@outlook.com>
+
+ARG ANT_VERSION=1.9.4
+ARG ANT_SHA=ee13c915a18f3c6e1283c43ce3716e2ed1b03fd87abe27d0e4964a84cba54474f95655c8d75ee12de2516f4df62402acfc9df064aa05f2cc80560a144b2128f8
+ARG BASE_URL=http://mirrors.tuna.tsinghua.edu.cn/apache//ant/binaries/apache-ant-${ANT_VERSION}-bin.tar.gz
+
+RUN apk update \
+  && apk add --no-cache curl tar bash \
+  && mkdir -p /usr/local/ant \
+  && curl -fsSL -o /tmp/apache-ant.tar.gz ${BASE_URL} \ 
+  && sha512sum /tmp/apache-ant.tar.gz \
+  && echo "${ANT_SHA}  /tmp/apache-ant.tar.gz" | sha512sum -c - \
+  && tar -xzf /tmp/apache-ant.tar.gz -C /usr/local/ant --strip-components=1 \
+  && rm -f /tmp/apache-ant.tar.gz \
+  && ln -s /usr/local/ant/bin/ant /usr/bin/ant
+
+ENV ANT_HOME /usr/local/ant
+ENV PATH $PATH:${ANT_HOME}
+
+CMD ["ant"]
