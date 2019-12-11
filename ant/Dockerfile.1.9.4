@@ -25,6 +25,8 @@ RUN apk update \
   && rm -f /tmp/apache-ant.tar.gz \
   && ln -s /usr/local/ant/bin/ant /usr/bin/ant
 
+WORKDIR /data
+
 ENV ANT_HOME /usr/local/ant
 ENV PATH $PATH:${ANT_HOME}
 
