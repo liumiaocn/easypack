@@ -1,0 +1,82 @@
+<project xmlns:ivy="antlib:org.apache.ivy.ant" name="AntIvyDemoProject" default="main" basedir=".">
+	<description>
+		Spring MVC Ant Demo Project
+	</description>
+
+	<!-- Project Structure -->
+	<property name="jdk.version" value="1.7" />
+	<property name="projectName" value="WebProject" />
+	<property name="src.dir" location="src" />
+	<property name="resources.dir" location="resources" />
+	<property name="web.dir" value="war" />
+	<property name="web.classes.dir" location="${web.dir}/WEB-INF/classes" />
+	<property name="target.dir" location="target" />
+	<property name="target.temp.dir" location="target/temp" />
+	<property name="lib.dir" value="lib" />
+
+	<!-- ivy start -->
+	<target name="resolve" description="get dependencies with ivy">
+		<echo message="Getting dependencies..." />
+		<ivy:retrieve />
+
+		<ivy:cachepath pathid="build.path" conf="build" />
+		<ivy:cachepath pathid="runtime.path" conf="runtime" />
+		<ivy:cachepath pathid="test.path" conf="test" />
+
+	</target>
+
+	<!-- install ivy if you don't have ivyide-->
+	<target name="ivy" description="Install ivy">
+		<mkdir dir="${user.home}/.ant/lib" />
+		<get dest="${user.home}/.ant/lib/ivy.jar" src="http://search.maven.org/remotecontent?filepath=org/apache/ivy/ivy/2.5.0/ivy-2.5.0.jar" />
+	</target>
+	<!-- ivy end -->
+
+	<!-- Compile Java source from ${src.dir} and output it to ${web.classes.dir} -->
+	<target name="build" depends="init, resolve" description="build source code">
+		<mkdir dir="${web.classes.dir}" />
+		<javac destdir="${web.classes.dir}" source="${jdk.version}" target="${jdk.version}" 
+			debug="true" includeantruntime="false" classpathref="build.path">
+			<src path="${src.dir}" />
+		</javac>
+	</target>
+
+	<!-- Copy *.xml or *.properties from ${resources.dir} to ${web.classes.dir} -->
+	<target name="copy-resources" description="copy Java resources like xml and properties files">
+		<copy todir="${web.classes.dir}">
+			<fileset dir="${resources.dir}">
+				<include name="**/*.xml" />
+				<include name="**/*.properties" />
+			</fileset>
+		</copy>
+	</target>
+
+	<!-- Create WAR file for deployment -->
+	<target name="package" depends="clean, build, copy-resources" description="create a war file">
+		<!-- ivy get dependencies and put it in ${lib.dir} -->
+		<ivy:retrieve pattern="${lib.dir}/[artifact]-[revision].[ext]" conf="runtime" />
+
+		<war destfile="${target.dir}/antivydemo.war" webxml="${web.dir}/WEB-INF/web.xml">
+			
+			<webinf dir="${web.dir}/WEB-INF" />
+			<lib dir="${lib.dir}" />
+			<zipfileset dir="${web.dir}/resources" prefix="resources" />
+		</war>
+	</target>
+
+	<!-- Create folders -->
+	<target name="init">
+		<mkdir dir="${src.dir}" />
+		<mkdir dir="${target.dir}" />
+		<mkdir dir="${web.classes.dir}" />
+	</target>
+
+	<!-- Delete folders -->
+	<target name="clean" description="clean up">
+		<delete dir="${web.classes.dir}" />
+		<delete dir="${target.dir}" />
+	</target>
+
+	<target name="main" depends="package" />
+
+</project>
