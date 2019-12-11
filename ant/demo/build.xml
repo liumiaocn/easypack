@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<project name="Hello" default="compile">
+    <target name="clean" description="remove intermediate files">
+        <delete dir="classes"/>
+        <delete file="hello.jar"/>
+    </target>
+    <target name="build" description="compile Java source code to class files">
+        <mkdir dir="classes"/>
+        <javac srcdir="." destdir="classes" includeAntRuntime="false"/>
+    </target>
+    <target name="jar" depends="build" description="create a Jar file">
+        <jar destfile="hello.jar">
+            <fileset dir="classes" includes="**/*.class"/>
+            <manifest>
+                <attribute name="Main-Class" value="HelloWorld"/>
+            </manifest>
+        </jar>
+    </target>
+</project>
