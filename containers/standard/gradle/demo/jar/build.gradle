@@ -1,0 +1,11 @@
+apply plugin: 'java'
+version = '1.0'
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'Gradle plugin sample: create jar distribution',
+                   'Implementation-Version': version,
+                   'Main-Class': 'com.liumiaocn.HelloPlugin',
+                   'Created-By': 'liumiaocn'
+    }
+}
