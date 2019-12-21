@@ -1,0 +1,4 @@
+println "[Phase: initialization] : settings executed... "
+rootProject.name='helloPorject'
+
+include 'subProjectA', 'subProjectB','subProjectA:subProjectAA'

@@ -1,0 +1,68 @@
+println "[phase:configuration] build.gradle ..."
+println "[phase:configuration] before setting [version] = " + version
+
+task setDefaultProperty {
+  group 'propertyTest'
+  description 'set default property'
+
+  version = 'alpha'
+}
+
+setDefaultProperty.configure {
+  description = 'property using task.configure'
+}
+
+ext {
+  extProperty1 = 'perperty using ext closure'
+}
+
+ext.extProperty2 = 'perperty using ext.'
+
+task displayExtProperties {
+  group 'propertyTest'
+  description 'display ext properties'
+
+  doFirst() {
+    println '[ext]:[extProperty1] = ' + extProperty1
+    println '[ext]:[ext.extProperty2] = ' + extProperty2
+  }
+}
+
+task displayParaByENV {
+  group 'propertyTest'
+  description 'display ENV properties'
+
+  doFirst() {
+    println '[ENV]:[envProperty1] = ' + envProperty1
+  }
+}
+
+task displayParaByJVM {
+  group 'propertyTest'
+  description 'display JVM properties'
+
+  doFirst() {
+    println '[JVM]:[jvmProperty1] = ' + jvmProperty1
+  }
+}
+
+task displayParaByP {
+  group 'propertyTest'
+  description 'display -P properties'
+
+  doFirst() {
+    println '[-P]:[pProperty1] = ' + pProperty1
+  }
+}
+
+tasks.create("display") {
+  group 'propertyTest'
+  description 'display properties'
+
+  doFirst() {
+    println '[default]:[rootProject.name] = ' + rootProject.name
+    println '[default]:[version] = ' + version
+    println '[default]:[description] = ' + description
+    println '[default/configure]:[setDefaultProperty.description] = ' + setDefaultProperty.description
+  }
+}

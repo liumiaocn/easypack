@@ -1,0 +1,60 @@
+println "[phase:configuration] build.gradle ..."
+
+task compile {
+  group 'compile'
+  description 'compile task'
+  println "[phase:configuration] compile"
+  doFirst {
+    println "[phase:execution] compile :doFirst()"
+  }
+}
+
+tasks.create(name: 'test',dependsOn: compile) {
+  group 'test'
+  description 'test task'
+  println "[phase:configuration] test"
+  doLast {
+    println "[phase:execution] test:doLast()"
+  }
+}
+
+tasks.create("packaging") {
+  group 'packaging'
+  description 'packaging task'
+  dependsOn test
+  enabled   true
+  println "[phase:configuration] packaging"
+  doLast {
+    println "[phase:execution] packaging:doLast()"
+  }
+}
+
+class Install extends DefaultTask{
+  String installObjectName
+
+  @TaskAction
+  void checkObject() {
+    println "[phase:execution] install:checkObject   (${installObjectName})"
+  }
+
+  @TaskAction
+  void installObject() {
+    println "[phase:execution] install:installObject (${installObjectName})"
+  }
+}
+
+task install(type: Install) {
+  group 'install'
+  description 'install task'
+  installObjectName 'test.jar'
+
+  println "[phase:configuration] install"
+  doFirst {
+    println "[phase:execution] install:doFirst()"
+  }
+  doLast {
+    println "[phase:execution] install:doLast()"
+  }
+}
+install.dependsOn packaging
+install.onlyIf { packaging.enabled }

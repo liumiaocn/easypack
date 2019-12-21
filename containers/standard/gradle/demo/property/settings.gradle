@@ -1,0 +1,3 @@
+println "[Phase: initialization] : settings executed... "
+rootProject.name='propertySample'
+println "[default]:[rootProject.name] = " + rootProject.name

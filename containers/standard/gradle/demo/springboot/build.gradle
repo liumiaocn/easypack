@@ -1,0 +1,52 @@
+buildscript {
+	ext {
+		springBootVersion = '2.1.1.RELEASE'
+	}
+	repositories {
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+plugins {
+  id "org.sonarqube" version "2.6.2"
+}
+
+sonarqube {
+    properties {
+        property "sonar.host.url", "http://localhost:32003"
+        property "sonar.login", "admin"
+        property "sonar.password", "admin"
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'jacoco'
+apply plugin: 'org.sonarqube'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+
+group = 'com.liumiaocn'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+
+dependencies {
+	implementation('org.springframework.boot:spring-boot-starter-web')
+        testImplementation('org.springframework.boot:spring-boot-starter-test')
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        html.enabled true
+    }
+}
+
+check.dependsOn jacocoTestReport

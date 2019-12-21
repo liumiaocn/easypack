@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Implementation-Title: Gradle plugin sample: create jar distribution
+Implementation-Version: 1.0
+Created-By: liumiaocn
+
