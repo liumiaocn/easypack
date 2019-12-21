@@ -43,16 +43,16 @@
 ## 持续集成与持续构建
 <table border="0">
     <tr>
-        <td><a href="https://liumiaocn.blog.csdn.net/article/category/8598907">00-Jenkins使用介绍</a></td>
-        <td><a href="https://blog.csdn.net/liumiaocn/column/info/27057">01-持续集成实践</a></td>
-        <td><a href="containers/alpine/jenkins">02-Jenkins</a></td>
-        <td><a href="https://blog.csdn.net/liumiaocn/article/details/84341611">03-构建工具Gradle实践介绍</a></td>
-        <td><a href="containers/alpine/jenkins">04-构建工具Gradle</a></td>
+        <td><a href="https://liumiaocn.blog.csdn.net/article/category/8598907">Jenkins使用介绍</a></td>
+        <td><a href="https://blog.csdn.net/liumiaocn/column/info/27057">持续集成实践</a></td>
+        <td><a href="containers/alpine/jenkins">Jenkins</a></td>
+        <td><a href="https://blog.csdn.net/liumiaocn/article/details/84341611">构建工具Gradle实践介绍</a></td>
+        <td><a href="containers/alpine/jenkins">构建工具Gradle</a></td>
     </tr>
         <tr>
-        <td><a href="https://liumiaocn.blog.csdn.net/article/details/103640872">05-安卓SDK镜像</a></td>
-        <td><a href="https://blog.csdn.net/liumiaocn/column/info/27057">06-gradlew+docker+SDK</a></td>
-            <td><a href="https://blog.csdn.net/liumiaocn/column/info/27057">07-gradle+docker+SDK</a></td>
+        <td><a href="https://liumiaocn.blog.csdn.net/article/details/103640872">安卓SDK镜像</a></td>
+        <td><a href="https://blog.csdn.net/liumiaocn/column/info/27057">gradlew+docker+SDK</a></td>
+            <td><a href="https://blog.csdn.net/liumiaocn/column/info/27057">gradle+docker+SDK</a></td>
     </tr>
 </table>
 
