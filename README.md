@@ -49,6 +49,11 @@
         <td><a href="https://blog.csdn.net/liumiaocn/article/details/84341611">03-构建工具Gradle实践介绍</a></td>
         <td><a href="containers/alpine/jenkins">04-构建工具Gradle</a></td>
     </tr>
+        <tr>
+        <td><a href="https://liumiaocn.blog.csdn.net/article/details/103640872">05-Android SDK镜像</a></td>
+        <td><a href="https://blog.csdn.net/liumiaocn/column/info/27057">06-使用gradlew构建APK</a></td>
+            <td><a href="https://blog.csdn.net/liumiaocn/column/info/27057">07-使用gradle构建APK</a></td>
+    </tr>
 </table>
 
 
