@@ -3,7 +3,7 @@ all-in-one-hostip=192.168.163.132
 
 # kubernetes : all-node
 [all-in-one]
-host132 var_master_host=all-in-one-hostip var_etcd_host=all-in-one-hostip var_node_host=all-in-one-hostip
+localhost var_master_host=all-in-one-hostip var_etcd_host=all-in-one-hostip var_node_host=all-in-one-hostip
 
 # kubernetes : master
 [master-nodes]
