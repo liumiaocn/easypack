@@ -10,11 +10,11 @@ WorkingDirectory={{ var_etcd_data_dir }}
 ExecStart={{ var_etcd_dir_bin }}/etcd \
           --name={{ var_etcd_names }} \
           --data-dir={{ var_etcd_data_dir }}/default.etcd \
-          --listen-peer-urls=https://{{ var_all_in_one_hostip }}:{{ var_etcd_peer_port }} \
-          --listen-client-urls=https://{{ var_all_in_one_hostip }}:{{ var_etcd_client_port }},{{ var_etcd_localhost_client }} \
-          --advertise-client-urls=https://{{ var_all_in_one_hostip }}:{{ var_etcd_client_port }} \
-          --initial-advertise-peer-urls=https://{{ var_all_in_one_hostip }}:{{ var_etcd_peer_port }} \
-          --initial-cluster={{ var_etcd_names }}=https://{{ var_all_in_one_hostip }}:{{ var_etcd_peer_port }} \
+          --listen-peer-urls=https://{{ var_etcd_host }}:{{ var_etcd_peer_port }} \
+          --listen-client-urls=https://{{ var_etcd_host }}:{{ var_etcd_client_port }},{{ var_etcd_localhost_client }} \
+          --advertise-client-urls=https://{{ var_etcd_host }}:{{ var_etcd_client_port }} \
+          --initial-advertise-peer-urls=https://{{ var_etcd_host }}:{{ var_etcd_peer_port }} \
+          --initial-cluster={{ var_etcd_names }}=https://{{ var_etcd_host }}:{{ var_etcd_peer_port }} \
           --initial-cluster-token={{ var_etcd_initial_cluster_token }} \
           --initial-cluster-state={{ var_etcd_initial_cluster_state }} \
           --cert-file={{ var_ssl_etcd_dir }}/{{ var_ssl_etcd_cert_prefix }}.pem \

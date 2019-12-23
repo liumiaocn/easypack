@@ -1,18 +1,18 @@
 # kubernetes : all-node
 [all-in-one]
-localhost
-
-[all]
-localhost
+localhost var_master_host=192.168.163.132 var_etcd_host=192.168.163.132 var_node_host=192.168.163.132
 
 # kubernetes : master
-[master]
-localhost
+[master-nodes]
+host131 var_master_host=192.168.163.131
 
 # kubernetes : node
-[node]
-localhost
+[agent-nodes]
+host132 var_node_host=192.168.163.132
+host133 var_node_host=192.168.163.133
+host134 var_node_host=192.168.163.134
 
 # kubernetes : etcd
 [etcd]
-localhost
+host131 var_etcd_host=192.168.163.131
+[root@host131 ansible]# 

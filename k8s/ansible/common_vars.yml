@@ -1,6 +1,5 @@
 ---
 #######BEGIN: SETTING: BASIC#########
-var_all_in_one_hostip: 192.168.163.132
 var_src_binary: /tmp/binary
 var_src_k8s: "{{var_src_binary}}/kubernetes"
 var_src_cfssl: "{{var_src_binary}}/cfssl"
@@ -32,7 +31,6 @@ var_etcd_data_dir: "/var/lib/etcd/"
 var_etcd_client_port: 2379
 var_etcd_peer_port: 2380
 var_etcd_names: "etcd-01"
-var_etcd_hosts: "{{ var_all_in_one_hostip }}"
 var_etcd_localhost_client: "http://127.0.0.1:{{var_etcd_client_port}}"
 var_etcd_state_new: "new"
 var_etcd_state_existing: "existing"
@@ -58,8 +56,7 @@ var_kube_opt_cluster_port_range: 30000-50000
 var_kube_opt_auth_mode: "RBAC,Node"
 var_kube_adm_plugins: "NamespaceLifecycle,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota,NodeRestriction"
 var_kube_master_addr: 127.0.0.1:8080
-var_kube_master_ip: "{{ var_all_in_one_hostip }}"
-var_kube_master_https: "https://{{var_kube_master_ip}}:{{var_kube_opt_api_ssl_port}}"
+var_kube_master_https: "https://{{var_master_host}}:{{var_kube_opt_api_ssl_port}}"
 #######END  : SETTING: APISERVER#####
 
 #######BEGIN: SETTING: COREDNS#####
@@ -198,7 +195,6 @@ var_bootstrap_token: 00fdeedfa65384fe4dca538a54a0e8a1
 var_template_kubelet_service: kubelet.service.j2
 var_kubelet_service: /usr/lib/systemd/system/kubelet.service
 var_kubelet_dir_working: /var/lib/kubelet
-var_kube_node_hostname: "{{ var_all_in_one_hostip }}"
 var_template_kubelet_config: kubelet-config.yaml.j2
 var_kubelet_opt_config: kubelet-config.yaml
 var_kube_opt_pause: "gcr.io/google_containers/pause-amd64:3.1"

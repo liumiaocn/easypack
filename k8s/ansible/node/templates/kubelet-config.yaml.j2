@@ -22,4 +22,4 @@ rotateCertificates: {{ var_kubelet_config_opt_rotate_cert }}
 serverTLSBootstrap: {{ var_kubelet_config_opt_tls_bootstrap }}
 readOnlyPort: {{ var_kubelet_config_opt_readonly_port }}
 port: {{ var_kubelet_config_opt_port }}
-address: "{{ var_kube_node_hostname }}"
+address: "{{ var_node_host }}"
