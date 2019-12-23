@@ -1,0 +1,31 @@
+---
+- hosts: master-nodes
+  vars_files:
+    - "common_vars.yml"
+  gather_facts: no
+  roles:
+    - role: clean
+    - role: prepare
+    - role: etcd
+    - role: master
+- hosts: etcd
+  vars_files:
+    - "common_vars.yml"
+  gather_facts: no
+  roles:
+    - role: etcd
+- hosts: master-nodes
+  vars_files:
+    - "common_vars.yml"
+  gather_facts: no
+  roles:
+    - role: master
+- hosts: agent-nodes
+  vars_files:
+    - "common_vars.yml"
+  gather_facts: no
+  roles:  
+    - role: flannel 
+    - role: docker
+    - role: node
+...
