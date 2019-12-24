@@ -135,12 +135,10 @@
   tags:
     - "csr-approve"
 
-- name: auto approve kubelet csr requestor
-  shell: "csr_name=`kubectl get csr | grep kubelet-bootstrap |grep Pending|grep -v grep |head -n1 |awk '{print $1}'` \
-          && kubectl certificate approve ${csr_name}"
-  register: approve_status
-  until: '"approved" in approve_status.stdout'
-  retries: "{{ var_retry_max }}"
-  delay: "{{ var_delay_cnt }}"
-  tags:
-    - "csr-approve"
+- name: get csr requestor list
+  shell: "sleep {{ var_delay_cnt }} && kubectl get csr |grep Pending|grep -v grep |awk '{print $1}'"
+  register: csr_names
+
+- name: approve csr requests
+  shell: "kubectl certificate approve {{ item }}"
+  with_items: "{{ csr_names.stdout_lines }}"
