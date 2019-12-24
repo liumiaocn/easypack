@@ -126,3 +126,17 @@
   ignore_errors: true
   tags:
     - "apiserver"
+
+- name: delete clusterrolebinding
+  shell: "kubectl delete clusterrolebinding {{ var_kubeconfig_client_kubelet }}"
+  ignore_errors: true
+  tags:
+    - "kubelet"
+
+- name: create clusterrolebinding
+  shell: "kubectl create clusterrolebinding {{ var_kubeconfig_client_kubelet }} \
+             --clusterrole={{ var_kubeconfig_role_bootstrapper }} \
+             --user={{ var_kubeconfig_client_kubelet }}"
+  ignore_errors: true
+  tags:
+    - "kubelet"

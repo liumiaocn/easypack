@@ -1,6 +1,5 @@
 ---
 # tasks file for etcd
-
 - name: create dirs for etcd
   file:
     path: "{{ item }}"

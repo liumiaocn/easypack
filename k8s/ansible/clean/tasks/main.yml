@@ -1,16 +1,37 @@
 ---
 # tasks file for clean
 
-## stop etcd service
-- name: stop etcd service
-  shell: "systemctl stop etcd"
-  ignore_errors: true
 
 ## stop kubernetes master service
 - name: stop master service
-  shell: "systemctl stop kube-scheduler \
-          && systemctl stop kube-controller-manager \
-          && systemctl stop kube-apiserver"
+  service:
+    name: "{{ item }}"
+    state: stopped
+  with_items:
+    - kube-scheduler
+    - kube-controller-manager
+    - kube-apiserver
+  ignore_errors: true
+
+## stop etcd service
+- name: stop etcd service
+  service:
+    name:  etcd
+    state: stopped
+  ignore_errors: true
+
+## stop flannel service
+- name: stop flannel service
+  service:
+    name:  flanneld
+    state: stopped
+  ignore_errors: true
+
+## stop docker service
+- name: stop docker service
+  service:
+    name:  docker 
+    state: stopped
   ignore_errors: true
 
 ## clean files

@@ -23,6 +23,31 @@
   tags: 
     - "install"
 
+## install etcd binaries for flannel setting
+- name: copy etcd and etcdctl to install dir
+  copy:
+    src: "{{ item }}"
+    dest: "{{ var_etcd_dir_bin }}"
+    mode: "{{ var_default_bin_mode }}"
+  with_items:
+    - "{{ var_src_etcd }}/etcd"
+    - "{{ var_src_etcd }}/etcdctl"
+
+- name: create dirs for images
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ var_src_binary }}/images"
+
+## copy puase images
+- name: copy pause images
+  copy:
+    src: "{{ var_src_pause }}"
+    dest: "{{ var_src_pause }}"
+  tags:
+    - "install"
+
 ## firewall setting
 - name: firwall setting
   shell: "systemctl stop firewalld \
@@ -82,6 +107,7 @@
     dest: "{{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_config }}" 
   tags:
     - "cert" 
+  when: var_master_node_flag == True
 
 - name: create csr file for ca
   template:
@@ -89,6 +115,7 @@
     dest: "{{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_csr }}" 
   tags:
     - "cert" 
+  when: var_master_node_flag == True
 
 - name: create csr file for etcd
   template:
@@ -96,6 +123,7 @@
     dest: "{{ var_ssl_etcd_dir }}/{{ var_ssl_file_etcd_csr }}" 
   tags:
     - "cert" 
+  when: var_master_node_flag == True
 
 - name: create csr file for k8s
   template:
@@ -103,6 +131,7 @@
     dest: "{{ var_ssl_k8s_dir }}/{{ var_ssl_file_k8s_csr }}" 
   tags:
     - "cert" 
+  when: var_master_node_flag == True
 
 - name: create csr file for k8s controller manager
   template:
@@ -110,6 +139,7 @@
     dest: "{{ var_ssl_k8s_dir }}/{{ var_ssl_file_k8scm_csr }}" 
   tags:
     - "cert" 
+  when: var_master_node_flag == True
 
 - name: create csr file for k8s scheduler
   template:
@@ -117,6 +147,7 @@
     dest: "{{ var_ssl_k8s_dir }}/{{ var_ssl_file_k8sch_csr }}" 
   tags:
     - "cert" 
+  when: var_master_node_flag == True
 
 - name: create csr file for k8s admin
   template:
@@ -124,6 +155,7 @@
     dest: "{{ var_ssl_k8s_dir }}/{{ var_ssl_file_admin_csr }}" 
   tags:
     - "cert" 
+  when: var_master_node_flag == True
 
 - name: create ca certificate
   shell: "cd {{ var_ssl_ca_dir }}      \
@@ -132,6 +164,7 @@
           && cfssl gencert -ca={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_pem }} -ca-key={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_key }} -config={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_config }} -profile={{ var_ssl_profile_etcd }} {{ var_ssl_file_etcd_csr }} | cfssljson -bare {{ var_ssl_etcd_cert_prefix }}"
   tags:
     - "cert" 
+  when: var_master_node_flag == True
 
 - name: create kubernetes certificate
   shell: "cd {{ var_ssl_k8s_dir }}   \
@@ -141,6 +174,7 @@
           && cfssl gencert -ca={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_pem }} -ca-key={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_key }} -config={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_config }} -profile={{ var_ssl_profile_k8s }} {{ var_ssl_file_admin_csr }} | cfssljson -bare {{ var_ssl_admin_cert_prefix }}"
   tags:
     - "cert" 
+  when: var_master_node_flag == True
 
 
 - name: create cluster kubeconfig file for controller manager
@@ -162,6 +196,7 @@
           && kubectl config use-context {{ var_kubeconfig_client_kube_controller_manager }} --kubeconfig={{ var_kubeconfig_kube_controller_manager }}"
   tags:
     - "kubeconfig" 
+  when: var_master_node_flag == True
 
 - name: create cluster kubeconfig file for scheduler
   shell: "cd {{ var_ssl_k8s_dir }}   \
@@ -182,6 +217,7 @@
           && kubectl config use-context {{ var_kubeconfig_client_kube_scheduler }} --kubeconfig={{ var_kubeconfig_kube_scheduler }}"
   tags:
     - "kubeconfig" 
+  when: var_master_node_flag == True
 
 - name: create cluster kubeconfig file for kubectl
   shell: "cd {{ var_ssl_ca_dir }} \
@@ -202,6 +238,7 @@
           && kubectl config use-context {{ var_kubeconfig_client_kubectl }} --kubeconfig={{ var_kubeconfig_kubectl }}"
   tags:
     - "kubeconfig" 
+  when: var_master_node_flag == True
 
 - name: copy kubectl config
   copy:
@@ -209,3 +246,63 @@
     dest: "{{ var_kubeconfig_default }}"
   tags:
     - "kubeconfig" 
+  when: var_master_node_flag == True
+
+
+- name: prepare certificates for node kube-proxy
+  template:
+    src: "{{ var_template_proxy_csr }}"
+    dest: "{{ var_ssl_k8s_dir }}/{{ var_ssl_proxy_csr }}"
+  tags:
+    - "kube-proxy"
+  when: var_master_node_flag == True
+
+- name: create certificates for kube-proxy
+  shell: "cd {{ var_ssl_k8s_dir }} \
+          && cfssl gencert -ca={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_pem }} \
+             -ca-key={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_key }} \
+             -config={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_config }} \
+             -profile={{ var_ssl_profile_k8s }} {{ var_ssl_proxy_csr }} | cfssljson -bare {{ var_ssl_proxy_cert_prefix }} "
+  tags:
+    - "kube-proxy"
+  when: var_master_node_flag == True
+
+- name: set kubeconfig for kubelet
+  shell: "cd {{ var_ssl_k8s_dir }} \
+          && kubectl config set-cluster {{ var_kubeconfig_cluster }}                \
+             --certificate-authority={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_pem }} \
+             --embed-certs={{ var_kubeconfig_embed_certs }} \
+             --server={{ var_kube_master_https }}           \
+             --kubeconfig={{ var_kubeconfig_bootstrap }}    \
+          && kubectl config set-credentials {{ var_kubeconfig_client_kubelet }}     \
+             --token={{ var_bootstrap_token }}              \
+             --kubeconfig={{ var_kubeconfig_bootstrap }}    \
+          && kubectl config set-context {{ var_kubeconfig_context_default }}        \
+             --cluster={{ var_kubeconfig_cluster }}         \
+             --user={{ var_kubeconfig_client_kubelet }}     \
+             --kubeconfig={{ var_kubeconfig_bootstrap }}    \
+          && kubectl config use-context {{ var_kubeconfig_context_default }} --kubeconfig={{ var_kubeconfig_bootstrap }}"
+  tags:
+    - "kubelet"
+  when: var_master_node_flag == True
+
+- name: set kubeconfig for kube-proxy
+  shell: "cd {{ var_ssl_k8s_dir }} \
+          && kubectl config set-cluster {{ var_kubeconfig_cluster }}                \
+             --certificate-authority={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_pem }} \
+             --embed-certs={{ var_kubeconfig_embed_certs }} \
+             --server={{ var_kube_master_https }}           \
+             --kubeconfig={{ var_kubeconfig_kubeproxy }}    \
+          && kubectl config set-credentials {{ var_kubeconfig_client_kubeproxy }}           \
+             --client-certificate={{ var_ssl_k8s_dir }}/{{ var_ssl_proxy_cert_prefix }}.pem \
+             --client-key={{ var_ssl_k8s_dir }}/{{ var_ssl_proxy_cert_prefix }}-key.pem     \
+             --embed-certs={{ var_kubeconfig_embed_certs }} \
+             --kubeconfig={{ var_kubeconfig_kubeproxy }}    \
+          && kubectl config set-context {{ var_kubeconfig_context_default }} \
+             --cluster={{ var_kubeconfig_cluster }}         \
+             --user={{ var_kubeconfig_client_kubeproxy }}   \
+             --kubeconfig={{ var_kubeconfig_kubeproxy }}    \
+          && kubectl config use-context {{ var_kubeconfig_context_default }} --kubeconfig=kube-proxy.kubeconfig"
+  tags:
+    - "kube-proxy"
+  when: var_master_node_flag == True
