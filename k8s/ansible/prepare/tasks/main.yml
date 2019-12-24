@@ -39,6 +39,7 @@
     state: directory
   with_items:
     - "{{ var_src_binary }}/images"
+    - "~/.kube"
 
 ## copy puase images
 - name: copy pause images
@@ -246,7 +247,7 @@
     dest: "{{ var_kubeconfig_default }}"
   tags:
     - "kubeconfig" 
-  when: var_master_node_flag == True
+  when: var_kubectl_agent_flag == True
 
 
 - name: prepare certificates for node kube-proxy

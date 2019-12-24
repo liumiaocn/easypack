@@ -172,6 +172,7 @@ var_docker_opt_log_max_size: "1g"
 
 #######BEGIN: SETTING: KUBECONFIG####
 var_kubeconfig_default: "~/.kube/config"
+var_kubectl_agent_flag: True
 var_kubeconfig_cluster: kubernetes
 var_kubeconfig_embed_certs: true
 var_kubeconfig_bootstrap: "bootstrap.kubeconfig"
