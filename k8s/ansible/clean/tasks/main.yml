@@ -1,38 +1,16 @@
 ---
 # tasks file for clean
 
-
-## stop kubernetes master service
-- name: stop master service
-  service:
-    name: "{{ item }}"
-    state: stopped
-  with_items:
-    - kube-scheduler
-    - kube-controller-manager
-    - kube-apiserver
-  ignore_errors: true
-
-## stop etcd service
-- name: stop etcd service
-  service:
-    name:  etcd
-    state: stopped
-  ignore_errors: true
-
-## stop flannel service
-- name: stop flannel service
-  service:
-    name:  flanneld
-    state: stopped
-  ignore_errors: true
-
-## stop docker service
-- name: stop docker service
-  service:
-    name:  docker 
-    state: stopped
-  ignore_errors: true
+## stop services
+- name: stop services
+  shell: "(! chkconfig kube-scheduler || systemctl stop kube-scheduler ) \
+          && (! chkconfig kube-controller-manager || systemctl stop kube-controller-manager ) \
+          && (! chkconfig kube-apiserver || systemctl stop kube-apiserver ) \
+          && (! chkconfig etcd || systemctl stop etcd ) \
+          && (! chkconfig flanneld || systemctl stop flanneld  ) \
+          && (! chkconfig kubelet  || systemctl stop kubelet   ) \
+          && (! chkconfig kube-proxy || systemctl stop kube-proxy ) \
+          && (! chkconfig docker || systemctl stop docker )"
 
 ## clean files
 - name: clean files kubectl & cfssltools
@@ -74,6 +52,7 @@
       - "{{ var_ssl_ca_dir }}"
       - "{{ var_ssl_k8s_dir }}"
       - "{{ var_ssl_etcd_dir }}"
+      - "{{ var_ssl_flannel_dir }}"
 
 - name: delete dirs of etcd
   file:

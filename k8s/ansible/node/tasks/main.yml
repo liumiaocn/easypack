@@ -1,14 +1,6 @@
 ---
 # tasks file for node
 
-## stop kubernetes node service
-- name: stop node service
-  shell: "systemctl stop kube-proxy    \
-          && systemctl stop  kubelet   \
-          && systemctl stop  docker    \
-          && systemctl stop  flannel "
-  ignore_errors: true
-
 - name: create dirs for kubelet and kube-proxy
   file:
     path: "{{ item }}"
@@ -38,6 +30,21 @@
     - "{{ var_kube_proxy_dir_working }}"
   tags:
     - "kube-proxy"
+
+- name: copy ca certificate file ca.pem
+  copy:
+    src: "{{ item }}"
+    dest: "{{ var_ssl_ca_dir }}"
+  with_items:
+    - "{{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_pem }}"
+
+- name: copy config files
+  copy:
+    src: "{{ item }}"
+    dest: "{{ var_ssl_k8s_dir }}"
+  with_items:
+    - "{{ var_ssl_k8s_dir }}/{{ var_kubeconfig_bootstrap }}"
+    - "{{ var_ssl_k8s_dir }}/{{ var_kubeconfig_kubeproxy }}"
 
 - name: copy kubelet to install dir
   copy:
