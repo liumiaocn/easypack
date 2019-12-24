@@ -1,5 +1,17 @@
 ---
 # tasks file for flannel
+## install cffssl tools
+- name: install cfssl tools
+  copy:
+    src: "{{ item }}"
+    dest: "{{ var_default_install_bin }}"
+    mode: "{{ var_default_bin_mode }}"
+  with_items:
+    - "{{ var_src_cfssl }}/cfssl"
+    - "{{ var_src_cfssl }}/cfssljson"
+    - "{{ var_src_cfssl }}/cfssl-certinfo"
+  tags:
+    - "install"
 
 - name: create dirs for flannel
   file:
@@ -9,6 +21,16 @@
     - "{{ var_flannel_dir_bin }}"
     - "{{ var_flannel_dir_run }}"
     - "{{ var_ssl_flannel_dir }}"
+    - "{{ var_ssl_ca_dir }}"
+
+- name: copy ca key pem and config files
+  copy:
+    src: "{{ item }}"
+    dest: "{{ var_ssl_ca_dir }}"
+  with_items:
+    - "{{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_key }}"
+    - "{{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_pem }}"
+    - "{{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_config }}"
 
 - name: copy flannel to install dir
   copy:

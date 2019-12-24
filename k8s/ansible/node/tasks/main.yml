@@ -1,6 +1,14 @@
 ---
 # tasks file for node
 
+## stop kubernetes node service
+- name: stop node service
+  shell: "systemctl stop kube-proxy    \
+          && systemctl stop  kubelet   \
+          && systemctl stop  docker    \
+          && systemctl stop  flannel "
+  ignore_errors: true
+
 - name: create dirs for kubelet and kube-proxy
   file:
     path: "{{ item }}"

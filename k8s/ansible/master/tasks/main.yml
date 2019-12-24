@@ -123,5 +123,6 @@
 - name: create clusterrolebind
   shell: "sleep {{ var_sleep_internal }} && kubectl create clusterrolebinding {{ var_rbac_kubeletapi_role_binding }} \
           --clusterrole={{ var_rbac_kubelet_role_apiadmin }} --user {{ var_kubeconfig_cluster }}"
+  ignore_errors: true
   tags:
     - "apiserver"

@@ -7,14 +7,14 @@ localhost var_master_host=all-in-one-hostip var_etcd_host=all-in-one-hostip var_
 
 # kubernetes : master
 [master-nodes]
-host131 var_master_host=192.168.163.131
+host132 var_master_host=192.168.163.132
 
 # kubernetes : node
 [agent-nodes]
 host132 var_node_host=192.168.163.132
 host133 var_node_host=192.168.163.133
-host134 var_node_host=192.168.163.134
+#host134 var_node_host=192.168.163.134
 
 # kubernetes : etcd
 [etcd]
-host131 var_etcd_host=192.168.163.131
+host132 var_etcd_host=192.168.163.132

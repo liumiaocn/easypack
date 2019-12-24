@@ -1,4 +1,5 @@
 ---
+# master node: prepare
 - hosts: master-nodes
   vars_files:
     - "common_vars.yml"
@@ -6,20 +7,24 @@
   roles:
     - role: clean
     - role: prepare
-    - role: etcd
-    - role: master
+
+# etcd node setting
 - hosts: etcd
   vars_files:
     - "common_vars.yml"
   gather_facts: no
   roles:
     - role: etcd
+
+# master nodes setting
 - hosts: master-nodes
   vars_files:
     - "common_vars.yml"
   gather_facts: no
   roles:
     - role: master
+
+# agent nodes setting
 - hosts: agent-nodes
   vars_files:
     - "common_vars.yml"

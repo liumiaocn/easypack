@@ -13,14 +13,6 @@
           && systemctl stop kube-apiserver"
   ignore_errors: true
 
-## stop kubernetes node service
-- name: stop node service
-  shell: "systemctl stop kube-proxy    \
-          && systemctl stop  kubelet   \
-          && systemctl stop  docker    \
-          && systemctl stop  flannel "
-  ignore_errors: true
-
 ## clean files
 - name: clean files kubectl & cfssltools
   file:
