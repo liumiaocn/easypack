@@ -28,16 +28,12 @@
   retries: "{{ var_retry_max }}"
   delay: "{{ var_delay_cnt }}"
 
-- name: delete dashboard service account
-  shell: kubectl delete serviceaccount dashboard-admin -n kube-system
-  ignore_errors: true
+- name: drop dashboard service account if exist then create the account
+  shell: "( ! kubectl get serviceaccount dashboard-admin -n kube-system      \
+           || kubectl delete serviceaccount dashboard-admin -n kube-system ) \
+          && kubectl create serviceaccount dashboard-admin -n kube-system"
 
-- name: create dashboard service account
-  shell: kubectl create serviceaccount dashboard-admin -n kube-system
-
-- name: delete clusterrolebinding for dashboard
-  shell: kubectl delete clusterrolebinding dashboard-admin
-  ignore_errors: true
-
-- name: create clusterrolebinding for dashboard
-  shell: kubectl create clusterrolebinding dashboard-admin --clusterrole=cluster-admin --serviceaccount=kube-system:dashboard-admin
+- name: drop clusterrolebinding for dashboard if exist then create the clusterrolebinding
+  shell: "( ! kubectl get clusterrolebinding dashboard-admin      \
+           || kubectl delete clusterrolebinding dashboard-admin ) \
+          && kubectl create clusterrolebinding dashboard-admin --clusterrole=cluster-admin --serviceaccount=kube-system:dashboard-admin"

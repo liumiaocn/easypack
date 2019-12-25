@@ -27,3 +27,20 @@
   until: '"Running" in ret_coredns_status.stdout'
   retries: "{{ var_retry_max }}"
   delay: "{{ var_delay_cnt }}"
+
+- name: wait for kubelet csr requestor
+  shell: "kubectl get csr |grep Pending"
+  register: csr_status
+  until: '"Pending" in csr_status.stdout'
+  retries: "{{ var_retry_max }}"
+  delay: "{{ var_delay_cnt }}"
+  tags:
+    - "csr-approve"
+
+- name: get csr requestor list
+  shell: "sleep {{ var_sleep_internal }} && kubectl get csr |grep Pending|grep -v grep |awk '{print $1}'"
+  register: csr_names
+
+- name: approve csr requests
+  shell: "kubectl certificate approve {{ item }}"
+  with_items: "{{ csr_names.stdout_lines }}"

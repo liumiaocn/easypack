@@ -1,21 +1,3 @@
-[all:vars]
-all-in-one-hostip=192.168.163.131
-
 # kubernetes : all-node
 [all-in-one]
-localhost var_master_host=all-in-one-hostip var_etcd_host=all-in-one-hostip var_node_host=all-in-one-hostip
-
-# kubernetes : master
-[master-nodes]
-host131 var_master_host=192.168.163.131 var_master_node_flag=True
-
-# kubernetes : node
-[agent-nodes]
-host131 var_node_host=192.168.163.131 var_etcd_host=192.168.163.131 var_master_host=192.168.163.131 var_master_node_flag=True
-host132 var_node_host=192.168.163.132 var_etcd_host=192.168.163.131 var_master_host=192.168.163.131 var_master_node_flag=False
-host133 var_node_host=192.168.163.133 var_etcd_host=192.168.163.131 var_master_host=192.168.163.131 var_master_node_flag=False
-host134 var_node_host=192.168.163.134 var_etcd_host=192.168.163.131 var_master_host=192.168.163.131 var_master_node_flag=False
-
-# kubernetes : etcd
-[etcd]
-host131 var_etcd_host=192.168.163.131
+localhost var_master_host=192.168.163.131 var_etcd_host=192.168.163.131 var_node_host=192.168.163.131 var_master_node_flag=True

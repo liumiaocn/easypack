@@ -127,7 +127,7 @@
     - "kube-proxy"
 
 - name: wait for kubelet csr requestor
-  shell: "kubectl get csr | grep kubelet-bootstrap |grep Pending"
+  shell: "kubectl get csr |grep Pending"
   register: csr_status
   until: '"Pending" in csr_status.stdout'
   retries: "{{ var_retry_max }}"
@@ -136,7 +136,7 @@
     - "csr-approve"
 
 - name: get csr requestor list
-  shell: "sleep {{ var_delay_cnt }} && kubectl get csr |grep Pending|grep -v grep |awk '{print $1}'"
+  shell: "sleep {{ var_sleep_internal }} && kubectl get csr |grep Pending|grep -v grep |awk '{print $1}'"
   register: csr_names
 
 - name: approve csr requests
