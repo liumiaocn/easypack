@@ -3,7 +3,7 @@
 var_type_os: linux
 var_arch: amd64
 var_ver_cfssl: R1.2
-var_ver_k8s: v1.15.0
+var_ver_k8s: v1.17.0
 var_ver_etcd: v3.3.13
 var_ver_docker: 18.09.7
 var_ver_cni: v0.7.4
