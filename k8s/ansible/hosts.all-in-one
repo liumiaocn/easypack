@@ -1,0 +1,6 @@
+[all:vars]
+all-in-one-hostip=192.168.163.131
+
+# kubernetes : all-node
+[all-in-one]
+localhost var_master_host=all-in-one-hostip var_etcd_host=all-in-one-hostip var_node_host=all-in-one-hostip
