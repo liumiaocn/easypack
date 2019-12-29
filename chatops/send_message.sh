@@ -20,7 +20,7 @@ fi
 
 if [ _"${TYPE}" = _"wechat" ]; then
   CHAT_WEBHOOK_URL='https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key'
-elif [ _"${TYPE}" = _"wechat" ]; then
+elif [ _"${TYPE}" = _"dingtalk" ]; then
   CHAT_WEBHOOK_URL='https://oapi.dingtalk.com/robot/send?access_token'
 else
   usage
@@ -47,28 +47,26 @@ if [ _"${TYPE}" = _"wechat" ]; then
         "news": {
            "articles" : [
               {
-                  "title" : "'${TITLE}'",
-                  "description" : "'${CONTENT}'",
-                  "url" : "'${URL}'",
-                  "picurl" : "'${DEFAULT_PIC_URL}'"
+                  "title" : "'"${TITLE}"'",
+                  "description" : "'"${CONTENT}"'",
+                  "url" : "'"${URL}"'",
+                  "picurl" : "'"${DEFAULT_PIC_URL}"'"
               }
            ]
         }
    }'
-elif [ _"${TYPE}" = _"wechat" ]; then
+elif [ _"${TYPE}" = _"dingtalk" ]; then
   curl "${CHAT_WEBHOOK_URL}=${CHAT_WEBHOOK_KEY}" \
    -H "${CHAT_CONTENT_TYPE}" \
    -d '
    {
-    "actionCard": {
-        "title": "'${TITLE}'", 
-        "text": "'${CONTENT}${DINGTALK_DEFAULT_WORDS}'", 
-        "hideAvatar": "0", 
-        "btnOrientation": "0", 
-        "singleTitle" : "阅读全文",
-        "singleURL" : "'${URL}'"
-    }, 
-    "msgtype": "actionCard"
+    "msgtype": "link", 
+    "link": {
+        "text": "'"${CONTENT}${DINGTALK_DEFAULT_WORDS}"'", 
+        "title": "'"${TITLE}"'", 
+        "picUrl": "'"${DEFAULT_PIC_URL}"'", 
+        "messageUrl": "'"${URL}"'"
+    }
    }'
 else
   usage
