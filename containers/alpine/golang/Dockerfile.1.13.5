@@ -23,8 +23,8 @@ ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 #Install
 ###############################################################################
 RUN set -eux; \
-    apk add --no-cache ca-certificates \
-    [ ! -e /etc/nsswitch.conf ] && echo 'hosts: files dns' > /etc/nsswitch.conf \
+    apk add --no-cache ca-certificates; \
+    [ ! -e /etc/nsswitch.conf ] && echo 'hosts: files dns' > /etc/nsswitch.conf; \
 	apk add --no-cache --virtual .build-deps bash \
 		gcc musl-dev openssl go; \
 	export GOROOT_BOOTSTRAP="$(go env GOROOT)" \
@@ -47,7 +47,7 @@ RUN set -eux; \
 	rm -rf /usr/local/go/pkg/bootstrap usr/local/go/pkg/obj; \
 	apk del .build-deps; \
 	export PATH="/usr/local/go/bin:$PATH"; \
-	go version \
+	go version ; \
 	mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 
 ###############################################################################
