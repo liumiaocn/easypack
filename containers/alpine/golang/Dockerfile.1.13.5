@@ -25,8 +25,7 @@ ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 RUN set -eux; \
     apk add --no-cache ca-certificates; \
     [ ! -e /etc/nsswitch.conf ] && echo 'hosts: files dns' > /etc/nsswitch.conf; \
-	apk add --no-cache --virtual .build-deps bash \
-		gcc musl-dev openssl go; \
+	apk add --no-cache --virtual .build-deps bash gcc musl-dev openssl go; \
 	export GOROOT_BOOTSTRAP="$(go env GOROOT)" \
 		GOOS="$(go env GOOS)" \
 		GOARCH="$(go env GOARCH)" \
