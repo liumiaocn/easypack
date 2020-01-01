@@ -16,7 +16,9 @@ MAINTAINER LiuMiao <liumiaocn@outlook.com>
 #ENVIRONMENT VARS
 ###############################################################################
 ENV GOLANG_VERSION 1.13.5
-ENV GOPATH /go
+ENV GOPATH=${GOPATH:-/go}
+ENV GO111MODULE on
+ENV GOPROXY=${GOPROXY:-https://goproxy.cn,direct}
 ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 
 ###############################################################################
