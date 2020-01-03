@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-configmap
+  namespace: default
+data:
+  user.name: liumiao
+  user.id: '1001'
