@@ -1,6 +1,12 @@
 ---
 # tasks file for master
 
+## clean before install when mode set
+- name: uninstall old versions
+  shell: "!  test -f {{ var_default_install_bin }}/k3s-uninstall.sh \
+          || {{ var_default_install_bin }}/k3s-uninstall.sh"
+  when: var_flag_clean_mode == true
+
 ## create directories
 - name: create dirs for the image file
   file:
@@ -91,9 +97,13 @@
   shell: "k3s_server_token=`cat {{ var_k3s_server_token }}` \
           && sed -i s/KEYWORD_REPLACE_K3S_TOKEN/${k3s_server_token}/g {{ var_src_binary }}/{{ var_src_k3s_agent_install_script }}"
 
-- name: load air gap offline image for k3s
+- name: load air gap offline image for k3s (for containerd)
   shell: "ctr image import {{ var_k3s_dir_bin }}/{{ var_src_air_gap_image_name }}"
-  when: var_flag_air_gap_enabled == true
+  when: var_flag_air_gap_enabled == true and var_k3s_docker_runc == ''
+
+- name: load air gap offline image for k3s (for Docker)
+  shell: "docker load -i {{ var_k3s_dir_bin }}/{{ var_src_air_gap_image_name }}"
+  when: var_flag_air_gap_enabled == true and var_k3s_docker_runc == '--docker'
 
 - name: delete install scripts
   file:
