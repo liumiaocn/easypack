@@ -18,7 +18,7 @@ var_download_file_air_gap: "{{ var_download_base_dir }}/{{ var_src_air_gap_image
 #######BEGIN: SETTING: DOWNLOAD######
 
 #######BEGIN: SETTING: BASIC#########
-var_k3s_server_hostname: 192.168.163.121
+var_k3s_server_hostname: 192.168.163.141
 var_k3s_server_port: 6443
 var_k3s_server_udp_port: 8472
 var_src_binary: "{{ var_download_base_dir }}"
@@ -39,10 +39,11 @@ var_default_bin_mode: '0755'
 var_retry_max: 6
 var_delay_cnt: 3
 var_sleep_internal: 15
-var_flag_selinux_enabled: true
+var_flag_selinux_enabled: false
 var_flag_taint_node: true
 var_flag_offline_install: 'true'
-var_k3s_install_option: '--no-deploy traefik'
+var_k3s_docker_runc: '--docker'
+var_k3s_install_option: '{{ var_k3s_docker_runc }} --no-deploy traefik'
 var_k3s_dir_bin: /usr/local/bin
 #######END  : SETTING: BASIC#########
 
