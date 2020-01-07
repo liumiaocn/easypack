@@ -1,7 +1,7 @@
 ###############################################################################
 # 
 #IMAGE:   angular-cli
-#VERSION: 8.2.14
+#VERSION: 8.3.21
 #
 ###############################################################################
 FROM liumiaocn/nodejs:10.15.3
@@ -12,7 +12,7 @@ FROM liumiaocn/nodejs:10.15.3
 MAINTAINER LiuMiao <liumiaocn@outlook.com>
 
 RUN apk update \
-  && npm install -g @angular/cli@8.2.14 \
+  && npm install -g @angular/cli@8.3.21 \
   && rm -rf /tmp/* /var/cache/apk/* *.tar.gz ~/.npm \
   && npm cache clear --force \
   && yarn cache clean \
