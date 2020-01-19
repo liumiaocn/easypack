@@ -5,10 +5,10 @@ scrape_configs:
     scrape_interval: 5s
 
     static_configs:
-      - targets: ['localhost:8080', 'localhost:8081']
+      - targets: ['192.168.31.242:8080', '192.168.31.242:8081']
         labels:
           group: 'production'
 
-      - targets: ['localhost:8082']
+      - targets: ['192.168.31.242:8082']
         labels:
           group: 'canary'

@@ -1,0 +1,17 @@
+version: '2'
+
+services:
+    prometheus:
+        image: prom/prometheus:v2.15.1
+        privileged: true
+        volumes:
+            - ./prometheus-node.yml:/etc/prometheus/prometheus.yml
+        command:
+            - '--config.file=/etc/prometheus/prometheus.yml'
+        ports:
+            - '9090:9090'
+
+    node-exporter:
+        image: prom/node-exporter:v0.18.1
+        ports:
+            - '9100:9100'
