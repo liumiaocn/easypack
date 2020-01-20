@@ -1,0 +1,11 @@
+global:
+  scrape_interval:     10s
+  evaluation_interval: 10s
+
+scrape_configs:
+  - job_name: 'node'
+
+    static_configs:
+      - targets: ['192.168.31.242:8080']
+        labels:
+          group: 'node_exporter'
