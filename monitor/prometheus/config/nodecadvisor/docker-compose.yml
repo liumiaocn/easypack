@@ -1,0 +1,29 @@
+version: '2'
+
+services:
+    prometheus:
+        image: prom/prometheus:v2.15.1
+        privileged: true
+        volumes:
+            - ./prometheus.yml:/etc/prometheus/prometheus.yml
+        command:
+            - '--config.file=/etc/prometheus/prometheus.yml'
+        ports:
+            - '9090:9090'
+
+    cadvisor:
+        image: google/cadvisor:v0.33.0
+        container_name: cadvisor
+        restart: unless-stopped
+        ports:
+          - '8080:8080'
+        volumes:
+          - /:/rootfs:ro
+          - /var/run:/var/run:rw
+          - /sys:/sys:ro
+          - /var/lib/docker/:/var/lib/docker:ro
+
+    node-exporter:
+        image: prom/node-exporter:v0.18.1
+        ports:
+            - '9100:9100'
