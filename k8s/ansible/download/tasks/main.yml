@@ -103,27 +103,9 @@
     mode: '{{ var_download_save_mode }}'
 
 - name: extract binary files of docker
-  unarchive:
-    copy: no
-    src: "{{ var_download_file_docker }}"
-    dest: "{{ var_download_save_dir_docker }}" 
-
-# change docker directory name because of docker file in directory
-- name: copy docker/dockertmp/ from docker/docker/
-  copy:
-    src: "{{ var_download_tmp_dir_docker }}/"
-    dest: "{{ var_download_tmp_dir_docker }}tmp/"
-
-# delete docker/docker directory
-- name : delete docker/docker directory for moving action
-  file:
-    path: "{{ var_download_tmp_dir_docker }}/"
-    state: absent
-
-- name: create output docker binary dir
-  synchronize:
-    src: "{{ var_download_tmp_dir_docker }}tmp/"
-    dest: "{{ var_download_save_dir_docker }}" 
+  shell: "tar zxvf {{ var_download_file_docker }} \
+          -C {{ var_download_save_dir_docker }}   \
+          --strip-component=1"
 
 - name: download pause image
   shell: docker pull {{ var_image_pause_full_name }} \
@@ -140,6 +122,12 @@
 - name: download dashboard image
   shell: docker pull {{ var_image_dashboard_full_name }} \
          && docker save {{ var_image_dashboard_full_name }} > {{ var_download_save_dir_images }}/{{ var_download_save_dashboard }}
+  tags:
+    - "images"
+
+- name: download prometheus image
+  shell: docker pull {{ var_image_prometheus_full_name }} \
+         && docker save {{ var_image_prometheus_full_name }} > {{ var_download_save_dir_images }}/{{ var_download_save_prometheus }}
   tags:
     - "images"
 

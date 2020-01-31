@@ -3,14 +3,14 @@
 var_type_os: linux
 var_arch: amd64
 var_ver_cfssl: R1.2
-var_ver_k8s: v1.17.0
-var_ver_etcd: v3.3.13
-var_ver_docker: 18.09.7
-var_ver_cni: v0.7.4
+var_ver_k8s: v1.17.2
+var_ver_etcd: v3.3.18
+var_ver_docker: 19.03.5
+var_ver_cni: v0.8.5
 var_ver_flannel: v0.11.0
 var_ver_pause: 3.1
-var_ver_coredns: 1.2.6
-var_ver_dashboard: v1.10.1
+var_ver_coredns: 1.6.7
+var_ver_dashboard: v2.0.0-rc3
 var_ver_prometheus: v2.15.1
 
 # vars file for download
@@ -20,8 +20,9 @@ var_download_save_mode_bin: '0755'
 
 # var for images
 var_image_pause_full_name: "gcr.io/google_containers/pause-amd64:{{ var_ver_pause }}"
-var_image_coredns_full_name: "k8s.gcr.io/coredns:{{ var_ver_coredns }}"
-var_image_dashboard_full_name: "k8s.gcr.io/kubernetes-dashboard-amd64:{{ var_ver_dashboard }}"
+var_image_coredns_full_name: "coredns/coredns:{{ var_ver_coredns }}"
+var_image_dashboard_full_name: "kubernetesui/dashboard:{{ var_ver_dashboard }}"
+var_image_prometheus_full_name: "prom/prometheus:{{ var_ver_prometheus }}"
 var_download_save_dir_images: "{{ var_download_base_dir }}/images"
 var_download_save_pause: pause.tar
 var_download_save_coredns: coredns.tar
@@ -81,5 +82,5 @@ var_download_file_docker:  "{{var_download_save_dir_docker}}/docker-{{var_ver_do
 
 # vars for cni
 var_download_save_dir_cni: "{{var_download_base_dir}}/cni"
-var_download_url_cni: "https://github.com/containernetworking/plugins/releases/download/{{var_ver_cni}}/cni-plugins-{{var_arch}}-{{var_ver_cni}}.tgz" 
-var_download_file_cni:  "{{var_download_save_dir_cni}}/cni-plugins-{{var_arch}}-{{var_ver_cni}}.tgz"
+var_download_url_cni: "https://github.com/containernetworking/plugins/releases/download/{{var_ver_cni}}/cni-plugins-linux-{{var_arch}}-{{var_ver_cni}}.tgz" 
+var_download_file_cni:  "{{var_download_save_dir_cni}}/cni-plugins-linux-{{var_arch}}-{{var_ver_cni}}.tgz"
