@@ -13,6 +13,7 @@ clusterDomain: "{{ var_kubelet_config_opt_cluster_domain }}"
 clusterDNS:
   - "{{ var_kubelet_config_opt_cluster_dns }}"
 podCIDR: "{{ var_kube_opt_cluster_ip_range }}"
+failSwapOn: {{ var_kubelet_opt_fail_swap_on }}
 maxPods: {{ var_kubelet_config_opt_maxpods }}
 serializeImagePulls: {{ var_kubelet_config_opt_serialize_img_pull }}
 hairpinMode: {{ var_kubelet_config_opt_hairpin }}
