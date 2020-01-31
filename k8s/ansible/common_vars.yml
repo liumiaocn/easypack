@@ -54,7 +54,7 @@ var_k8s_cluster_service_ip: 10.254.0.1
 var_kube_opt_cluster_ip_range: 10.254.0.0/16
 var_kube_opt_cluster_port_range: 30000-50000
 var_kube_opt_auth_mode: "RBAC,Node"
-var_kube_adm_plugins: "NamespaceLifecycle,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota,NodeRestriction"
+var_kube_adm_plugins: "NamespaceLifecycle,LimitRanger,ServiceAccount,ResourceQuota,NodeRestriction"
 var_kube_master_addr: 127.0.0.1:8080
 var_kube_master_https: "https://{{var_master_host}}:{{var_kube_opt_api_ssl_port}}"
 #######END  : SETTING: APISERVER#####
