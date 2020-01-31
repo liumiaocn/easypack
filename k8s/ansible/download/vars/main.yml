@@ -11,6 +11,7 @@ var_ver_flannel: v0.11.0
 var_ver_pause: 3.1
 var_ver_coredns: 1.2.6
 var_ver_dashboard: v1.10.1
+var_ver_prometheus: v2.15.1
 
 # vars file for download
 var_download_base_dir: /tmp/binary
@@ -25,6 +26,7 @@ var_download_save_dir_images: "{{ var_download_base_dir }}/images"
 var_download_save_pause: pause.tar
 var_download_save_coredns: coredns.tar
 var_download_save_dashboard: dashboard.tar
+var_download_save_prometheus: prometheus.tar
 
 # vars for kubernetes
 var_download_url_k8s: "https://dl.k8s.io/{{var_ver_k8s}}/kubernetes-server-{{var_type_os}}-{{var_arch}}.tar.gz"

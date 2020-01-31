@@ -72,6 +72,17 @@ var_template_dashboard_yaml: "kubernetes-dashboard.yaml"
 var_dashboard_node_port: 33307
 #######END  : SETTING: DASHBOARD#####
 
+#######BEGIN: SETTING: PROMETHEUS####
+var_ver_prometheus: v2.15.1
+var_prometheus_dir_etc: "{{var_kube_dir_etc}}/prometheus"
+var_template_prometheus_rbac_yaml: "rbac.yaml"
+var_template_prometheus_configmap_yaml: "configmap.yaml"
+var_template_prometheus_deployment_yaml: "deployment.yaml"
+var_src_dashboard: "{{var_src_binary}}/images/prometheus.tar" 
+var_prometheus_node_port: 33308
+var_prometheus_namespace: prometheus
+#######END  : SETTING: PROMETHEUS####
+
 #######BEGIN: SETTING: SCHEDULER#####
 var_template_sch_service: kube-scheduler.service.j2
 var_kube_sch_etc: kube-scheduler.conf

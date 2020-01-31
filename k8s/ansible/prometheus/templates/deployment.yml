@@ -1,0 +1,56 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: prometheus-service
+  namespace: {{ var_prometheus_namespace }}
+  annotations:
+      prometheus.io/scrape: 'true'
+      prometheus.io/port:   '9090'
+  
+spec:
+  selector: 
+    app: prometheus-deployment
+  type: NodePort  
+  ports:
+    - port: 8080
+      targetPort: 9090 
+      nodePort: {{ var_prometheus_node_port }}
+...
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: prometheus-deployment
+  namespace: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: prometheus-deployment
+  template:
+    metadata:
+      labels:
+        app: prometheus-deployment
+    spec:
+      containers:
+        - name: prometheus
+          image: prom/prometheus:{{ var_ver_prometheus }}
+          args:
+            - "--config.file=/etc/prometheus/prometheus.yml"
+            - "--storage.tsdb.path=/prometheus/"
+          ports:
+            - containerPort: 9090
+          volumeMounts:
+            - name: prometheus-configmap
+              mountPath: /etc/prometheus/
+            - name: prometheus-storage-volume
+              mountPath: /prometheus/
+      volumes:
+        - name: prometheus-configmap
+          configMap:
+            defaultMode: 420
+            name: prometheus-configmap
+  
+        - name: prometheus-storage-volume
+          emptyDir: {}
