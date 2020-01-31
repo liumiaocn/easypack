@@ -1,2 +1,42 @@
 ---
 # tasks file for prometheus
+
+- name: create dirs for prometheus
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ var_prometheus_dir_etc }}"
+
+- name: create prometheus rbac yaml file
+  template:
+    src: "{{ var_template_prometheus_rbac_yaml }}"
+    dest: "{{ var_prometheus_dir_etc }}/{{ var_template_prometheus_rbac_yaml }}"
+
+- name: create prometheus configmap yaml file
+  template:
+    src: "{{ var_template_prometheus_configmap_yaml }}"
+    dest: "{{ var_prometheus_dir_etc }}/{{ var_template_prometheus_configmap_yaml }}"
+
+- name: create prometheus deployment yaml file
+  template:
+    src: "{{ var_template_prometheus_deployment_yaml }}"
+    dest: "{{ var_prometheus_dir_etc }}/{{ var_template_prometheus_deployment_yaml }}"
+
+- name: load prometheus image
+  shell: "docker load -i {{ var_src_prometheus }}"
+
+- name: create namespace specified when not existed
+  shell: "kubectl get namespace {{ var_prometheus_namespace }} \
+          || kubectl create namespace {{ var_prometheus_namespace }}"
+
+- name: create prometheus service
+  shell: "cd {{ var_prometheus_dir_etc }} \
+          && kubectl delete -f . ; kubectl create -f ."
+
+- name: confirm prometheus service state
+  shell: "kubectl get all -A |egrep -e 'prometheus|NAME'"
+  register: ret_prometheus_status
+  until: '"Running" in ret_prometheus_status.stdout'
+  retries: "{{ var_retry_max }}"
+  delay: "{{ var_delay_cnt }}"
