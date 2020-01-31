@@ -18,7 +18,6 @@ ExecStart={{ var_kube_dir_bin }}/kube-controller-manager \
   --root-ca-file={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_pem }} \
   --service-account-private-key-file={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_key }} \
   --controllers=*,bootstrapsigner,tokencleaner \
-  --horizontal-pod-autoscaler-use-rest-clients=true \
   --horizontal-pod-autoscaler-sync-period=10s \
   --tls-cert-file={{ var_ssl_k8s_dir }}/{{ var_ssl_k8scm_cert_prefix }}.pem \
   --tls-private-key-file={{ var_ssl_k8s_dir }}/{{ var_ssl_k8scm_cert_prefix }}-key.pem \
