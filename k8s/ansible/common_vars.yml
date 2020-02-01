@@ -83,6 +83,14 @@ var_prometheus_node_port: 33308
 var_prometheus_namespace: prometheus
 #######END  : SETTING: PROMETHEUS####
 
+#######BEGIN: SETTING: METRICS#######
+var_ver_metrics: v0.3.6
+var_metrics_dir_etc: "{{var_kube_dir_etc}}/metrics"
+var_template_metrics_deployment_yaml: "metrics-server-deployment.yaml"
+var_src_metrics: "{{var_src_binary}}/images/metrics.tar" 
+var_metrics_node_port: 33309
+#######END  : SETTING: METRICS#######
+
 #######BEGIN: SETTING: SCHEDULER#####
 var_template_sch_service: kube-scheduler.service.j2
 var_kube_sch_etc: kube-scheduler.conf

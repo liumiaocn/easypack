@@ -1,2 +1,40 @@
 ---
 # tasks file for metrics
+
+- name: create dirs for metrics
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items:
+    - "{{ var_metrics_dir_etc }}"
+
+- name: copy metrics yaml file
+  copy:
+    src: "{{ item }}"
+    dest: "{{ var_metrics_dir_etc }}"
+  with_items:
+    - "aggregated-metrics-reader.yaml"
+    - "auth-delegator.yaml"
+    - "auth-reader.yaml"
+    - "metrics-apiservice.yaml"
+    - "metrics-server-service.yaml"
+    - "resource-reader.yaml"
+
+- name: create metrics server deployment yaml file
+  template:
+    src: "{{ var_template_metrics_deployment_yaml }}"
+    dest: "{{ var_metrics_dir_etc }}/{{ var_template_metrics_deployment_yaml }}"
+
+- name: load metrics server image
+  shell: "docker load -i {{ var_src_metrics }}"
+
+- name: create metrics service
+  shell: "cd {{ var_metrics_dir_etc }} \
+          && kubectl delete -f . ; kubectl create -f ."
+
+- name: confirm metrics service state
+  shell: "kubectl get all -A |egrep -e 'metrics|NAME'"
+  register: ret_metrics_status
+  until: '"Running" in ret_metrics_status.stdout'
+  retries: "{{ var_retry_max }}"
+  delay: "{{ var_delay_cnt }}"
