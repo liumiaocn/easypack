@@ -54,7 +54,7 @@ var_k8s_cluster_service_ip: 10.254.0.1
 var_kube_opt_cluster_ip_range: 10.254.0.0/16
 var_kube_opt_cluster_port_range: 30000-50000
 var_kube_opt_auth_mode: "RBAC,Node"
-var_kube_adm_plugins: "NamespaceLifecycle,LimitRanger,SecurityContextDeny,ServiceAccount,ResourceQuota,NodeRestriction"
+var_kube_adm_plugins: "NamespaceLifecycle,LimitRanger,ServiceAccount,ResourceQuota,NodeRestriction"
 var_kube_master_addr: 127.0.0.1:8080
 var_kube_master_https: "https://{{var_master_host}}:{{var_kube_opt_api_ssl_port}}"
 #######END  : SETTING: APISERVER#####
@@ -71,6 +71,25 @@ var_dashboard_dir_etc: "{{var_kube_dir_etc}}/dashboard"
 var_template_dashboard_yaml: "kubernetes-dashboard.yaml"
 var_dashboard_node_port: 33307
 #######END  : SETTING: DASHBOARD#####
+
+#######BEGIN: SETTING: PROMETHEUS####
+var_ver_prometheus: v2.15.1
+var_prometheus_dir_etc: "{{var_kube_dir_etc}}/prometheus"
+var_template_prometheus_rbac_yaml: "rbac.yml"
+var_template_prometheus_configmap_yaml: "configmap.yml"
+var_template_prometheus_deployment_yaml: "deployment.yml"
+var_src_prometheus: "{{var_src_binary}}/images/prometheus.tar" 
+var_prometheus_node_port: 33308
+var_prometheus_namespace: prometheus
+#######END  : SETTING: PROMETHEUS####
+
+#######BEGIN: SETTING: METRICS#######
+var_ver_metrics: v0.3.6
+var_metrics_dir_etc: "{{var_kube_dir_etc}}/metrics"
+var_template_metrics_deployment_yaml: "metrics-server-deployment.yaml"
+var_src_metrics: "{{var_src_binary}}/images/metrics.tar" 
+var_metrics_node_port: 33309
+#######END  : SETTING: METRICS#######
 
 #######BEGIN: SETTING: SCHEDULER#####
 var_template_sch_service: kube-scheduler.service.j2
@@ -131,6 +150,7 @@ var_template_k8s_csr: k8s-csr.json.j2
 var_template_k8scm_csr: k8s-cm-csr.json.j2
 var_template_k8sch_csr: k8s-sch-csr.json.j2
 var_template_admin_csr: admin-csr.json.j2
+var_template_aggregator_csr: aggregator-csr.json.j2
 var_ssl_file_ca_pem: "ca.pem"
 var_ssl_file_ca_key: "ca-key.pem"
 var_ssl_file_ca_config: "ca-config.json"
@@ -141,6 +161,7 @@ var_ssl_file_k8sch_csr: "k8s-sch-csr.json"
 var_ssl_file_admin_csr: "admin-csr.json"
 var_ssl_file_etcd_csr: "etcd-csr.json"
 var_ssl_flannel_csr: flanneld-csr.json
+var_ssl_aggregator_csr: aggregator-csr.json
 var_template_proxy_csr: kubeproxy-csr.json.j2
 var_ssl_proxy_csr: kubeproxy-csr.json
 var_ssl_etcd_csr_cn: "etcd"
@@ -149,12 +170,14 @@ var_ssl_k8scm_csr_cn: "system:kube-controller-manager"
 var_ssl_k8sch_csr_cn: "system:kube-scheduler"
 var_ssl_proxy_csr_cn: "system:kube-proxy"
 var_ssl_flannel_csr_cn: flanneld
+var_ssl_aggregator_csr_cn: aggregator
 var_ssl_etcd_cert_prefix: "cert-etcd"
 var_ssl_k8s_cert_prefix: cert-k8s
 var_ssl_k8scm_cert_prefix: cert-k8scm
 var_ssl_k8sch_cert_prefix: cert-k8sch
 var_ssl_flannel_cert_prefix: flanneld
 var_ssl_proxy_cert_prefix: cert-kubeproxy
+var_ssl_aggregator_cert_prefix: cert-aggregator
 var_ssl_admin_cert_prefix: "kubeadmin"
 var_ssl_csr_hosts_srv: "10.254.0.1"
 #######END  : SETTING: SSL###########

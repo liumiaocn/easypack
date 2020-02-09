@@ -11,5 +11,4 @@
     - role: docker
     - role: node
     - role: coredns
-    - role: dashboard
 ...

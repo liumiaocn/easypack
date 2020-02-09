@@ -39,7 +39,8 @@ ExecStart={{ var_kube_dir_bin }}/kube-apiserver \
   --requestheader-group-headers=X-Remote-Group \
   --requestheader-username-headers=X-Remote-User \
   --proxy-client-cert-file={{ var_ssl_k8s_dir }}/{{ var_ssl_aggregator_cert_prefix }}.pem \
-  --proxy-client-key-file={{ var_ssl_k8s_dir }}/{{ var_ssl_aggregator_cert_prefix }}-key.pem
+  --proxy-client-key-file={{ var_ssl_k8s_dir }}/{{ var_ssl_aggregator_cert_prefix }}-key.pem \
+  --enable-aggregator-routing=true
 Restart=on-failure
 
 [Install]

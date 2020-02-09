@@ -158,6 +158,14 @@
     - "cert" 
   when: var_master_node_flag == True
 
+- name: create csr file for metrics server aggregator
+  template:
+    src: "{{ var_template_aggregator_csr }}"
+    dest: "{{ var_ssl_k8s_dir }}/{{ var_ssl_aggregator_csr }}" 
+  tags:
+    - "cert" 
+  when: var_master_node_flag == True
+
 - name: create ca certificate
   shell: "cd {{ var_ssl_ca_dir }}      \
           && cfssl gencert -initca {{ var_ssl_file_ca_csr }} | cfssljson -bare ca - \
@@ -166,6 +174,10 @@
   tags:
     - "cert" 
   when: var_master_node_flag == True
+
+- name: create metrics server aggregator certificate
+  shell: "cd {{ var_ssl_k8s_dir }}   \
+          && cfssl gencert -ca={{ var_ssl_ca_dir }}/{{  var_ssl_file_ca_pem }}  -ca-key={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_key }} -config={{ var_ssl_ca_dir }}/{{ var_ssl_file_ca_config }} -profile={{ var_ssl_profile_k8s }} {{ var_ssl_aggregator_csr }}  | cfssljson -bare {{ var_ssl_aggregator_cert_prefix }}"
 
 - name: create kubernetes certificate
   shell: "cd {{ var_ssl_k8s_dir }}   \

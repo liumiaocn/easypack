@@ -13,8 +13,8 @@
     src: "{{ var_template_dashboard_yaml }}"
     dest: "{{ var_dashboard_dir_etc }}/{{ var_template_dashboard_yaml }}"
 
-- name: load dashboard image
-  shell: "docker load -i {{ var_src_dashboard }}"
+#- name: load dashboard image
+#  shell: "docker load -i {{ var_src_dashboard }}"
 
 - name: delete & create kubectl service
   shell: "cd {{ var_dashboard_dir_etc }} \
@@ -22,7 +22,7 @@
           || kubectl create -f ."
 
 - name: confirm dashboard service state
-  shell: "kubectl get all -n kube-system |egrep -e 'dashboard|NAME'"
+  shell: "kubectl get pod -A |egrep -e 'dashboard|NAME'"
   register: ret_dashboard_status
   until: '"Running" in ret_dashboard_status.stdout'
   retries: "{{ var_retry_max }}"
