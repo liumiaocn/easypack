@@ -35,7 +35,7 @@
   shell: "systemctl daemon-reload \
           && systemctl restart docker"
 
-- name: confirm docer service state
+- name: confirm docker service state
   shell: "systemctl status docker.service|grep Active"
   register: ret_docker_status
   until: '"running" in ret_docker_status.stdout'
